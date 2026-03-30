@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aibrain — Your Agent, But Better Every Day</title>
+    <meta name="description" content="AI agent brain with selective memory routing. 155 workflows, multi-agent mesh, brain marketplace. pip install aibrain">
+    <meta name="keywords" content="AI agent, memory, brain, MCP, skills, retrieval, LLM, agent OS">
+
+    <!-- Security headers via meta tags (Cloudflare Pages handles the rest) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="aibrain — Your Agent, But Better Every Day">
+    <meta property="og:description" content="Portable agent operating system with selective memory routing. Your agent learns, remembers, and improves.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://myaibrain.org">
+
+    <!-- No external dependencies — zero supply chain attack surface -->
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a28;
+            --text: #e4e4e7;
+            --text-muted: #9ca3af;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --accent-glow: rgba(99, 102, 241, 0.15);
+            --green: #22c55e;
+            --border: #27272a;
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--accent-hover); }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Nav */
+        nav {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 28px; align-items: center; }
+        .nav-links a { color: var(--text-muted); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--text); }
+
+        /* Hero */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+        .hero h1 span { color: var(--accent); }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 640px;
+            margin: 0 auto 40px;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            color: white;
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Install block */
+        .install-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 1rem;
+            color: var(--green);
+            max-width: 420px;
+            margin: 32px auto 0;
+            text-align: left;
+            user-select: all;
+        }
+        .install-block .prompt { color: var(--text-muted); }
+
+        /* Features grid */
+        .features {
+            padding: 80px 0;
+        }
+        .features h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .features .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+            font-size: 1.1rem;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            transition: all 0.2s;
+        }
+        .feature-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        /* Numbers */
+        .numbers {
+            padding: 60px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            text-align: center;
+        }
+        .number-item .value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .number-item .label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 80px 0;
+        }
+        .pricing h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+        }
+        .price-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+        }
+        .price-card.featured {
+            border-color: var(--accent);
+            box-shadow: 0 0 40px var(--accent-glow);
+            position: relative;
+        }
+        .price-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .price-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        .price-card .price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 16px 0;
+        }
+        .price-card .price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        .price-card ul {
+            list-style: none;
+            text-align: left;
+            margin: 24px 0;
+        }
+        .price-card li {
+            padding: 8px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .price-card li::before {
+            content: '+';
+            color: var(--green);
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        /* CTA */
+        .cta {
+            padding: 80px 0;
+            text-align: center;
+        }
+        .cta h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .cta p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        footer a { color: var(--text-muted); }
+        footer a:hover { color: var(--text); }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .numbers-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-links { gap: 16px; }
+        }
+        @media (max-width: 480px) {
+            .hero { padding: 60px 0 40px; }
+            .hero-actions { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="container">
+        <div class="logo">ai<span>brain</span></div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="https://github.com/sindeck/aibrain" rel="noopener">GitHub</a>
+            <a href="/docs">Docs</a>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="container">
+        <h1>Your agent, but <span>better every day</span></h1>
+        <p>
+            Portable agent operating system with selective memory routing.
+            Your AI agent learns from experience, remembers what matters,
+            and improves with every interaction.
+        </p>
+        <div class="hero-actions">
+            <a href="#pricing" class="btn btn-primary">Get Started</a>
+            <a href="https://github.com/sindeck/aibrain" class="btn btn-secondary" rel="noopener">View on GitHub</a>
+        </div>
+        <div class="install-block">
+            <span class="prompt">$</span> pip install aibrain
+        </div>
+    </div>
+</section>
+
+<section class="numbers">
+    <div class="container">
+        <div class="numbers-grid">
+            <div class="number-item">
+                <div class="value">155</div>
+                <div class="label">Ready-to-use workflows</div>
+            </div>
+            <div class="number-item">
+                <div class="value">40+</div>
+                <div class="label">Trained skill types</div>
+            </div>
+            <div class="number-item">
+                <div class="value">4</div>
+                <div class="label">Retrieval strategies</div>
+            </div>
+            <div class="number-item">
+                <div class="value">0</div>
+                <div class="label">Cloud dependency</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features" id="features">
+    <div class="container">
+        <h2>Everything your agent needs to think</h2>
+        <p class="subtitle">Memory, skills, workflows, and multi-agent intelligence — in one package.</p>
+        <div class="feature-grid">
+
+            <div class="feature-card">
+                <span class="feature-icon">&#x1F9E0;</span>
+                <h3>Selective Memory Routing</h3>
+                <p>Four retrieval strategies (FTS5, embeddings, semantic facts, graph expansion) automatically selected per query type. Research-validated across 8 benchmarks.</p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">&#x26A1;</span>
+                <h3>Skill Learning</h3>
+                <p>Your agent learns from every task. Principles extracted, confidence tracked, performance improved. 40+ skill types out of the box.</p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">&#x1F916;</span>
+                <h3>155 Workflows</h3>
+                <p>Email triage, job tracking, security monitoring, research digests, and more. Enable what you need, disable what you don't.</p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">&#x1F310;</span>
+                <h3>Multi-Agent Mesh</h3>
+                <p>Connect multiple agents. Consensus merge, domain-specific authority, swarm training with 100+ agents. Principles validated across the mesh.</p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">&#x1F6D2;</span>
+                <h3>Brain Marketplace</h3>
+                <p>Buy and sell trained agent brains. Privacy-preserving export — share principles without sharing raw memories. Knowledge grafting as a product.</p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">&#x1F512;</span>
+                <h3>Privacy First</h3>
+                <p>100% on-device. SQLite database, no cloud dependency, no data leaves your machine. Air-gap safe. Your data is yours.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="pricing" id="pricing">
+    <div class="container">
+        <h2>Simple, transparent pricing</h2>
+        <div class="pricing-grid">
+
+            <div class="price-card">
+                <h3>Free</h3>
+                <div class="price">$0</div>
+                <ul>
+                    <li>1 agent</li>
+                    <li>40 workflows</li>
+                    <li>5,000 memories</li>
+                    <li>Basic memory routing</li>
+                    <li>Community brains</li>
+                    <li>Full CLI access</li>
+                </ul>
+                <a href="https://github.com/sindeck/aibrain" class="btn btn-secondary" rel="noopener" style="width:100%;justify-content:center;">Install Free</a>
+            </div>
+
+            <div class="price-card featured">
+                <h3>Pro</h3>
+                <div class="price">$9.95<span>/mo</span></div>
+                <ul>
+                    <li>3 agents</li>
+                    <li>155 workflows</li>
+                    <li>50,000 memories</li>
+                    <li>Skill learning</li>
+                    <li>Brain marketplace access</li>
+                    <li>Selective routing (4 strategies)</li>
+                </ul>
+                <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;">Coming Soon</a>
+            </div>
+
+            <div class="price-card">
+                <h3>Team</h3>
+                <div class="price">$29<span>/mo</span></div>
+                <ul>
+                    <li>10 agents</li>
+                    <li>Full mesh merge</li>
+                    <li>Team brain sharing</li>
+                    <li>200,000 memories</li>
+                    <li>Consensus validation</li>
+                    <li>Priority support</li>
+                </ul>
+                <a href="#" class="btn btn-secondary" style="width:100%;justify-content:center;">Coming Soon</a>
+            </div>
+
+            <div class="price-card">
+                <h3>Enterprise</h3>
+                <div class="price">$99<span>/mo</span></div>
+                <ul>
+                    <li>Unlimited agents</li>
+                    <li>Swarm training (100+)</li>
+                    <li>Custom embedding models</li>
+                    <li>Air-gap deployment</li>
+                    <li>Dedicated support</li>
+                    <li>Custom integrations</li>
+                </ul>
+                <a href="#" class="btn btn-secondary" style="width:100%;justify-content:center;">Contact Us</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container">
+        <h2>Your agent deserves a brain</h2>
+        <p>Install in 30 seconds. Works with Claude, GPT, Gemini, or any LLM.</p>
+        <div class="install-block" style="margin:0 auto;">
+            <span class="prompt">$</span> pip install aibrain && aibrain setup
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="footer-links">
+            <a href="https://github.com/sindeck/aibrain" rel="noopener">GitHub</a>
+            <a href="/docs">Documentation</a>
+            <a href="/pricing">Pricing</a>
+            <a href="https://pypi.org/project/aibrain/" rel="noopener">PyPI</a>
+        </div>
+        <p>&copy; 2026 aibrain. Built by <a href="https://deckerops.com" rel="noopener">DeckerOps</a>.</p>
+    </div>
+</footer>
+
+</body>
+</html>

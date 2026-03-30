@@ -1,0 +1,3 @@
+# Redirects for Cloudflare Pages
+/docs  /docs/index.html  200
+/pricing  /#pricing  301

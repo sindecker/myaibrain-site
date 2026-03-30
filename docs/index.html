@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aibrain Documentation</title>
+    <meta name="description" content="Getting started with aibrain — the portable agent operating system.">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --text: #e4e4e7;
+            --text-muted: #9ca3af;
+            --accent: #6366f1;
+            --green: #22c55e;
+            --border: #27272a;
+            --code-bg: #1e1e2e;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: var(--accent); text-decoration: none; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+        h1 { font-size: 2.2rem; margin-bottom: 16px; }
+        h2 { font-size: 1.5rem; margin: 40px 0 16px; color: var(--accent); }
+        h3 { font-size: 1.2rem; margin: 24px 0 8px; }
+        p { margin-bottom: 16px; color: var(--text-muted); }
+        code {
+            background: var(--code-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        pre code { background: none; padding: 0; }
+        .breadcrumb { margin-bottom: 32px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); }
+        ul { margin: 8px 0 16px 24px; color: var(--text-muted); }
+        li { margin: 4px 0; }
+        .note {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+<p class="breadcrumb"><a href="/">aibrain</a> / Documentation</p>
+
+<h1>Getting Started</h1>
+<p>aibrain is a portable agent operating system that gives any AI agent persistent memory, skill learning, and multi-agent intelligence.</p>
+
+<h2>Installation</h2>
+<pre><code># Core (memory, CLI, workflows)
+pip install aibrain
+
+# With embeddings (recommended)
+pip install aibrain[embeddings]
+
+# Everything
+pip install aibrain[all]</code></pre>
+
+<h2>Quick Start</h2>
+<pre><code># Initialize your brain
+aibrain setup
+
+# Check status
+aibrain summary
+
+# Search memories
+aibrain search "how to deploy"
+
+# List available workflows
+aibrain workflows list
+
+# Enable recommended workflows
+aibrain workflows enable --recommended
+
+# Sync to OS scheduler
+aibrain workflows sync</code></pre>
+
+<h2>Core Concepts</h2>
+
+<h3>Memory</h3>
+<p>aibrain stores memories in a local SQLite database with four retrieval strategies:</p>
+<ul>
+    <li><strong>FTS5</strong> — full-text search for keyword matching</li>
+    <li><strong>Embeddings</strong> — semantic similarity via sentence transformers</li>
+    <li><strong>Semantic Facts</strong> — entity-relationship graph for factual queries</li>
+    <li><strong>Graph Expansion</strong> — multi-hop reasoning through connected entities</li>
+</ul>
+<p>Selective routing automatically picks the best strategy per query type.</p>
+
+<h3>Skills</h3>
+<p>Your agent learns from every task. Principles are extracted, confidence scores tracked, and performance improves over time. The skill system tracks 40+ task types out of the box.</p>
+
+<h3>Workflows</h3>
+<p>155 pre-built workflows for common tasks: email triage, job tracking, research digests, security monitoring, and more. Each workflow runs on a configurable schedule.</p>
+
+<h3>Multi-Agent Mesh</h3>
+<p>Connect multiple agents into a mesh. Three merge strategies:</p>
+<ul>
+    <li><strong>Consensus</strong> — confidence boosted by independent validation</li>
+    <li><strong>Union</strong> — non-overlapping specializations combined</li>
+    <li><strong>Domain</strong> — authority-based per specialization</li>
+</ul>
+
+<h3>Brain Marketplace</h3>
+<p>Buy and sell trained agent brains. Privacy-preserving export shares principles without raw memories.</p>
+
+<h2>SDK</h2>
+<pre><code>from agentos_sdk import AgentOS
+
+aos = AgentOS("http://localhost:8001")
+
+# Store a memory
+aos.remember("user prefers dark mode", tags=["preference", "ui"])
+
+# Search memories
+results = aos.recall("dark mode")
+
+# Send a chat message
+aos.say("Task complete: deployed v2.1")</code></pre>
+
+<h2>MCP Server</h2>
+<p>aibrain includes a Model Context Protocol server for direct integration with Claude, Cursor, and other MCP-compatible tools:</p>
+<pre><code># Start the MCP server
+aibrain mcp
+
+# Or add to your MCP config:
+{
+  "mcpServers": {
+    "aibrain": {
+      "command": "aibrain-mcp"
+    }
+  }
+}</code></pre>
+
+<div class="note">
+    <strong>Privacy:</strong> All data stays on your machine. No cloud dependency.
+    The database is a local SQLite file at <code>~/agentos/agentos.db</code>.
+</div>
+
+<h2>CLI Reference</h2>
+<pre><code>aibrain setup             — first-time setup wizard
+aibrain init              — initialize database
+aibrain summary           — dashboard stats
+aibrain search "query"    — cross-table FTS search
+aibrain browse            — open memory browser
+aibrain forget "topic"    — preview deletion
+aibrain skills            — show skill inventory
+aibrain workflows list    — list all workflows
+aibrain workflows sync    — create OS scheduled tasks
+aibrain mesh status       — multi-agent mesh status
+aibrain marketplace       — brain marketplace
+aibrain license           — license status
+aibrain history           — brain version history
+aibrain scale             — brain health + compaction
+aibrain server            — start FastAPI server
+aibrain mcp               — start MCP server</code></pre>
+
+<h2>Links</h2>
+<ul>
+    <li><a href="https://github.com/sindeck/aibrain" rel="noopener">GitHub Repository</a></li>
+    <li><a href="https://pypi.org/project/aibrain/" rel="noopener">PyPI Package</a></li>
+    <li><a href="/#pricing">Pricing</a></li>
+</ul>
+
+</div>
+</body>
+</html>
