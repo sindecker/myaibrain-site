@@ -463,7 +463,7 @@
                     <li>Brain marketplace access</li>
                     <li>Selective routing (4 strategies)</li>
                 </ul>
-                <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;">Coming Soon</a>
+                <button onclick="checkout('price_1TGwNCFJOifuQjRKWsTG4DQU')" class="btn btn-primary" style="width:100%;justify-content:center;cursor:pointer;border:none;font-family:inherit;font-size:inherit;">Get Pro</button>
             </div>
 
             <div class="price-card">
@@ -477,7 +477,7 @@
                     <li>Consensus validation</li>
                     <li>Priority support</li>
                 </ul>
-                <a href="#" class="btn btn-secondary" style="width:100%;justify-content:center;">Coming Soon</a>
+                <button onclick="checkout('price_1TGwNEFJOifuQjRKSeXoj6Tv')" class="btn btn-secondary" style="width:100%;justify-content:center;cursor:pointer;border:none;font-family:inherit;font-size:inherit;">Get Team</button>
             </div>
 
             <div class="price-card">
@@ -491,7 +491,7 @@
                     <li>Dedicated support</li>
                     <li>Custom integrations</li>
                 </ul>
-                <a href="#" class="btn btn-secondary" style="width:100%;justify-content:center;">Contact Us</a>
+                <a href="mailto:matt@deckerops.com?subject=aibrain%20Enterprise" class="btn btn-secondary" style="width:100%;justify-content:center;">Contact Us</a>
             </div>
 
         </div>
@@ -520,5 +520,17 @@
     </div>
 </footer>
 
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    var stripe = Stripe('pk_test_51TGwFyFJOifuQjRKKppdKKL1JN9dF0Bg3nQ5lWsjfUXHRvmVwyCh4o3NT5wJb139pvrMPRQRZknxnwC0IETHzANk00Zf92aAYW');
+    function checkout(priceId) {
+        stripe.redirectToCheckout({
+            lineItems: [{price: priceId, quantity: 1}],
+            mode: 'subscription',
+            successUrl: window.location.origin + '/?success=1',
+            cancelUrl: window.location.origin + '/#pricing'
+        });
+    }
+</script>
 </body>
 </html>
