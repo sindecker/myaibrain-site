@@ -106,14 +106,14 @@ aibrain license activate ${licenseKey}</pre>
           <li>3 AI agents</li>
           <li>155+ workflows with skill learning</li>
           <li>Brain marketplace access</li>
-          <li>50,000 memories with BGE embeddings</li>
+          <li>Up to 50,000 memories with BGE embeddings</li>
         </ul>
       ` : `
         <ul>
           <li>10 AI agents</li>
           <li>Full mesh merge across agents</li>
           <li>Team brain sharing</li>
-          <li>200,000 memories with BGE embeddings</li>
+          <li>Up to 200,000 memories with BGE embeddings</li>
         </ul>
       `}
       <p>Questions? Reply to this email or reach us at support@myaibrain.org</p>
