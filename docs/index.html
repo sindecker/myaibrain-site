@@ -129,9 +129,9 @@ aibrain workflows sync</code></pre>
 <p>Buy and sell trained agent brains. Privacy-preserving export shares principles without raw memories.</p>
 
 <h2>SDK</h2>
-<pre><code>from agentos_sdk import AgentOS
+<pre><code>from aibrain_sdk import AIBrain
 
-aos = AgentOS("http://localhost:8001")
+aos = AIBrain("http://localhost:8001")
 
 # Store a memory
 aos.remember("user prefers dark mode", tags=["preference", "ui"])
@@ -158,7 +158,7 @@ aibrain mcp
 
 <div class="note">
     <strong>Privacy:</strong> All data stays on your machine. No cloud dependency.
-    The database is a local SQLite file at <code>~/agentos/agentos.db</code>.
+    The database is a local SQLite file at <code>~/aibrain/aibrain.db</code>.
 </div>
 
 <h2>CLI Reference</h2>
