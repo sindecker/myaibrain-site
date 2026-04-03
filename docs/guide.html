@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide — AIBrain Documentation</title>
+    <meta name="description" content="AIBrain user guide. Memory system, workflows, MCP servers, mesh networking, evolution, dashboard, and CLI reference.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    <style>
+        :root {
+            --teal: #00f5d4;
+            --dark: #0a0a0f;
+            --darker: #06060a;
+            --card: #111118;
+            --border: #1a1a25;
+            --text: #e0e0e8;
+            --dim: #6b6b80;
+            --pro: #a78bfa;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        a { color: var(--teal); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            background: rgba(10,10,15,0.95); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; color: var(--teal); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--dim); font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--teal); text-decoration: none; }
+        .nav-links a.active { color: var(--teal); }
+
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+        }
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--dim);
+            margin-bottom: 2rem;
+        }
+        .breadcrumb a { color: var(--dim); }
+        .breadcrumb a:hover { color: var(--teal); }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        h1 .accent { color: var(--teal); }
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--dim);
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 3rem 0 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 2rem 0 0.75rem;
+            color: var(--teal);
+        }
+
+        p { margin-bottom: 1rem; }
+        ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.4rem; }
+
+        pre {
+            background: var(--darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        pre .prompt { color: var(--teal); }
+        pre .comment { color: var(--dim); }
+
+        code {
+            background: var(--darker);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.15rem 0.4rem;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+        }
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            color: var(--dim);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        td code { font-size: 0.8em; }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+        }
+        .feature-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--dim);
+            margin-bottom: 0;
+        }
+
+        .toc {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .toc h3 { margin-top: 0; }
+        .toc ol { padding-left: 1.25rem; }
+        .toc li { margin-bottom: 0.3rem; }
+        .toc a { color: var(--text); font-size: 0.95rem; }
+        .toc a:hover { color: var(--teal); }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+        .badge-pro { background: var(--pro); color: var(--dark); }
+        .badge-free { background: var(--teal); color: var(--dark); }
+
+        .next-pages {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .next-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: border-color 0.2s;
+        }
+        .next-card:hover { border-color: var(--teal); text-decoration: none; }
+        .next-card .label { font-size: 0.8rem; color: var(--dim); }
+        .next-card .title { font-weight: 600; color: var(--text); }
+
+        footer {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--dim);
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 1.8rem; }
+            .nav-links { gap: 1rem; }
+            .nav-links a { font-size: 0.8rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .next-pages { grid-template-columns: 1fr; }
+            pre { padding: 1rem; font-size: 0.8rem; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="https://myaibrain.org" class="nav-brand">AIBrain</a>
+    <div class="nav-links">
+        <a href="getting-started.html">Get Started</a>
+        <a href="guide.html" class="active">Guide</a>
+        <a href="workflows.html">Workflows</a>
+        <a href="https://myaibrain.org">Home</a>
+    </div>
+</nav>
+
+<main class="content">
+    <div class="breadcrumb">
+        <a href="https://myaibrain.org">AIBrain</a> / <a href="guide.html">Docs</a> / User Guide
+    </div>
+
+    <h1>User <span class="accent">Guide</span></h1>
+    <p class="subtitle">Everything AIBrain can do &mdash; memory, workflows, MCP, mesh networking, evolution, and more.</p>
+
+    <div class="toc">
+        <h3>On this page</h3>
+        <ol>
+            <li><a href="#concepts">Core Concepts</a></li>
+            <li><a href="#memory">Memory System</a></li>
+            <li><a href="#cli">CLI Reference</a></li>
+            <li><a href="#workflows">Workflows</a></li>
+            <li><a href="#brain-packs">Brain Packs</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#mcp">MCP Servers</a></li>
+            <li><a href="#mesh">Multi-Agent Mesh</a></li>
+            <li><a href="#evolution">Self-Learning &amp; Evolution</a></li>
+            <li><a href="#marketplace">Marketplace</a></li>
+            <li><a href="#tiers">Tiers &amp; Pricing</a></li>
+        </ol>
+    </div>
+
+    <!-- Core Concepts -->
+    <h2 id="concepts">Core Concepts</h2>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h4>The Brain</h4>
+            <p>A portable SQLite database containing everything your agent knows: memories, skills, workflows, config, and relationship graphs. Copy the file to move your brain to another machine.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Memories</h4>
+            <p>Structured knowledge units with types, importance scores, tags, timestamps, and optional vector embeddings for semantic search.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Workflows</h4>
+            <p>Automated tasks running on schedules or triggers. 55+ built-in scripts covering productivity, research, communication, security, and self-learning.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Brain Packs</h4>
+            <p>Domain specialization bundles. Activate a pack to enable a curated workflow set for a specific use case (developer, content creator, security pro, etc.).</p>
+        </div>
+        <div class="feature-card">
+            <h4>Stacks</h4>
+            <p>The running state of your agent: active workflows, hooks, and services. Save, restore, and share complete configurations.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Mesh</h4>
+            <p>Multi-agent coordination. AIBrain instances sync memories, resolve conflicts by consensus, and distribute merged knowledge to all agents.</p>
+        </div>
+    </div>
+
+    <!-- Memory System -->
+    <h2 id="memory">Memory System</h2>
+
+    <h3>Storage Architecture</h3>
+    <ul>
+        <li><strong>SQLite + FTS5</strong> &mdash; Full-text search across all memories, instant results</li>
+        <li><strong>Vector embeddings</strong> (optional) &mdash; Semantic search using MiniLM (22MB) or bge-base (110MB)</li>
+        <li><strong>Hyperedge relationships</strong> &mdash; Multi-node connections, not just pairwise links</li>
+        <li><strong>Entity extraction</strong> &mdash; Auto-detects technologies, URLs, emails, IPs, names</li>
+    </ul>
+
+    <h3>Memory Types</h3>
+    <table>
+        <thead><tr><th>Type</th><th>Purpose</th><th>Example</th></tr></thead>
+        <tbody>
+            <tr><td><code>user</code></td><td>Preferences, expertise</td><td>"Senior Go developer, new to React"</td></tr>
+            <tr><td><code>feedback</code></td><td>Corrections, validated approaches</td><td>"Never mock the database in integration tests"</td></tr>
+            <tr><td><code>project</code></td><td>Ongoing work, goals, deadlines</td><td>"Merge freeze begins April 5"</td></tr>
+            <tr><td><code>reference</code></td><td>External resources, locations</td><td>"Pipeline bugs tracked in Linear"</td></tr>
+            <tr><td><code>pattern</code></td><td>Recurring tendencies</td><td>"Verify before declaring done"</td></tr>
+            <tr><td><code>decision</code></td><td>Architectural, strategic choices</td><td>"Chose PostgREST over FastAPI"</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Search Modes</h3>
+    <p>AIBrain uses <strong>selective query routing</strong> &mdash; it auto-detects your query type and routes to the best search strategy:</p>
+    <ul>
+        <li><strong>Keyword queries</strong> &rarr; FTS5 full-text search (fast, exact matching)</li>
+        <li><strong>Semantic queries</strong> &rarr; Vector similarity search (meaning-based)</li>
+        <li><strong>Hybrid queries</strong> &rarr; Both, with result fusion</li>
+    </ul>
+
+    <pre><code><span class="prompt">$</span> aibrain search "kubernetes deployment"     <span class="comment"># Search memories</span>
+<span class="prompt">$</span> aibrain summary                            <span class="comment"># Memory stats</span>
+<span class="prompt">$</span> aibrain brain export                       <span class="comment"># Export as JSON</span>
+<span class="prompt">$</span> aibrain brain import backup.json           <span class="comment"># Import from file</span>
+<span class="prompt">$</span> aibrain forget "outdated topic" --confirm  <span class="comment"># Delete memories</span></code></pre>
+
+    <!-- CLI Reference -->
+    <h2 id="cli">CLI Reference</h2>
+
+    <h3>Setup &amp; System</h3>
+    <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>aibrain setup</code></td><td>Interactive first-time setup wizard</td></tr>
+            <tr><td><code>aibrain start</code></td><td>Restore stack + start services</td></tr>
+            <tr><td><code>aibrain status</code></td><td>Show current stack state</td></tr>
+            <tr><td><code>aibrain server</code></td><td>Start dashboard at :8001</td></tr>
+            <tr><td><code>aibrain mcp</code></td><td>Start MCP server (stdio)</td></tr>
+            <tr><td><code>aibrain update</code></td><td>Safe self-update (backup, pull, validate)</td></tr>
+            <tr><td><code>aibrain version</code></td><td>Print version</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Memory &amp; Brain</h3>
+    <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>aibrain search &lt;query&gt;</code></td><td>Cross-table FTS search</td></tr>
+            <tr><td><code>aibrain summary</code></td><td>Dashboard statistics</td></tr>
+            <tr><td><code>aibrain browse</code></td><td>Open memory browser in web browser</td></tr>
+            <tr><td><code>aibrain brain export</code></td><td>Export brain to JSON</td></tr>
+            <tr><td><code>aibrain brain import &lt;file&gt;</code></td><td>Import from JSON</td></tr>
+            <tr><td><code>aibrain brain merge &lt;source&gt;</code></td><td>Merge from git URL or local path</td></tr>
+            <tr><td><code>aibrain forget &lt;topic&gt;</code></td><td>Preview deletion (add <code>--confirm</code> to execute)</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Stack &amp; Versioning</h3>
+    <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>aibrain stack save [name]</code></td><td>Save named snapshot</td></tr>
+            <tr><td><code>aibrain stack restore [name]</code></td><td>Restore from snapshot</td></tr>
+            <tr><td><code>aibrain stack rollback</code></td><td>Roll back to previous</td></tr>
+            <tr><td><code>aibrain history snapshot &lt;msg&gt;</code></td><td>Snapshot current brain state</td></tr>
+            <tr><td><code>aibrain history diff &lt;a&gt; [b]</code></td><td>Compare versions</td></tr>
+            <tr><td><code>aibrain scale compact</code></td><td>Archive stale memories</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Workflows -->
+    <h2 id="workflows">Workflows</h2>
+
+    <p>AIBrain ships with 55+ workflow scripts organized into categories: Productivity, Research, Communication, Developer, Self-Learning, and System. See the <a href="workflows.html">Workflow Reference</a> for the full list.</p>
+
+    <pre><code><span class="prompt">$</span> aibrain workflows list                  <span class="comment"># Show all workflows + status</span>
+<span class="prompt">$</span> aibrain workflows enable --recommended  <span class="comment"># Enable the starter set</span>
+<span class="prompt">$</span> aibrain workflows sync                  <span class="comment"># Create OS scheduled tasks</span>
+<span class="prompt">$</span> aibrain workflows run weekly_wins       <span class="comment"># Run one immediately</span></code></pre>
+
+    <p>Workflows use your OS scheduler (cron on Linux, schtasks on Windows, launchctl on macOS). No daemon process required.</p>
+
+    <!-- Brain Packs -->
+    <h2 id="brain-packs">Brain Packs</h2>
+
+    <table>
+        <thead><tr><th>Pack</th><th>Workflows</th><th>Tier</th></tr></thead>
+        <tbody>
+            <tr><td>Productivity</td><td>8</td><td><span class="badge badge-free">Free</span></td></tr>
+            <tr><td>Developer</td><td>7</td><td><span class="badge badge-pro">Pro</span></td></tr>
+            <tr><td>Content Creator</td><td>10</td><td><span class="badge badge-pro">Pro</span></td></tr>
+            <tr><td>Business</td><td>7</td><td><span class="badge badge-pro">Pro</span></td></tr>
+            <tr><td>Security Pro</td><td>6</td><td><span class="badge badge-pro">Pro</span></td></tr>
+            <tr><td>Research</td><td>5</td><td><span class="badge badge-pro">Pro</span></td></tr>
+            <tr><td>Multi-Agent Ops</td><td>6</td><td><span class="badge badge-pro">Pro</span></td></tr>
+            <tr><td>Job Hunter</td><td>5</td><td><span class="badge badge-pro">Pro</span></td></tr>
+        </tbody>
+    </table>
+
+    <pre><code><span class="prompt">$</span> aibrain packs                       <span class="comment"># Browse available packs</span>
+<span class="prompt">$</span> aibrain packs activate developer     <span class="comment"># Activate a pack</span>
+<span class="prompt">$</span> aibrain packs active                 <span class="comment"># Show active packs</span></code></pre>
+
+    <!-- Dashboard -->
+    <h2 id="dashboard">Dashboard</h2>
+
+    <p>Launch with <code>aibrain server</code>. The dashboard runs at <code>http://localhost:8001</code> and includes 17 pages:</p>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h4>Home</h4>
+            <p>System overview: memory count, active workflows, pending approvals, costs, recent activity.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Memories</h4>
+            <p>Search, browse, create, edit, and delete memories with full-text search.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Memory Graph</h4>
+            <p>Interactive force-directed visualization of knowledge connections.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Workflow Builder</h4>
+            <p>Visual drag-and-drop node editor for creating custom workflows.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Chat</h4>
+            <p>Real-time chat with built-in commands: /status, /approvals, /schedule, /costs.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Approvals</h4>
+            <p>Human-in-the-loop approval queue. Approve or reject pending agent actions.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Costs</h4>
+            <p>Per-model, per-workflow, per-day LLM cost tracking with budget alerts.</p>
+        </div>
+        <div class="feature-card">
+            <h4>API Playground</h4>
+            <p>Postman-style endpoint tester with 17 pre-configured endpoints.</p>
+        </div>
+    </div>
+
+    <p>Additional pages: Activity, Settings, Logs, Skills, Backups, Webhooks, MCP Hub, and Integrations.</p>
+
+    <p><strong>Keyboard shortcuts:</strong> <code>Ctrl+K</code> opens the command palette. <code>?</code> shows all shortcuts.</p>
+
+    <!-- MCP Servers -->
+    <h2 id="mcp">MCP Servers</h2>
+
+    <p>AIBrain ships with <strong>9 MCP servers</strong>, making it one of the most comprehensive agent toolkits available. Every server is agent-agnostic &mdash; works with Claude, GPT, Cursor, Copilot, Ollama, or any MCP-compatible runtime.</p>
+
+    <table>
+        <thead><tr><th>Server</th><th>Tools</th><th>Tier</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>aibrain-memory</code></td><td>7</td><td><span class="badge badge-free">Free</span></td><td>Persistent memory with selective routing</td></tr>
+            <tr><td><code>web-search</code></td><td>5</td><td><span class="badge badge-free">Free</span></td><td>Zero-config web search</td></tr>
+            <tr><td><code>calendar</code></td><td>8</td><td><span class="badge badge-free">Free</span></td><td>CalDAV + local .ics management</td></tr>
+            <tr><td><code>files</code></td><td>10</td><td><span class="badge badge-free">Free</span></td><td>File search, organize, classify</td></tr>
+            <tr><td><code>it-support</code></td><td>9</td><td><span class="badge badge-pro">Pro</span></td><td>System diagnostics + remediation</td></tr>
+            <tr><td><code>peer-discovery</code></td><td>15</td><td><span class="badge badge-pro">Pro</span></td><td>Multi-agent mesh + file transfer</td></tr>
+            <tr><td><code>design</code></td><td>7</td><td><span class="badge badge-pro">Pro</span></td><td>Programmatic image creation</td></tr>
+            <tr><td><code>desktop</code></td><td>10</td><td><span class="badge badge-pro">Pro</span></td><td>GUI automation</td></tr>
+            <tr><td><code>computer-use</code></td><td>1</td><td><span class="badge badge-pro">Pro</span></td><td>Full computer-use via MCP</td></tr>
+        </tbody>
+    </table>
+
+    <pre><code><span class="comment"># Install all MCP servers at once</span>
+<span class="prompt">$</span> aibrain mcp install
+
+<span class="comment"># Or add individually</span>
+<span class="prompt">$</span> claude mcp add aibrain-memory -- python mcp_server.py --db aibrain.db
+<span class="prompt">$</span> claude mcp add it-support -- python mcp_it_support.py
+<span class="prompt">$</span> claude mcp add peer-discovery -- python mcp_peer_discovery.py</code></pre>
+
+    <!-- Multi-Agent Mesh -->
+    <h2 id="mesh">Multi-Agent Mesh</h2>
+
+    <p>Multiple AIBrain instances can coordinate through the agent mesh. Agents register with a broker, exchange messages and files, sync memories, and resolve conflicts through consensus merge.</p>
+
+    <pre><code><span class="prompt">$</span> aibrain mesh status                        <span class="comment"># Show mesh agent status</span>
+<span class="prompt">$</span> aibrain mesh register myagent agent.db      <span class="comment"># Register an agent</span>
+<span class="prompt">$</span> aibrain mesh merge                          <span class="comment"># Merge all agents (consensus)</span>
+<span class="prompt">$</span> aibrain mesh distribute                     <span class="comment"># Push merged brain to all</span></code></pre>
+
+    <h3>Swarm Training</h3>
+    <p>Spin up multiple agent instances, let them learn independently, and harvest the results:</p>
+    <pre><code><span class="prompt">$</span> aibrain mesh swarm create research -n 100   <span class="comment"># Create 100-agent swarm</span>
+<span class="prompt">$</span> aibrain mesh swarm harvest research          <span class="comment"># Merge swarm results</span></code></pre>
+
+    <!-- Evolution -->
+    <h2 id="evolution">Self-Learning &amp; Evolution</h2>
+
+    <p>AIBrain agents improve over time through built-in self-learning workflows:</p>
+
+    <ul>
+        <li><strong>Correction Learner</strong> &mdash; converts your feedback into permanent skill principles</li>
+        <li><strong>Memory Hygiene</strong> &mdash; deduplicates, decays stale data, keeps the brain fast</li>
+        <li><strong>Self-Model Refresh</strong> &mdash; rebuilds the agent's understanding of its own strengths weekly</li>
+        <li><strong>Principle Validator</strong> &mdash; tests stored principles against actual outcomes</li>
+        <li><strong>Contradiction Detector</strong> &mdash; finds and resolves conflicting memories</li>
+        <li><strong>Evolution Experiment</strong> &mdash; runs self-improvement experiments on a schedule</li>
+    </ul>
+
+    <p>These run silently in the background. You don't interact with them directly &mdash; they just make everything better over time.</p>
+
+    <!-- Marketplace -->
+    <h2 id="marketplace">Marketplace</h2>
+
+    <p>Package and sell trained brain configurations. Buyers get domain expertise instantly without the training time.</p>
+
+    <pre><code><span class="prompt">$</span> aibrain marketplace package --name "devops-brain"  <span class="comment"># Package for sale</span>
+<span class="prompt">$</span> aibrain marketplace publish devops-brain.brain     <span class="comment"># Publish</span>
+<span class="prompt">$</span> aibrain marketplace search "machine learning"      <span class="comment"># Browse</span>
+<span class="prompt">$</span> aibrain marketplace install &lt;id&gt;                   <span class="comment"># Install a brain</span>
+<span class="prompt">$</span> aibrain marketplace revenue                        <span class="comment"># Revenue dashboard</span></code></pre>
+
+    <!-- Tiers -->
+    <h2 id="tiers">Tiers &amp; Pricing</h2>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h4>Free <span class="badge badge-free">Free</span></h4>
+            <p>Full memory system, CLI, MCP memory server, Productivity brain pack, web search, file management, basic workflows. Everything you need to get started.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Pro <span class="badge badge-pro">$9.95/mo</span></h4>
+            <p>All brain packs, all 9 MCP servers, multi-agent mesh, marketplace access, swarm training, IT support, design tools, desktop automation, computer-use.</p>
+        </div>
+    </div>
+
+    <pre><code><span class="prompt">$</span> aibrain license tiers              <span class="comment"># See pricing details</span>
+<span class="prompt">$</span> aibrain license activate &lt;key&gt;     <span class="comment"># Activate your license</span></code></pre>
+
+    <div class="next-pages">
+        <a href="getting-started.html" class="next-card">
+            <div class="label">Previous</div>
+            <div class="title">&larr; Getting Started</div>
+        </a>
+        <a href="workflows.html" class="next-card">
+            <div class="label">Next</div>
+            <div class="title">Workflow Reference &rarr;</div>
+        </a>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 Matthew McKee / DeckerOps. All rights reserved.<br>
+    AIBrain is proprietary software.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Reference — AIBrain Documentation</title>
+    <meta name="description" content="AIBrain workflow reference. All workflow categories, scheduling, dependencies, and custom workflow creation.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    <style>
+        :root {
+            --teal: #00f5d4;
+            --dark: #0a0a0f;
+            --darker: #06060a;
+            --card: #111118;
+            --border: #1a1a25;
+            --text: #e0e0e8;
+            --dim: #6b6b80;
+            --pro: #a78bfa;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        a { color: var(--teal); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            background: rgba(10,10,15,0.95); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; color: var(--teal); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--dim); font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--teal); text-decoration: none; }
+        .nav-links a.active { color: var(--teal); }
+
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+        }
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--dim);
+            margin-bottom: 2rem;
+        }
+        .breadcrumb a { color: var(--dim); }
+        .breadcrumb a:hover { color: var(--teal); }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        h1 .accent { color: var(--teal); }
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--dim);
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 3rem 0 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 2rem 0 0.75rem;
+            color: var(--teal);
+        }
+
+        p { margin-bottom: 1rem; }
+        ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.4rem; }
+
+        pre {
+            background: var(--darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        pre .prompt { color: var(--teal); }
+        pre .comment { color: var(--dim); }
+
+        code {
+            background: var(--darker);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.15rem 0.4rem;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+        }
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.92rem;
+        }
+        th {
+            color: var(--dim);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        td code { font-size: 0.8em; }
+
+        .tier-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .tier-1 { background: var(--teal); color: var(--dark); }
+        .tier-2 { background: #3b82f6; color: white; }
+        .tier-3 { background: var(--pro); color: var(--dark); }
+
+        .callout {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--teal);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .callout p:last-child { margin-bottom: 0; }
+
+        .toc {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .toc h3 { margin-top: 0; }
+        .toc ul { padding-left: 1.25rem; list-style: none; }
+        .toc li { margin-bottom: 0.3rem; }
+        .toc li::before { content: ""; }
+        .toc a { color: var(--text); font-size: 0.95rem; }
+        .toc a:hover { color: var(--teal); }
+
+        .next-pages {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .next-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: border-color 0.2s;
+        }
+        .next-card:hover { border-color: var(--teal); text-decoration: none; }
+        .next-card .label { font-size: 0.8rem; color: var(--dim); }
+        .next-card .title { font-weight: 600; color: var(--text); }
+
+        footer {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--dim);
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 640px) {
+            h1 { font-size: 1.8rem; }
+            .nav-links { gap: 1rem; }
+            .nav-links a { font-size: 0.8rem; }
+            .next-pages { grid-template-columns: 1fr; }
+            pre { padding: 1rem; font-size: 0.8rem; }
+            table { font-size: 0.82rem; }
+            th, td { padding: 0.5rem 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="https://myaibrain.org" class="nav-brand">AIBrain</a>
+    <div class="nav-links">
+        <a href="getting-started.html">Get Started</a>
+        <a href="guide.html">Guide</a>
+        <a href="workflows.html" class="active">Workflows</a>
+        <a href="https://myaibrain.org">Home</a>
+    </div>
+</nav>
+
+<main class="content">
+    <div class="breadcrumb">
+        <a href="https://myaibrain.org">AIBrain</a> / <a href="workflows.html">Docs</a> / Workflows
+    </div>
+
+    <h1>Workflow <span class="accent">Reference</span></h1>
+    <p class="subtitle">55+ automated workflows that make your agent smarter every day.</p>
+
+    <div class="toc">
+        <h3>On this page</h3>
+        <ul>
+            <li><a href="#three-tiers">The Three Tiers</a></li>
+            <li><a href="#quick-start">Quick Start</a></li>
+            <li><a href="#productivity">Productivity</a></li>
+            <li><a href="#research">Research &amp; Intelligence</a></li>
+            <li><a href="#communication">Communication</a></li>
+            <li><a href="#developer">Developer &amp; DevOps</a></li>
+            <li><a href="#self-learning">Self-Learning</a></li>
+            <li><a href="#system">System</a></li>
+            <li><a href="#job-search">Job Search &amp; Career</a></li>
+            <li><a href="#recommended">Recommended Starting Set</a></li>
+            <li><a href="#scheduling">Scheduling &amp; Cron</a></li>
+            <li><a href="#dependencies">Dependencies</a></li>
+            <li><a href="#custom">Custom Workflows</a></li>
+            <li><a href="#commands">All Commands</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+    </div>
+
+    <!-- Three Tiers -->
+    <h2 id="three-tiers">The Three Tiers</h2>
+
+    <p>AIBrain workflows are organized into three tiers that work together as a system:</p>
+
+    <div class="callout">
+        <p><strong><span class="tier-tag tier-1">Tier 1</span> Utility Workflows</strong> &mdash; RSS feeds, weather, GitHub digests, uptime monitoring, expense tracking. Useful table-stakes automation that makes AIBrain feel alive on day one.</p>
+    </div>
+
+    <div class="callout">
+        <p><strong><span class="tier-tag tier-2">Tier 2</span> Agent Improvement</strong> &mdash; These run silently in the background and make everything better over time. Skill sharpening, correction learning, memory hygiene, self-model refresh, principle validation, task retrospectives, and session continuity.</p>
+    </div>
+
+    <div class="callout">
+        <p><strong><span class="tier-tag tier-3">Tier 3</span> Personal Intelligence</strong> &mdash; The features that are impossible without persistent memory. Decision journals, contradiction detection, burnout detection, idea incubation, weekly wins, and deadline prediction. These are the "how did it know that?" moments.</p>
+    </div>
+
+    <p><strong>Tier 2 powers Tier 3.</strong> The Contradiction Detector can only find contradictions if Memory Hygiene keeps the brain clean, Correction Learner captures your feedback, and User Model tracks your preferences. Without the background work, the intelligence features fail.</p>
+
+    <!-- Quick Start -->
+    <h2 id="quick-start">Quick Start</h2>
+
+    <pre><code><span class="comment"># Enable the recommended starter set</span>
+<span class="prompt">$</span> aibrain workflows enable --recommended
+
+<span class="comment"># Sync to your OS scheduler</span>
+<span class="prompt">$</span> aibrain workflows sync
+
+<span class="comment"># Preview what would be created (optional)</span>
+<span class="prompt">$</span> aibrain workflows sync --dry-run</code></pre>
+
+    <p>The recommended set enables 7 agent improvement workflows, 5 personal intelligence workflows, and 2 utility workflows (daily planner + weekly review).</p>
+
+    <!-- Productivity -->
+    <h2 id="productivity">Productivity</h2>
+
+    <table>
+        <thead><tr><th>Workflow</th><th>Schedule</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>daily_planner</code></td><td>7am daily</td><td>Task plan from calendar, emails, priorities</td></tr>
+            <tr><td><code>habit_tracker</code></td><td>9pm daily</td><td>Evening habit check-in and streak tracking</td></tr>
+            <tr><td><code>file_declutter</code></td><td>Weekly</td><td>Clean up Downloads and Desktop</td></tr>
+            <tr><td><code>calendar_manager</code></td><td>Hourly</td><td>Calendar sync and management</td></tr>
+            <tr><td><code>bookmark_organizer</code></td><td>Weekly</td><td>Organize and categorize bookmarks</td></tr>
+            <tr><td><code>email_to_task</code></td><td>On trigger</td><td>Convert emails to actionable tasks</td></tr>
+            <tr><td><code>meeting_notes</code></td><td>On trigger</td><td>Capture and summarize meeting notes</td></tr>
+            <tr><td><code>smart_file_organizer</code></td><td>Weekly</td><td>Intelligent file organization by type/project</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Research -->
+    <h2 id="research">Research &amp; Intelligence</h2>
+
+    <table>
+        <thead><tr><th>Workflow</th><th>Schedule</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>arxiv_tracker</code></td><td>Daily</td><td>Track new papers matching your interests</td></tr>
+            <tr><td><code>rss_digest</code></td><td>Daily</td><td>Summarize articles from RSS feeds</td></tr>
+            <tr><td><code>daily_research</code></td><td>Daily</td><td>Research summaries from multiple sources</td></tr>
+            <tr><td><code>price_watcher</code></td><td>Hourly</td><td>Crypto/stock price alerts on significant moves</td></tr>
+            <tr><td><code>security_advisories</code></td><td>Daily</td><td>CISA KEV, NVD, GitHub advisory monitoring</td></tr>
+            <tr><td><code>newsletter_digest</code></td><td>Daily</td><td>Email newsletter aggregation</td></tr>
+            <tr><td><code>social_listener</code></td><td>Daily</td><td>Brand/topic monitoring from social media</td></tr>
+            <tr><td><code>weather_briefing</code></td><td>Daily</td><td>Weather briefing for your location</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Communication -->
+    <h2 id="communication">Communication</h2>
+
+    <table>
+        <thead><tr><th>Workflow</th><th>Schedule</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>email_triage</code></td><td>2x daily</td><td>Check all accounts, categorize messages</td></tr>
+            <tr><td><code>email_auto_reply</code></td><td>On trigger</td><td>Draft and send replies</td></tr>
+            <tr><td><code>telegram_check</code></td><td>Every 10m</td><td>Telegram message monitoring</td></tr>
+            <tr><td><code>morning_check_email_summarize</code></td><td>7am</td><td>Morning email summary</td></tr>
+            <tr><td><code>report_generator</code></td><td>On demand</td><td>Generate reports on any topic</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Developer -->
+    <h2 id="developer">Developer &amp; DevOps</h2>
+
+    <table>
+        <thead><tr><th>Workflow</th><th>Schedule</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>github_digest</code></td><td>Daily</td><td>Summarize GitHub activity across repos</td></tr>
+            <tr><td><code>git_monitor</code></td><td>Every 4h</td><td>Watch for repo changes</td></tr>
+            <tr><td><code>uptime_monitor</code></td><td>Every 30m</td><td>Service availability monitoring</td></tr>
+            <tr><td><code>dependency_auditor</code></td><td>Weekly</td><td>Audit dependencies for CVEs</td></tr>
+            <tr><td><code>service_monitor</code></td><td>Every 2h</td><td>Monitor service health</td></tr>
+            <tr><td><code>heartbeat</code></td><td>Every 30m</td><td>System health check (disk, memory, services)</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Self-Learning -->
+    <h2 id="self-learning">Self-Learning</h2>
+
+    <p>These are the Tier 2 and Tier 3 workflows that make AIBrain fundamentally different. They run in the background and compound over time.</p>
+
+    <table>
+        <thead><tr><th>Workflow</th><th>Schedule</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>correction_learner</code></td><td>Every 4h</td><td>Convert your feedback into permanent skill principles</td></tr>
+            <tr><td><code>memory_hygiene</code></td><td>Weekly</td><td>Deduplicate, decay stale data, keep the brain fast</td></tr>
+            <tr><td><code>self_model_refresh</code></td><td>Weekly</td><td>Rebuild the agent's understanding of its own strengths</td></tr>
+            <tr><td><code>principle_validator</code></td><td>Weekly</td><td>Test stored principles against actual outcomes</td></tr>
+            <tr><td><code>memory_consolidation</code></td><td>Weekly</td><td>Merge redundant memories into principles</td></tr>
+            <tr><td><code>contradiction_detector</code></td><td>Weekly</td><td>Find and resolve conflicting memories</td></tr>
+            <tr><td><code>learning_extractor</code></td><td>Every 4h</td><td>Extract learnings from recent experiences</td></tr>
+            <tr><td><code>evolution_experiment</code></td><td>2x/week</td><td>Run self-improvement experiments</td></tr>
+            <tr><td><code>evolution_auto_loop</code></td><td>Every 12h</td><td>Full cycle: insights, hypotheses, experiments</td></tr>
+            <tr><td><code>knowledge_graph_builder</code></td><td>Every 6h</td><td>Build entity/relationship graph from memories</td></tr>
+            <tr><td><code>cross_domain_questions</code></td><td>Weekly</td><td>Find connections across different domains</td></tr>
+            <tr><td><code>risk_analyst</code></td><td>Daily 8pm</td><td>Retrospective risk scan of recent actions</td></tr>
+        </tbody>
+    </table>
+
+    <!-- System -->
+    <h2 id="system">System</h2>
+
+    <table>
+        <thead><tr><th>Workflow</th><th>Schedule</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>db_backup</code></td><td>2x daily</td><td>Database backup to timestamped copy</td></tr>
+            <tr><td><code>weekly_report</code></td><td>Friday 6pm</td><td>Full weekly review</td></tr>
+            <tr><td><code>cron_health</code></td><td>Daily</td><td>Monitor workflow execution health</td></tr>
+            <tr><td><code>session_continuity</code></td><td>Every 2h</td><td>Verify key memories survived compaction</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Job Search -->
+    <h2 id="job-search">Job Search &amp; Career</h2>
+
+    <table>
+        <thead><tr><th>Workflow</th><th>Schedule</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>job_search_apply</code></td><td>Weekdays</td><td>Automated job search and application</td></tr>
+            <tr><td><code>interview_prep</code></td><td>On demand</td><td>Interview preparation with STAR stories</td></tr>
+            <tr><td><code>job_response_checker</code></td><td>Daily</td><td>Monitor responses to applications</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Recommended Starting Set -->
+    <h2 id="recommended">Recommended Starting Set</h2>
+
+    <h3>Start with these 5</h3>
+    <ol>
+        <li><code>correction_learner</code> &mdash; the single most important workflow. Every correction becomes a permanent improvement.</li>
+        <li><code>memory_hygiene</code> &mdash; keeps the brain fast and clean as it grows.</li>
+        <li><code>self_model_refresh</code> &mdash; the agent knows what it's good at and where it struggles.</li>
+        <li><code>decision_journal</code> &mdash; start tracking decisions now. In 3 months you'll have judgment quality data.</li>
+        <li><code>weekly_wins</code> &mdash; surfaces accomplishments you already forgot about.</li>
+    </ol>
+
+    <h3>After 2 weeks, add</h3>
+    <ul>
+        <li><code>contradiction_detector</code> &mdash; enough decisions stored for useful detection</li>
+        <li><code>learning_path</code> &mdash; see which skills you're building</li>
+        <li><code>life_dashboard</code> &mdash; single view of everything that matters</li>
+    </ul>
+
+    <h3>After 1 month, add</h3>
+    <ul>
+        <li><code>burnout_detector</code> &mdash; enough data to spot quality patterns</li>
+        <li><code>pattern_matcher</code> &mdash; enough task history to find recurring themes</li>
+        <li><code>idea_incubator</code> &mdash; enough ideas stored to find connections</li>
+    </ul>
+
+    <!-- Scheduling -->
+    <h2 id="scheduling">Scheduling &amp; Cron</h2>
+
+    <p>Workflows run on your OS scheduler. No daemon, no Docker, no always-running process.</p>
+
+    <pre><code><span class="comment"># Create native scheduled tasks from enabled workflows</span>
+<span class="prompt">$</span> aibrain workflows sync
+
+<span class="comment"># Preview changes without applying</span>
+<span class="prompt">$</span> aibrain workflows sync --dry-run</code></pre>
+
+    <p>This creates:</p>
+    <ul>
+        <li><strong>Linux:</strong> entries in your user crontab</li>
+        <li><strong>Windows:</strong> tasks via <code>schtasks</code></li>
+        <li><strong>macOS:</strong> launchctl plist files</li>
+    </ul>
+
+    <p>You can also define schedules manually in <code>scheduled_jobs.json</code>:</p>
+
+    <pre><code>{
+  "weather_briefing": {
+    "enabled": true,
+    "cron": "30 6 * * *",
+    "script": "workflows/weather_briefing.py"
+  },
+  "memory_consolidation": {
+    "enabled": true,
+    "cron": "0 3 * * 0",
+    "script": "workflows/memory_consolidation.py"
+  }
+}</code></pre>
+
+    <p>All Tier 1 utility workflows use free APIs (Open-Meteo, CoinGecko, ArXiv, Hacker News, Reddit). No paid API keys required.</p>
+
+    <!-- Dependencies -->
+    <h2 id="dependencies">Dependencies</h2>
+
+    <p>When you enable a Tier 3 workflow, its Tier 2 dependencies auto-enable:</p>
+
+    <pre><code><span class="prompt">$</span> aibrain workflows enable contradiction_detector
+
+Enabled: contradiction_detector
+Auto-enabled dependencies:
+  correction_learner
+  memory_hygiene
+  user_model</code></pre>
+
+    <p>If you disable a Tier 2 workflow that Tier 3 workflows depend on, you'll see a warning. The dependent workflows will still run but may produce less accurate results.</p>
+
+    <pre><code><span class="comment"># View the full dependency map</span>
+<span class="prompt">$</span> aibrain workflows deps
+
+<span class="comment"># View dependencies for a specific workflow</span>
+<span class="prompt">$</span> aibrain workflows deps contradiction_detector</code></pre>
+
+    <!-- Custom Workflows -->
+    <h2 id="custom">Custom Workflows</h2>
+
+    <p>Create custom workflows by subclassing <code>SkillWorkflow</code> or <code>UserWorkflow</code>:</p>
+
+    <pre><code><span class="comment"># my_workflow.py</span>
+from aibrain.workflows import UserWorkflow
+
+class MyCustomWorkflow(UserWorkflow):
+    name = "my_custom_workflow"
+    schedule = "0 9 * * *"  <span class="comment"># 9am daily</span>
+    description = "My custom daily workflow"
+
+    def run(self, brain):
+        <span class="comment"># Read from the brain</span>
+        memories = brain.search("project status")
+
+        <span class="comment"># Do your work</span>
+        summary = self.process(memories)
+
+        <span class="comment"># Write back to the brain</span>
+        brain.store(
+            content=summary,
+            memory_type="project",
+            importance=7
+        )</code></pre>
+
+    <p>You can also create workflows from the dashboard using the <strong>Visual Workflow Builder</strong> (drag-and-drop node editor) or via chat with the <code>/create</code> command.</p>
+
+    <!-- All Commands -->
+    <h2 id="commands">All Commands</h2>
+
+    <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>aibrain workflows list</code></td><td>Show all workflows + status</td></tr>
+            <tr><td><code>aibrain workflows list --enabled</code></td><td>Show only enabled workflows</td></tr>
+            <tr><td><code>aibrain workflows list &lt;category&gt;</code></td><td>Filter by category</td></tr>
+            <tr><td><code>aibrain workflows enable &lt;name&gt;</code></td><td>Enable (+ auto-enable dependencies)</td></tr>
+            <tr><td><code>aibrain workflows enable --recommended</code></td><td>Enable the starter set</td></tr>
+            <tr><td><code>aibrain workflows disable &lt;name&gt;</code></td><td>Disable a workflow</td></tr>
+            <tr><td><code>aibrain workflows sync</code></td><td>Create OS scheduled tasks</td></tr>
+            <tr><td><code>aibrain workflows sync --dry-run</code></td><td>Preview changes</td></tr>
+            <tr><td><code>aibrain workflows run &lt;name&gt;</code></td><td>Run immediately</td></tr>
+            <tr><td><code>aibrain workflows deps</code></td><td>Show full dependency map</td></tr>
+            <tr><td><code>aibrain workflows deps &lt;name&gt;</code></td><td>Show dependency tree for one workflow</td></tr>
+        </tbody>
+    </table>
+
+    <!-- FAQ -->
+    <h2 id="faq">FAQ</h2>
+
+    <p><strong>Do workflows use API credits or make network calls?</strong><br>
+    No. All Tier 2 and Tier 3 workflows operate on local SQLite data only. Some Tier 1 utility workflows (RSS, GitHub, weather) make HTTP requests but these are optional and clearly marked.</p>
+
+    <p><strong>Will workflows slow down my system?</strong><br>
+    No. Each workflow runs for a few seconds at most, on its own schedule. There's no always-running daemon. Your OS scheduler triggers them like any other cron job.</p>
+
+    <p><strong>Can I create custom workflows?</strong><br>
+    Yes. Subclass <code>SkillWorkflow</code> or <code>UserWorkflow</code>, implement <code>run()</code>, and register it. Or use the Visual Workflow Builder in the dashboard.</p>
+
+    <p><strong>What happens if I disable a dependency?</strong><br>
+    Dependent Tier 3 workflows will still run but may produce less accurate results. You'll see a warning when disabling a dependency.</p>
+
+    <p><strong>Does this work air-gapped?</strong><br>
+    Yes. All Tier 2 and Tier 3 workflows are fully air-gap safe. Zero network required.</p>
+
+    <div class="next-pages">
+        <a href="guide.html" class="next-card">
+            <div class="label">Previous</div>
+            <div class="title">&larr; User Guide</div>
+        </a>
+        <a href="getting-started.html" class="next-card">
+            <div class="label">Start here</div>
+            <div class="title">Getting Started &rarr;</div>
+        </a>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 Matthew McKee / DeckerOps. All rights reserved.<br>
+    AIBrain is proprietary software.
+</footer>
+
+</body>
+</html>

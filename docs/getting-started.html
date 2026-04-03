@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started — AIBrain Documentation</title>
+    <meta name="description" content="Get from zero to a running AIBrain agent in 5 minutes. Install, configure, and start building.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    <style>
+        :root {
+            --teal: #00f5d4;
+            --dark: #0a0a0f;
+            --darker: #06060a;
+            --card: #111118;
+            --border: #1a1a25;
+            --text: #e0e0e8;
+            --dim: #6b6b80;
+            --pro: #a78bfa;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        a { color: var(--teal); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Nav */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            background: rgba(10,10,15,0.95); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; color: var(--teal); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--dim); font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--teal); text-decoration: none; }
+        .nav-links a.active { color: var(--teal); }
+
+        /* Content */
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem;
+        }
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--dim);
+            margin-bottom: 2rem;
+        }
+        .breadcrumb a { color: var(--dim); }
+        .breadcrumb a:hover { color: var(--teal); }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        h1 .accent { color: var(--teal); }
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--dim);
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 3rem 0 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        h2:first-of-type { border-top: none; padding-top: 0; }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 2rem 0 0.75rem;
+            color: var(--teal);
+        }
+
+        p { margin-bottom: 1rem; }
+
+        /* Code blocks */
+        pre {
+            background: var(--darker);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        pre .prompt { color: var(--teal); }
+        pre .comment { color: var(--dim); }
+
+        code {
+            background: var(--darker);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.15rem 0.4rem;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+        }
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            color: var(--dim);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        td code { font-size: 0.8em; }
+
+        /* Cards */
+        .option-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .option-card h3 { margin-top: 0; }
+
+        /* Step numbers */
+        .step {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 28px;
+            background: var(--teal);
+            color: var(--dark);
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+        }
+
+        /* Next links */
+        .next-pages {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .next-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: border-color 0.2s;
+        }
+        .next-card:hover { border-color: var(--teal); text-decoration: none; }
+        .next-card .label { font-size: 0.8rem; color: var(--dim); }
+        .next-card .title { font-weight: 600; color: var(--text); }
+
+        /* Footer */
+        footer {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--dim);
+            border-top: 1px solid var(--border);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            h1 { font-size: 1.8rem; }
+            .nav-links { gap: 1rem; }
+            .nav-links a { font-size: 0.8rem; }
+            .next-pages { grid-template-columns: 1fr; }
+            pre { padding: 1rem; font-size: 0.8rem; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="https://myaibrain.org" class="nav-brand">AIBrain</a>
+    <div class="nav-links">
+        <a href="getting-started.html" class="active">Get Started</a>
+        <a href="guide.html">Guide</a>
+        <a href="workflows.html">Workflows</a>
+        <a href="https://myaibrain.org">Home</a>
+    </div>
+</nav>
+
+<main class="content">
+    <div class="breadcrumb">
+        <a href="https://myaibrain.org">AIBrain</a> / <a href="getting-started.html">Docs</a> / Getting Started
+    </div>
+
+    <h1>Getting <span class="accent">Started</span></h1>
+    <p class="subtitle">From zero to a running agent brain in 5 minutes.</p>
+
+    <h2>Prerequisites</h2>
+    <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+        <li>Python 3.10+</li>
+        <li>Node.js 18+ (optional, for the dashboard)</li>
+        <li>Docker (optional, for containerized deployment)</li>
+    </ul>
+
+    <h2>Install</h2>
+
+    <div class="option-card">
+        <h3>Option A: pip install (simplest)</h3>
+        <p>Two commands. Gives you the CLI, MCP server, and memory system.</p>
+        <pre><code><span class="prompt">$</span> pip install aibrain
+<span class="prompt">$</span> aibrain setup</code></pre>
+        <p>No Node.js or Docker needed. This is the fastest path.</p>
+    </div>
+
+    <div class="option-card">
+        <h3>Option B: Docker (full stack)</h3>
+        <p>Runs the backend, frontend dashboard, and all services in containers.</p>
+        <pre><code><span class="prompt">$</span> pip install aibrain && aibrain setup
+<span class="prompt">$</span> cp config.json.example config.json
+<span class="comment"># Edit config.json with your settings</span>
+<span class="prompt">$</span> docker compose up --build</code></pre>
+        <p>Open <code>http://localhost:5173</code> in your browser. Done.</p>
+    </div>
+
+    <div class="option-card">
+        <h3>Option C: Local install (full control)</h3>
+        <p>Run each service manually for maximum flexibility.</p>
+        <pre><code><span class="prompt">$</span> pip install aibrain && aibrain setup
+<span class="prompt">$</span> cp config.json.example config.json</code></pre>
+    </div>
+
+    <h2>Configure</h2>
+
+    <p>Edit <code>config.json</code> &mdash; the only required field is <code>user_name</code>. Everything else has sensible defaults:</p>
+
+    <table>
+        <thead>
+            <tr><th>Field</th><th>What it does</th><th>Default</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>user_name</code></td><td>Your name (shown in dashboard)</td><td><code>""</code></td></tr>
+            <tr><td><code>llm_provider</code></td><td>Which LLM to use</td><td><code>"auto"</code></td></tr>
+            <tr><td><code>anthropic_api_key</code></td><td>Claude API key</td><td><code>""</code> (skip for Ollama)</td></tr>
+            <tr><td><code>openai_api_key</code></td><td>OpenAI API key</td><td><code>""</code> (skip for Ollama)</td></tr>
+            <tr><td><code>ollama_url</code></td><td>Local Ollama endpoint</td><td><code>localhost:11434</code></td></tr>
+        </tbody>
+    </table>
+
+    <p>The <code>auto</code> provider tries Ollama first, then Claude, then GPT. For zero-cost local inference, install <a href="https://ollama.com">Ollama</a> and pull a model:</p>
+
+    <pre><code><span class="prompt">$</span> ollama pull llama3.2</code></pre>
+
+    <h3>Environment Variables (optional)</h3>
+    <pre><code><span class="prompt">$</span> cp .env.example .env
+<span class="comment"># Edit .env with any overrides</span></code></pre>
+
+    <table>
+        <thead>
+            <tr><th>Variable</th><th>Purpose</th><th>Default</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>AGENT_ID</code></td><td>Agent identity name</td><td><code>agent</code></td></tr>
+            <tr><td><code>AUTH_MODE</code></td><td>Auth type: none, api_key, jwt</td><td><code>none</code></td></tr>
+            <tr><td><code>AIBRAIN_CORS_ORIGINS</code></td><td>Allowed CORS origins</td><td>localhost</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Start</h2>
+
+    <p><span class="step">1</span> <strong>Launch the services</strong></p>
+    <pre><code><span class="comment"># Windows</span>
+<span class="prompt">></span> start.bat
+
+<span class="comment"># Unix / macOS</span>
+<span class="prompt">$</span> ./start.sh</code></pre>
+
+    <p>Or start manually:</p>
+    <pre><code><span class="comment"># Terminal 1 — Backend</span>
+<span class="prompt">$</span> cd backend
+<span class="prompt">$</span> pip install -r ../requirements.txt
+<span class="prompt">$</span> python -m uvicorn main:app --host 0.0.0.0 --port 8001 --reload
+
+<span class="comment"># Terminal 2 — Frontend (optional)</span>
+<span class="prompt">$</span> cd frontend
+<span class="prompt">$</span> npm install && npm run dev -- --host</code></pre>
+
+    <p><span class="step">2</span> <strong>Open the dashboard</strong></p>
+    <p>Navigate to <code>http://localhost:5173</code>. The onboarding tour walks you through the interface.</p>
+
+    <h2>Connect via MCP</h2>
+
+    <p>AIBrain includes an MCP server that gives any compatible AI agent persistent memory. Works with Claude Code, Cursor, Copilot, or any MCP-compatible tool.</p>
+
+    <p>Add to your MCP configuration:</p>
+    <pre><code>{
+  "mcpServers": {
+    "aibrain-memory": {
+      "command": "python",
+      "args": ["/path/to/aibrain/mcp_server.py"]
+    }
+  }
+}</code></pre>
+
+    <p>Install MCP dependencies:</p>
+    <pre><code><span class="prompt">$</span> pip install mcp sentence-transformers sqlite-vec</code></pre>
+
+    <p>All optional &mdash; the server gracefully degrades without them. Once connected, your agent gets three tools:</p>
+
+    <table>
+        <thead>
+            <tr><th>Tool</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>memory_store</code></td><td>Save a memory (auto-enriched with embeddings)</td></tr>
+            <tr><td><code>memory_search</code></td><td>Search with selective routing (auto-detects query type)</td></tr>
+            <tr><td><code>memory_recall</code></td><td>Load top memories by importance score</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Embedding Modes</h3>
+    <table>
+        <thead>
+            <tr><th>Mode</th><th>Config</th><th>Size</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>No ML</td><td><code>AIBRAIN_EMBEDDING_MODEL=none</code></td><td>0 deps</td></tr>
+            <tr><td>Default (MiniLM)</td><td>(no config needed)</td><td>22 MB</td></tr>
+            <tr><td>bge-base</td><td><code>AIBRAIN_EMBEDDING_MODEL=BAAI/bge-base-en-v1.5</code></td><td>110 MB</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Brain Packs</h2>
+
+    <p>Brain packs are domain specialization bundles. Activate a pack and your agent instantly gains a curated set of workflows for that domain.</p>
+
+    <pre><code><span class="prompt">$</span> aibrain packs                       <span class="comment"># Browse all packs</span>
+<span class="prompt">$</span> aibrain packs activate developer     <span class="comment"># Activate the developer pack</span>
+<span class="prompt">$</span> aibrain packs active                 <span class="comment"># See what's active</span></code></pre>
+
+    <p>Available packs include Productivity (free), Developer, Content Creator, Business, Security Pro, Research, Multi-Agent Ops, and Job Hunter. See the <a href="guide.html">User Guide</a> for full details.</p>
+
+    <h2>What's Next</h2>
+
+    <ul style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
+        <li><strong>Explore the dashboard</strong> &mdash; 17 pages covering memory, workflows, approvals, chat, costs, and more</li>
+        <li><strong>Enable workflows</strong> &mdash; <code>aibrain workflows enable --recommended</code> for the starter set</li>
+        <li><strong>Try the chat</strong> &mdash; built-in commands like <code>/status</code>, <code>/approvals</code>, <code>/schedule</code></li>
+        <li><strong>Connect agents</strong> &mdash; register peers in the Agent Mesh for multi-agent communication</li>
+    </ul>
+
+    <h2>Troubleshooting</h2>
+
+    <p><strong>Backend won't start?</strong> Check Python version (<code>python --version</code> must be 3.10+). Install deps with <code>pip install -r requirements.txt</code>.</p>
+
+    <p><strong>Frontend won't start?</strong> Check Node version (<code>node --version</code> must be 18+). Run <code>npm install</code> in the frontend directory.</p>
+
+    <p><strong>MCP not connecting?</strong> Verify the path in your MCP config is absolute. Check that the <code>mcp</code> package is installed.</p>
+
+    <p><strong>No LLM responses?</strong> Configure at least one provider in <code>config.json</code>. For zero-cost local inference, install <a href="https://ollama.com">Ollama</a>.</p>
+
+    <div class="next-pages">
+        <a href="guide.html" class="next-card">
+            <div class="label">Next</div>
+            <div class="title">User Guide &rarr;</div>
+        </a>
+        <a href="workflows.html" class="next-card">
+            <div class="label">Reference</div>
+            <div class="title">Workflow Reference &rarr;</div>
+        </a>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 Matthew McKee / DeckerOps. All rights reserved.<br>
+    AIBrain is proprietary software.
+</footer>
+
+</body>
+</html>
