@@ -273,6 +273,7 @@
         .price-card {
             background: var(--card); border: 1px solid var(--border);
             border-radius: 12px; padding: 2.5rem;
+            display: flex; flex-direction: column;
         }
         .price-card.featured { border-color: var(--teal); }
         .price-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
@@ -288,6 +289,7 @@
         }
         .price-features li:last-child { border: none; }
         .price-features .check { color: var(--teal); margin-right: 0.5rem; }
+        .price-features { flex: 1; }
         .price-cta {
             display: block; text-align: center; padding: 0.75rem;
             border-radius: 8px; font-weight: 600;
