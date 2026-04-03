@@ -1,13 +1,12 @@
-<!-- v4 - cache bust 1775146495 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIBrain — Your Agent, Better Every Day</title>
-    <meta name="description" content="Self-improving agent brain. Install a brain pack and your AI agent has years of expertise in minutes. Free + Pro tiers.">
+    <meta name="description" content="The portable operating system for AI agents. Persistent memory, 53 self-learning workflows, 9 MCP servers, mesh networking, and a full dashboard. 100% local. Works with any LLM.">
     <meta property="og:title" content="AIBrain — Your Agent, Better Every Day">
-    <meta property="og:description" content="Install. Pick your domain. Your agent has years of expertise in minutes.">
+    <meta property="og:description" content="Persistent memory, 53 workflows, 9 MCP servers, mesh networking. Install a brain pack and your agent has years of expertise in minutes.">
     <meta property="og:url" content="https://myaibrain.org">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
@@ -124,6 +123,7 @@
         }
         .badge-free { background: rgba(0,245,212,0.15); color: var(--teal); }
         .badge-pro { background: rgba(167,139,250,0.15); color: var(--pro); }
+
         .pack-tagline { color: var(--dim); font-size: 0.9rem; margin-bottom: 0.5rem; }
         .pack-count { font-size: 0.8rem; color: var(--dim); }
 
@@ -156,6 +156,113 @@
         }
         .step h3 { margin-bottom: 0.5rem; }
         .step p { color: var(--dim); font-size: 0.9rem; }
+
+        /* Deep-dive cards */
+        .deepdive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .deepdive-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 2rem;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .deepdive-card:hover { border-color: var(--teal); transform: translateY(-2px); }
+        .deepdive-card h3 { font-size: 1.1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .deepdive-card h3 .icon { font-size: 1.4rem; }
+        .deepdive-card p { color: var(--dim); font-size: 0.9rem; margin-bottom: 0.75rem; }
+        .deepdive-card ul { list-style: none; }
+        .deepdive-card ul li {
+            font-size: 0.85rem; color: var(--dim); padding: 0.2rem 0;
+        }
+        .deepdive-card ul li::before {
+            content: "+"; color: var(--teal); margin-right: 0.5rem; font-weight: 700;
+        }
+
+        /* Architecture */
+        .arch-diagram {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 2.5rem;
+            max-width: 800px; margin: 0 auto;
+        }
+        .arch-row {
+            display: flex; justify-content: center; align-items: center;
+            gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+        }
+        .arch-row:last-child { margin-bottom: 0; }
+        .arch-box {
+            background: var(--darker); border: 1px solid var(--border);
+            border-radius: 8px; padding: 0.75rem 1.25rem;
+            font-size: 0.9rem; text-align: center;
+            min-width: 120px;
+        }
+        .arch-box.primary {
+            border-color: var(--teal); color: var(--teal); font-weight: 700;
+        }
+        .arch-box.secondary {
+            border-color: var(--pro); color: var(--pro);
+        }
+        .arch-arrow {
+            color: var(--dim); font-size: 1.5rem; line-height: 1;
+        }
+        .arch-arrow-down {
+            display: flex; justify-content: center;
+            color: var(--dim); font-size: 1.5rem; margin-bottom: 1.5rem;
+        }
+        .arch-label {
+            text-align: center; font-size: 0.8rem; color: var(--dim);
+            margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+        }
+
+        /* Works With */
+        .compat-grid {
+            display: flex; justify-content: center; gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+        .compat-item {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem 2rem;
+            text-align: center; min-width: 140px;
+            transition: border-color 0.2s;
+        }
+        .compat-item:hover { border-color: var(--teal); }
+        .compat-item .compat-name { font-weight: 700; font-size: 1rem; margin-top: 0.5rem; }
+        .compat-item .compat-type { font-size: 0.8rem; color: var(--dim); }
+
+        /* Docs */
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+        .doc-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.75rem;
+            transition: border-color 0.2s, transform 0.2s;
+            display: block;
+        }
+        .doc-card:hover { border-color: var(--teal); transform: translateY(-2px); text-decoration: none; }
+        .doc-card h3 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--text); }
+        .doc-card p { color: var(--dim); font-size: 0.85rem; }
+
+        /* Privacy */
+        .privacy-section {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 3rem;
+            max-width: 800px; margin: 0 auto;
+            text-align: center;
+        }
+        .privacy-section h2 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+        .privacy-section .subtitle { color: var(--dim); font-size: 1.1rem; margin-bottom: 2rem; }
+        .privacy-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem; text-align: center;
+        }
+        .privacy-point .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .privacy-point h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+        .privacy-point p { font-size: 0.85rem; color: var(--dim); }
 
         /* Pricing */
         .pricing-grid {
@@ -194,10 +301,11 @@
         .comparison {
             background: var(--card); border: 1px solid var(--border);
             border-radius: 12px; padding: 2rem; margin-top: 3rem;
-            max-width: 700px; margin-left: auto; margin-right: auto;
+            max-width: 800px; margin-left: auto; margin-right: auto;
+            overflow-x: auto;
         }
         .comparison h3 { text-align: center; margin-bottom: 1.5rem; }
-        .comparison table { width: 100%; border-collapse: collapse; }
+        .comparison table { width: 100%; border-collapse: collapse; min-width: 600px; }
         .comparison th { text-align: left; padding: 0.5rem; color: var(--dim); font-size: 0.85rem; }
         .comparison td { padding: 0.5rem; font-size: 0.9rem; }
         .comparison tr { border-bottom: 1px solid var(--border); }
@@ -215,19 +323,47 @@
 
         /* Footer */
         footer {
-            text-align: center; padding: 2rem;
             border-top: 1px solid var(--border);
-            font-size: 0.85rem; color: var(--dim);
+            padding: 3rem 2rem;
+            max-width: 1100px; margin: 0 auto;
         }
-        footer a { color: var(--dim); }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem; margin-bottom: 2rem;
+        }
+        .footer-col h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); }
+        .footer-col a { display: block; color: var(--dim); font-size: 0.85rem; padding: 0.2rem 0; }
+        .footer-col a:hover { color: var(--teal); text-decoration: none; }
+        .footer-bottom {
+            text-align: center; font-size: 0.85rem; color: var(--dim);
+            padding-top: 2rem; border-top: 1px solid var(--border);
+        }
+
+        /* Divider */
+        .section-divider {
+            width: 60px; height: 2px; background: var(--border);
+            margin: 0 auto 3rem;
+        }
 
         /* Mobile */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             nav { padding: 0.75rem 1rem; }
             .nav-links { display: none; }
             .hero { padding: 6rem 1.5rem 3rem; }
             .stats { gap: 1.5rem; }
             .hero-install { font-size: 0.8rem; padding: 0.75rem 1rem; }
+            section { padding: 3rem 1.5rem; }
+            .arch-diagram { padding: 1.5rem; }
+            .arch-box { min-width: 90px; font-size: 0.8rem; padding: 0.5rem 0.75rem; }
+            .privacy-section { padding: 2rem 1.5rem; }
+            .comparison { padding: 1rem; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .footer-grid { grid-template-columns: 1fr; }
+            .compat-grid { gap: 1rem; }
+            .compat-item { min-width: 110px; padding: 1rem; }
         }
     </style>
     <!-- Ref tracking -->
@@ -249,8 +385,9 @@
     <span class="nav-brand">AIBrain</span>
     <div class="nav-links">
         <a href="#packs">Brain Packs</a>
-        <a href="#features">Features</a>
+        <a href="#inside">What's Inside</a>
         <a href="#pricing">Pricing</a>
+        <a href="#docs">Docs</a>
         <a href="https://pypi.org/project/aibrain/">PyPI</a>
     </div>
     <a href="#install" class="nav-cta">Install Free</a>
@@ -258,15 +395,15 @@
 
 <!-- Hero -->
 <div class="hero">
-    <div class="hero-badge">v1.0 — Self-Improving Agent Brain</div>
+    <div class="hero-badge">v1.0 — The Portable Agent Operating System</div>
     <h1>Your agent,<br><span class="accent">better from day one</span></h1>
-    <p>Install a brain pack and your AI agent has years of specialised expertise in minutes. Not an empty notebook — a trained brain.</p>
+    <p>AIBrain gives any AI agent persistent memory, 53 self-learning workflows, 9 MCP servers, mesh networking, and a full browser dashboard. Install a brain pack and your agent has years of expertise in minutes.</p>
 
-    <div class="hero-install" onclick="navigator.clipboard.writeText('curl -fsSL https://myaibrain.org/install.sh | bash')">
-        <span class="prompt">$</span> <span class="cmd">curl -fsSL https://myaibrain.org/install.sh | bash</span>
+    <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain && aibrain setup --auto')">
+        <span class="prompt">$</span> <span class="cmd">pip install aibrain && aibrain setup --auto</span>
     </div>
     <br>
-    <div class="hero-sub">Click to copy. Works on Linux, Mac, and WSL. <a href="#install">Windows instructions</a></div>
+    <div class="hero-sub">Click to copy. Python 3.10+. Works on Linux, Mac, and Windows.</div>
 </div>
 
 <!-- Stats -->
@@ -276,12 +413,16 @@
         <div class="stat-label">MCP Servers</div>
     </div>
     <div class="stat">
-        <div class="stat-num">44</div>
-        <div class="stat-label">Skills</div>
+        <div class="stat-num">72</div>
+        <div class="stat-label">Tools</div>
     </div>
     <div class="stat">
         <div class="stat-num">53</div>
         <div class="stat-label">Workflows</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">30</div>
+        <div class="stat-label">Dashboard Components</div>
     </div>
     <div class="stat">
         <div class="stat-num">100%</div>
@@ -367,7 +508,7 @@
 <section id="features">
     <div class="section-title">
         <h2>Not another memory tool</h2>
-        <p>Other tools give you an empty notebook. AIBrain gives you a complete brain — 9 MCP servers, 44 skills, and 53 workflows out of the box.</p>
+        <p>Other tools give you an empty notebook. AIBrain gives you a complete operating system — memory, workflows, servers, networking, and a dashboard out of the box.</p>
     </div>
     <div class="features-grid">
         <div class="feature">
@@ -443,18 +584,246 @@
         <div class="step">
             <div class="step-num">1</div>
             <h3>Install</h3>
-            <p>One command. Handles Python, dependencies, database, and config automatically.</p>
+            <p>One command. The setup wizard handles Python, dependencies, database, config, and MCP registration automatically.</p>
         </div>
         <div class="step">
             <div class="step-num">2</div>
             <h3>Pick a Pack</h3>
-            <p>Choose your domain. Workflows, skills, knowledge, and agent personality all pre-loaded.</p>
+            <p>Choose your domain. Workflows, skills, knowledge, and agent personality all pre-loaded and ready to run.</p>
         </div>
         <div class="step">
             <div class="step-num">3</div>
             <h3>Start</h3>
-            <p><code>aibrain start</code> — stack restores, services launch, your agent is ready.</p>
+            <p><code style="background:var(--darker);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.85rem;">aibrain start</code> — stack restores, services launch, dashboard opens. Your agent is ready.</p>
         </div>
+    </div>
+</section>
+
+<!-- What's Inside -->
+<section id="inside">
+    <div class="section-title">
+        <h2>What's Inside</h2>
+        <p>Everything your agent needs to be genuinely useful. No assembly required.</p>
+    </div>
+    <div class="deepdive-grid">
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f9e0;</span> Self-Learning Memory</h3>
+            <p>SQLite + FTS5 full-text search with optional vector embeddings. Powered by SelRoute, a research-backed hybrid retrieval engine published on arXiv.</p>
+            <ul>
+                <li>Semantic search with MiniLM or bge-base embeddings</li>
+                <li>6 memory types: user, feedback, project, reference, pattern, decision</li>
+                <li>Hyperedge relationships and entity extraction</li>
+                <li>Evolution cycles that compress, merge, and strengthen memories</li>
+                <li>Export/import your entire brain as JSON</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f504;</span> 53 Self-Learning Workflows</h3>
+            <p>Pre-built automations across six registries. Enable any workflow with a single toggle. All schedules are configurable via cron expressions.</p>
+            <ul>
+                <li>Email triage, ArXiv tracker, autonomous researcher</li>
+                <li>Code analysis, security scanning, CI/CD monitoring</li>
+                <li>Content scheduling across 7 platforms</li>
+                <li>Self-improvement: burnout detector, brain sync checker</li>
+                <li>Natural language workflow creation — describe it, AIBrain builds it</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f50c;</span> 9 MCP Servers (72 Tools)</h3>
+            <p>Full MCP server suite that any compatible agent can connect to. Each server is a focused capability module.</p>
+            <ul>
+                <li>Memory: store, search, recall, evolve, graph</li>
+                <li>Peer Discovery: find and connect to other AIBrain agents</li>
+                <li>Web Search: search and fetch with no API keys</li>
+                <li>IT Support: diagnostics, monitoring, remediation</li>
+                <li>Calendar, Design, Desktop, Files: full system integration</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f310;</span> Tailscale Mesh Networking</h3>
+            <p>Encrypted peer-to-peer communication between AIBrain agents on any device, anywhere. No port forwarding. Works across NAT.</p>
+            <ul>
+                <li>Agent-to-agent messaging over encrypted Tailscale tunnels</li>
+                <li>File transfer with SHA256 verification</li>
+                <li>Brain sync — merge knowledge between agents</li>
+                <li>Consensus-weighted merge for multi-agent teams</li>
+                <li>Peer registry with automatic discovery</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f4ec;</span> Telegram + Email Integration</h3>
+            <p>Your agent stays connected. Telegram bot notifications for approvals and alerts. IMAP/SMTP email monitoring with auto-reply capability.</p>
+            <ul>
+                <li>Telegram bot with push notifications</li>
+                <li>Email inbox monitoring with triage workflows</li>
+                <li>Auto-reply mode with sender whitelisting</li>
+                <li>Content pipeline: schedule posts across 7 platforms</li>
+                <li>Webhook triggers for GitHub, payments, CI results</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f4ca;</span> 30-Component Dashboard</h3>
+            <p>Full browser UI for everything your agent does. Not a toy dashboard — 30 production components with real-time WebSocket updates.</p>
+            <ul>
+                <li>Visual workflow builder with drag-and-drop node editor</li>
+                <li>Interactive knowledge graph with entity extraction</li>
+                <li>Cost tracking with daily/monthly budgets</li>
+                <li>Command palette (Ctrl+K), keyboard shortcuts</li>
+                <li>Mobile PWA with QR pairing and push notifications</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f9ec;</span> Evolution Engine</h3>
+            <p>Your agent improves itself. Outcomes feed patterns, patterns generate hypotheses, hypotheses run experiments, experiments get measured and kept or reverted.</p>
+            <ul>
+                <li>Pattern detection across all workflow domains</li>
+                <li>Hypothesis testing with automated evaluation</li>
+                <li>Self-criticism and loop detection</li>
+                <li>Skill version tracking with health monitoring</li>
+                <li>Positive pattern reinforcement — good habits compound</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x2699;</span> Setup Wizard</h3>
+            <p>One command gets you from zero to running. The wizard detects your environment and configures everything automatically.</p>
+            <ul>
+                <li>Auto-detects existing databases and migrates them</li>
+                <li>Configures MCP servers for your agent (Claude, Cursor, etc.)</li>
+                <li>Cross-platform: Linux, macOS, Windows</li>
+                <li>Interactive or fully automatic (--auto flag)</li>
+                <li>Stack snapshots for crash recovery and state restore</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Architecture -->
+<section id="architecture">
+    <div class="section-title">
+        <h2>Architecture</h2>
+        <p>AIBrain sits between your agent and everything it needs. One brain layer, any agent.</p>
+    </div>
+    <div class="arch-diagram">
+        <div class="arch-label">Your Agent</div>
+        <div class="arch-row">
+            <div class="arch-box secondary">Claude Code</div>
+            <div class="arch-box secondary">Cursor</div>
+            <div class="arch-box secondary">Copilot</div>
+            <div class="arch-box secondary">Ollama</div>
+            <div class="arch-box secondary">Any MCP Client</div>
+        </div>
+        <div class="arch-arrow-down">&#x2193;</div>
+        <div class="arch-label">Brain Layer</div>
+        <div class="arch-row">
+            <div class="arch-box primary">AIBrain</div>
+        </div>
+        <div class="arch-arrow-down">&#x2193;</div>
+        <div class="arch-label">Capabilities</div>
+        <div class="arch-row">
+            <div class="arch-box">Memory DB</div>
+            <div class="arch-box">53 Workflows</div>
+            <div class="arch-box">9 MCP Servers</div>
+            <div class="arch-box">Mesh Network</div>
+        </div>
+        <div style="margin-top:1rem;">
+            <div class="arch-row">
+                <div class="arch-box">Dashboard</div>
+                <div class="arch-box">Evolution</div>
+                <div class="arch-box">Scheduler</div>
+                <div class="arch-box">Approvals</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Works With -->
+<section id="compatible">
+    <div class="section-title">
+        <h2>Works With Your Agent</h2>
+        <p>AIBrain is agent-agnostic. It works with any MCP-compatible client or LLM provider.</p>
+    </div>
+    <div class="compat-grid">
+        <div class="compat-item">
+            <div style="font-size:2rem;">&#x1f4bb;</div>
+            <div class="compat-name">Claude Code</div>
+            <div class="compat-type">MCP Client</div>
+        </div>
+        <div class="compat-item">
+            <div style="font-size:2rem;">&#x1f4dd;</div>
+            <div class="compat-name">Cursor</div>
+            <div class="compat-type">MCP Client</div>
+        </div>
+        <div class="compat-item">
+            <div style="font-size:2rem;">&#x2728;</div>
+            <div class="compat-name">GitHub Copilot</div>
+            <div class="compat-type">MCP Client</div>
+        </div>
+        <div class="compat-item">
+            <div style="font-size:2rem;">&#x1f999;</div>
+            <div class="compat-name">Ollama</div>
+            <div class="compat-type">Local LLM</div>
+        </div>
+        <div class="compat-item">
+            <div style="font-size:2rem;">&#x1f916;</div>
+            <div class="compat-name">Any MCP Client</div>
+            <div class="compat-type">MCP Protocol</div>
+        </div>
+    </div>
+</section>
+
+<!-- Built for Privacy -->
+<section id="privacy">
+    <div class="privacy-section">
+        <h2>Built for privacy</h2>
+        <p class="subtitle">Your data never leaves your machine. Not even a little bit.</p>
+        <div class="privacy-points">
+            <div class="privacy-point">
+                <div class="icon">&#x1f4be;</div>
+                <h4>100% Local Storage</h4>
+                <p>SQLite database on your filesystem. No cloud. No syncing to someone else's server.</p>
+            </div>
+            <div class="privacy-point">
+                <div class="icon">&#x1f6ab;</div>
+                <h4>No Telemetry</h4>
+                <p>Zero analytics, zero tracking, zero phone-home. We don't know you installed it.</p>
+            </div>
+            <div class="privacy-point">
+                <div class="icon">&#x1f510;</div>
+                <h4>Your Keys, Your LLM</h4>
+                <p>Bring your own API keys or use Ollama for fully offline operation. No vendor lock-in.</p>
+            </div>
+            <div class="privacy-point">
+                <div class="icon">&#x1f4e6;</div>
+                <h4>Portable Brain</h4>
+                <p>Copy one file to move your entire brain. Export as JSON, import anywhere. You own it.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Documentation -->
+<section id="docs">
+    <div class="section-title">
+        <h2>Documentation</h2>
+        <p>Everything you need to get started, build workflows, and extend AIBrain.</p>
+    </div>
+    <div class="docs-grid">
+        <a href="/docs/getting-started" class="doc-card">
+            <h3>Getting Started</h3>
+            <p>Install AIBrain, run the setup wizard, and launch your first brain pack in under 5 minutes.</p>
+        </a>
+        <a href="/docs/guide" class="doc-card">
+            <h3>User Guide</h3>
+            <p>Complete guidebook covering memory, workflows, brain packs, dashboard, mesh networking, and more.</p>
+        </a>
+        <a href="/docs/workflows" class="doc-card">
+            <h3>Workflow Reference</h3>
+            <p>All 53 workflows documented. Triggers, schedules, configuration options, and customization.</p>
+        </a>
+        <a href="/docs/api" class="doc-card">
+            <h3>API Documentation</h3>
+            <p>165+ REST endpoints. Memory, workflows, approvals, chat, agents, health checks, and more.</p>
+        </a>
     </div>
 </section>
 
@@ -580,8 +949,17 @@
                 <td class="no">--</td>
             </tr>
             <tr>
-                <td>Skill evolution</td>
-                <td class="yes">Version DAG</td>
+                <td>Visual workflow builder</td>
+                <td class="yes">Drag & drop</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+            </tr>
+            <tr>
+                <td>Knowledge graph</td>
+                <td class="yes">Interactive</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
@@ -653,16 +1031,43 @@
     </div>
 
     <div class="hero-sub" style="margin-top: 1rem;">
-        <a href="https://pypi.org/project/aibrain/">Install from PyPI</a>
-        &nbsp;&middot;&nbsp;
-        <a href="https://pypi.org/project/aibrain/">Docs</a>
-        &nbsp;&middot;&nbsp;
         <a href="https://pypi.org/project/aibrain/">PyPI</a>
+        &nbsp;&middot;&nbsp;
+        <a href="/docs/getting-started">Docs</a>
+        &nbsp;&middot;&nbsp;
+        <a href="mailto:support@myaibrain.org">Support</a>
     </div>
 </section>
 
 <footer>
-    <p>AIBrain &copy; 2026 &middot; <a href="https://pypi.org/project/aibrain/">PyPI</a> &middot; <a href="mailto:support@myaibrain.org">Contact</a></p>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>Product</h4>
+            <a href="#packs">Brain Packs</a>
+            <a href="#inside">What's Inside</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#compatible">Compatibility</a>
+        </div>
+        <div class="footer-col">
+            <h4>Documentation</h4>
+            <a href="/docs/getting-started">Getting Started</a>
+            <a href="/docs/guide">User Guide</a>
+            <a href="/docs/workflows">Workflow Reference</a>
+            <a href="/docs/api">API Docs</a>
+        </div>
+        <div class="footer-col">
+            <h4>Install</h4>
+            <a href="https://pypi.org/project/aibrain/">PyPI</a>
+            <a href="#install">Install Script</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="mailto:support@myaibrain.org">support@myaibrain.org</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>AIBrain &copy; 2026 Matthew McKee / DeckerOps. All rights reserved.</p>
+    </div>
 </footer>
 
 </body>
