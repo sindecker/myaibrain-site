@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIBrain — Your Agent, Better Every Day</title>
-    <meta name="description" content="The portable operating system for AI agents. Persistent memory, 53 self-learning workflows, 9 MCP servers, mesh networking, and a full dashboard. 100% local. Works with any LLM.">
+    <meta name="description" content="The portable operating system for AI agents. Persistent memory, 200+ self-learning workflows, 9 MCP servers, mesh networking, and a full dashboard. 100% local. Works with any LLM.">
     <meta property="og:title" content="AIBrain — Your Agent, Better Every Day">
-    <meta property="og:description" content="Persistent memory, 53 workflows, 9 MCP servers, mesh networking. Install a brain pack and your agent has years of expertise in minutes.">
+    <meta property="og:description" content="Persistent memory, 200+ workflows, 9 MCP servers, mesh networking. Install a brain pack and your agent has years of expertise in minutes.">
     <meta property="og:url" content="https://myaibrain.org">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
@@ -179,6 +179,62 @@
         .deepdive-card ul li::before {
             content: "+"; color: var(--teal); margin-right: 0.5rem; font-weight: 700;
         }
+
+        /* Boss Agent Orchestrator */
+        .orchestrator-section {
+            background: linear-gradient(135deg, rgba(0,245,212,0.03) 0%, rgba(167,139,250,0.03) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .orchestrator-section .section-title { margin-bottom: 2rem; }
+        .orchestrator-headline {
+            font-size: 1.3rem; color: var(--teal); font-weight: 700;
+            text-align: center; margin-bottom: 2rem;
+        }
+        .orchestrator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem; margin-bottom: 2.5rem;
+        }
+        .orchestrator-usecase {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .orchestrator-usecase:hover { border-color: var(--teal); transform: translateY(-2px); }
+        .orchestrator-usecase h4 {
+            font-size: 1rem; margin-bottom: 0.5rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .orchestrator-usecase h4 .uc-icon { font-size: 1.3rem; }
+        .orchestrator-usecase p { color: var(--dim); font-size: 0.9rem; }
+        .orchestrator-selling {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem; margin-bottom: 2rem;
+        }
+        .selling-point {
+            text-align: center; padding: 1rem;
+        }
+        .selling-point .sp-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .selling-point h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+        .selling-point p { font-size: 0.85rem; color: var(--dim); }
+        .orchestrator-tiers {
+            display: flex; justify-content: center; gap: 2rem;
+            flex-wrap: wrap; text-align: center;
+        }
+        .orchestrator-tier {
+            background: var(--darker); border: 1px solid var(--border);
+            border-radius: 8px; padding: 1rem 1.5rem;
+            min-width: 180px;
+        }
+        .orchestrator-tier.tier-highlight { border-color: var(--teal); }
+        .orchestrator-tier h4 { font-size: 1rem; margin-bottom: 0.25rem; }
+        .orchestrator-tier .tier-detail { font-size: 0.85rem; color: var(--dim); }
+        .orchestrator-tier .tier-price { font-size: 1.1rem; font-weight: 700; color: var(--teal); margin-top: 0.25rem; }
 
         /* Architecture */
         .arch-diagram {
@@ -388,6 +444,7 @@
     <div class="nav-links">
         <a href="#packs">Brain Packs</a>
         <a href="#inside">What's Inside</a>
+        <a href="#orchestrator">Multi-Agent</a>
         <a href="#pricing">Pricing</a>
         <a href="#docs">Docs</a>
         <a href="https://pypi.org/project/aibrain/">PyPI</a>
@@ -399,7 +456,7 @@
 <div class="hero">
     <div class="hero-badge">v1.0 — The Portable Agent Operating System</div>
     <h1>Your agent,<br><span class="accent">better from day one</span></h1>
-    <p>AIBrain gives any AI agent persistent memory, 53 self-learning workflows, 9 MCP servers, mesh networking, and a full browser dashboard. Install a brain pack and your agent has years of expertise in minutes.</p>
+    <p>AIBrain gives any AI agent persistent memory, 200+ self-learning workflows, 9 MCP servers, mesh networking, and a full browser dashboard. Install a brain pack and your agent has years of expertise in minutes.</p>
 
     <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain && aibrain setup --auto')">
         <span class="prompt">$</span> <span class="cmd">pip install aibrain && aibrain setup --auto</span>
@@ -620,7 +677,7 @@
             </ul>
         </div>
         <div class="deepdive-card">
-            <h3><span class="icon">&#x1f504;</span> 53 Self-Learning Workflows</h3>
+            <h3><span class="icon">&#x1f504;</span> 200+ self-learning workflows</h3>
             <p>Pre-built automations across six registries. Enable any workflow with a single toggle. All schedules are configurable via cron expressions.</p>
             <ul>
                 <li>Email triage, ArXiv tracker, autonomous researcher</li>
@@ -699,6 +756,95 @@
     </div>
 </section>
 
+<!-- Boss Agent Orchestrator -->
+<section id="orchestrator">
+    <div class="orchestrator-section">
+        <div class="section-title">
+            <h2>Boss Agent Orchestrator</h2>
+            <p>One machine. Multiple workers. One brain that gets smarter with every task.</p>
+        </div>
+        <div class="orchestrator-headline">Replace 10 VPS instances with one machine</div>
+
+        <div class="orchestrator-grid">
+            <div class="orchestrator-usecase">
+                <h4><span class="uc-icon">&#x1f4f1;</span> Social Media Managers</h4>
+                <p>Run 10 client accounts from one laptop. Each worker handles a different client's posting, engagement, and analytics in its own isolated browser session.</p>
+            </div>
+            <div class="orchestrator-usecase">
+                <h4><span class="uc-icon">&#x1f9ea;</span> QA Teams</h4>
+                <p>Test the same app in 10 parallel sessions. Different browsers, different user profiles, different test scenarios — all coordinated by one boss agent.</p>
+            </div>
+            <div class="orchestrator-usecase">
+                <h4><span class="uc-icon">&#x1f50d;</span> Market Researchers</h4>
+                <p>Monitor 50 competitor pages simultaneously. Price changes, product launches, job postings — your workers watch everything and feed insights into one shared brain.</p>
+            </div>
+            <div class="orchestrator-usecase">
+                <h4><span class="uc-icon">&#x1f4e2;</span> Content Creators</h4>
+                <p>Manage cross-platform posting across LinkedIn, X, YouTube, and Reddit. One boss coordinates the messaging, each worker handles a platform natively.</p>
+            </div>
+            <div class="orchestrator-usecase">
+                <h4><span class="uc-icon">&#x1f3a5;</span> Live Stream Monitoring</h4>
+                <p>Watch chat across multiple platforms for trends, sentiment shifts, and key moments. Workers monitor each stream, the boss surfaces what matters.</p>
+            </div>
+            <div class="orchestrator-usecase">
+                <h4><span class="uc-icon">&#x1f4ac;</span> Customer Support</h4>
+                <p>Multiple support portal sessions open at once. Each worker handles a queue or platform while the shared brain learns resolution patterns across all of them.</p>
+            </div>
+        </div>
+
+        <div class="orchestrator-selling">
+            <div class="selling-point">
+                <div class="sp-icon">&#x1f433;</div>
+                <h4>Isolated Workers</h4>
+                <p>Docker containers with their own Playwright browser. No cross-contamination between tasks.</p>
+            </div>
+            <div class="selling-point">
+                <div class="sp-icon">&#x1f9e0;</div>
+                <h4>Shared Brain</h4>
+                <p>All workers feed one brain. Knowledge from every session compounds and makes the whole system smarter.</p>
+            </div>
+            <div class="selling-point">
+                <div class="sp-icon">&#x1f3af;</div>
+                <h4>Boss Orchestrator</h4>
+                <p>One boss assigns tasks, monitors progress, and merges results. Workers execute in parallel.</p>
+            </div>
+            <div class="selling-point">
+                <div class="sp-icon">&#x2699;</div>
+                <h4>Model Tier Routing</h4>
+                <p>Opus-class models for complex reasoning, Haiku-class for monitoring. Automatic routing to minimize cost.</p>
+            </div>
+            <div class="selling-point">
+                <div class="sp-icon">&#x1f6e1;</div>
+                <h4>Budget Guards</h4>
+                <p>Set spending limits, checkpoints, and approval gates. Full cost visibility across all workers.</p>
+            </div>
+            <div class="selling-point">
+                <div class="sp-icon">&#x1f504;</div>
+                <h4>Session Merge</h4>
+                <p>Workers finish, results merge cleanly. No conflicts, no lost work, no manual reconciliation.</p>
+            </div>
+        </div>
+
+        <div class="orchestrator-tiers">
+            <div class="orchestrator-tier">
+                <h4>Free</h4>
+                <div class="tier-detail">Single instance</div>
+                <div class="tier-price">$0</div>
+            </div>
+            <div class="orchestrator-tier tier-highlight">
+                <h4>Pro</h4>
+                <div class="tier-detail">Up to 3 workers + boss + merge logic + model routing</div>
+                <div class="tier-price">$9.95/mo</div>
+            </div>
+            <div class="orchestrator-tier">
+                <h4>Team</h4>
+                <div class="tier-detail">Up to 10 workers + cross-machine via Tailscale</div>
+                <div class="tier-price">$29.95/mo</div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Architecture -->
 <section id="architecture">
     <div class="section-title">
@@ -723,7 +869,7 @@
         <div class="arch-label">Capabilities</div>
         <div class="arch-row">
             <div class="arch-box">Memory DB</div>
-            <div class="arch-box">53 Workflows</div>
+            <div class="arch-box">200+ workflows</div>
             <div class="arch-box">9 MCP Servers</div>
             <div class="arch-box">Mesh Network</div>
         </div>
@@ -820,7 +966,7 @@
         </a>
         <a href="/docs/workflows" class="doc-card">
             <h3>Workflow Reference</h3>
-            <p>All 53 workflows documented. Triggers, schedules, configuration options, and customization.</p>
+            <p>All 200+ workflows documented. Triggers, schedules, configuration options, and customization.</p>
         </a>
         <a href="/docs/api" class="doc-card">
             <h3>API Documentation</h3>
@@ -856,11 +1002,11 @@
         <div class="price-card featured">
             <h3>Pro</h3>
             <div class="price-amount">$9.95<span class="period">/mo</span></div>
-            <div class="price-note">Launch price — first 200 users</div>
+            <div class="price-note">Launch price — <span class="countdown-remaining" style="font-weight:bold;">200</span> of 200 spots remaining</div>
             <ul class="price-features">
                 <li><span class="check">+</span> Everything in Free</li>
                 <li><span class="check">+</span> 9 MCP servers (72 tools total)</li>
-                <li><span class="check">+</span> 53 workflows across all domains</li>
+                <li><span class="check">+</span> 200+ workflows across all domains</li>
                 <li><span class="check">+</span> Tailscale mesh networking</li>
                 <li><span class="check">+</span> IT support + automated remediation</li>
                 <li><span class="check">+</span> Desktop automation (any app)</li>
@@ -870,6 +1016,7 @@
                 <li><span class="check">+</span> Full calendar (CalDAV)</li>
                 <li><span class="check">+</span> Push notifications (mobile)</li>
                 <li><span class="check">+</span> Brain marketplace access</li>
+                <li><span class="check">+</span> Boss Agent: up to 3 workers + model routing</li>
             </ul>
             <a href="https://buy.stripe.com/8x2fZi6BJ0w16dS7jgg7e06" class="price-cta primary">Get Pro</a>
         </div>
@@ -884,6 +1031,7 @@
                 <li><span class="check">+</span> Multi-user agent mesh</li>
                 <li><span class="check">+</span> Team workflows</li>
                 <li><span class="check">+</span> Up to 10 agents</li>
+                <li><span class="check">+</span> Boss Agent: up to 10 workers + cross-machine via Tailscale</li>
             </ul>
             <a href="https://buy.stripe.com/3cI14oaRZemR7hW5b8g7e01" class="price-cta primary">Get Team</a>
         </div>
@@ -987,6 +1135,15 @@
                 <td class="no">--</td>
             </tr>
             <tr>
+                <td>Multi-agent orchestrator</td>
+                <td class="yes">Up to 10 workers</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+                <td class="no">--</td>
+            </tr>
+            <tr>
                 <td>100% local / private</td>
                 <td class="yes">Yes</td>
                 <td class="no">Supabase</td>
@@ -1047,6 +1204,7 @@
             <h4>Product</h4>
             <a href="#packs">Brain Packs</a>
             <a href="#inside">What's Inside</a>
+            <a href="#orchestrator">Multi-Agent</a>
             <a href="#pricing">Pricing</a>
             <a href="#compatible">Compatibility</a>
         </div>
@@ -1072,5 +1230,21 @@
     </div>
 </footer>
 
+<script>
+// Pricing countdown — live Pro slot counter
+(function(){
+  var TOTAL=200;
+  var API='https://myaibrain-api.deckerops.workers.dev/pro-remaining';
+  function update(n){
+    var els=document.querySelectorAll('.countdown-remaining');
+    els.forEach(function(el){
+      el.textContent=n;
+      if(n<=20){el.style.color='#ff4444';el.style.fontWeight='bold';}
+      else if(n<=50){el.style.color='#ff8800';}
+    });
+  }
+  fetch(API).then(function(r){return r.json();}).then(function(d){update(d.remaining||TOTAL);}).catch(function(){update(TOTAL);});
+})();
+</script>
 </body>
 </html>
