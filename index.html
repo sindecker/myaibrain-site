@@ -223,13 +223,15 @@
         .selling-point h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
         .selling-point p { font-size: 0.85rem; color: var(--dim); }
         .orchestrator-tiers {
-            display: flex; justify-content: center; gap: 2rem;
-            flex-wrap: wrap; text-align: center;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem; text-align: center; max-width: 900px; margin: 2rem auto 0;
+        }
+        @media (max-width: 768px) {
+            .orchestrator-tiers { grid-template-columns: 1fr; }
         }
         .orchestrator-tier {
             background: var(--darker); border: 1px solid var(--border);
-            border-radius: 8px; padding: 1rem 1.5rem;
-            min-width: 180px;
+            border-radius: 8px; padding: 1.5rem;
         }
         .orchestrator-tier.tier-highlight { border-color: var(--teal); }
         .orchestrator-tier h4 { font-size: 1rem; margin-bottom: 0.25rem; }
@@ -562,6 +564,33 @@
             </div>
             <div class="pack-tagline">Find, apply, track automatically</div>
             <div class="pack-count">5 workflows + application tracking + interview prep</div>
+        </div>
+    </div>
+</section>
+
+<!-- Early Pricing -->
+<section style="padding: 3rem 2rem;">
+    <div class="pricing-grid">
+        <div class="price-card">
+            <h3>Free</h3>
+            <p style="color: var(--dim); margin-bottom: 1rem;">Everything you need to start</p>
+            <div class="price-amount" style="color: var(--teal);">$0</div>
+            <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Single instance &bull; 200+ workflows &bull; 9 MCP servers &bull; Local SQLite &bull; No credit card</p>
+            <a href="#install" class="btn btn-secondary" style="margin-top: auto; text-align: center;">Install Free</a>
+        </div>
+        <div class="price-card featured">
+            <h3>Pro</h3>
+            <p style="color: var(--dim); margin-bottom: 1rem;">For power users and professionals</p>
+            <div class="price-amount" style="color: var(--teal);">$9.95<span style="font-size: 1rem; font-weight: 400;">/mo</span></div>
+            <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Up to 3 workers &bull; Boss Agent &bull; Model routing &bull; Session merge &bull; Skill evolution &bull; Brain Marketplace</p>
+            <a href="https://myaibrain.org" class="btn btn-primary" style="margin-top: auto; text-align: center;">Get Pro</a>
+        </div>
+        <div class="price-card">
+            <h3>Team</h3>
+            <p style="color: var(--dim); margin-bottom: 1rem;">Multi-machine, multi-agent</p>
+            <div class="price-amount" style="color: var(--teal);">$29.95<span style="font-size: 1rem; font-weight: 400;">/mo</span></div>
+            <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Up to 10 workers &bull; Cross-machine via Tailscale &bull; Team brain sharing &bull; Priority support</p>
+            <a href="https://myaibrain.org" class="btn btn-secondary" style="margin-top: auto; text-align: center;">Get Team</a>
         </div>
     </div>
 </section>
