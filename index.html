@@ -1080,84 +1080,84 @@
         <h3>AIBrain vs the alternatives</h3>
         <table>
             <tr>
-                <th></th><th>AIBrain</th><th>OB1</th><th>mem0</th><th>Zep</th><th>Letta</th><th>LangChain</th>
+                <th></th><th>AIBrain</th><th>Mem0</th><th>CrewAI</th><th>Letta</th><th>LangGraph</th><th>Agno</th>
             </tr>
             <tr>
-                <td>MCP servers / tools</td>
-                <td class="yes">9 servers, 72 tools</td>
+                <td>Persistent memory</td>
+                <td class="yes">Vector + graph + satellites</td>
+                <td class="yes">Graph memory</td>
                 <td class="no">--</td>
-                <td class="no">1 SDK</td>
-                <td class="no">1 SDK</td>
-                <td class="no">1 server</td>
-                <td class="no">Varies</td>
+                <td class="yes">Self-editing</td>
+                <td class="yes">LangMem add-on</td>
+                <td class="no">Basic KV</td>
             </tr>
             <tr>
                 <td>Self-learning workflows</td>
-                <td class="yes">53 included</td>
+                <td class="yes">189 included</td>
+                <td class="no">--</td>
+                <td class="no">Manual crews</td>
+                <td class="no">--</td>
+                <td class="no">Build your own</td>
+                <td class="no">--</td>
+            </tr>
+            <tr>
+                <td>Self-improvement / evolution</td>
+                <td class="yes">Full engine</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
-                <td class="no">--</td>
+                <td class="no">Partial</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
             </tr>
             <tr>
-                <td>Mesh networking (Tailscale)</td>
-                <td class="yes">Encrypted P2P</td>
+                <td>Multi-agent companies</td>
+                <td class="yes">CEO → managers → workers</td>
                 <td class="no">--</td>
+                <td class="yes">Crews</td>
                 <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
+                <td class="yes">Graphs</td>
+                <td class="yes">Teams</td>
             </tr>
             <tr>
-                <td>File transfer / brain sync</td>
-                <td class="yes">SHA256 verified</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
+                <td>LLM adapters</td>
+                <td class="yes">8 providers</td>
+                <td class="no">API only</td>
+                <td class="yes">Multiple</td>
+                <td class="yes">Multiple</td>
+                <td class="yes">Via LangChain</td>
+                <td class="yes">Multiple</td>
             </tr>
             <tr>
-                <td>IT support / diagnostics</td>
-                <td class="yes">9 tools + tickets</td>
+                <td>Dashboard / UI</td>
+                <td class="yes">41 pages</td>
                 <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
+                <td class="yes">Cloud UI</td>
+                <td class="yes">Cloud UI</td>
+                <td class="yes">LangSmith</td>
+                <td class="yes">Cloud UI</td>
             </tr>
             <tr>
-                <td>Desktop automation</td>
-                <td class="yes">10 tools</td>
+                <td>MCP servers</td>
+                <td class="yes">9 servers</td>
+                <td class="no">1 SDK</td>
                 <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-            </tr>
-            <tr>
-                <td>Visual workflow builder</td>
-                <td class="yes">Drag & drop</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
+                <td class="no">1 server</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
             </tr>
             <tr>
                 <td>Knowledge graph</td>
                 <td class="yes">Interactive</td>
-                <td class="no">--</td>
+                <td class="yes">Graph-based</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
             </tr>
             <tr>
-                <td>Mobile PWA</td>
-                <td class="yes">Push notifications</td>
-                <td class="no">--</td>
+                <td>Brain portability</td>
+                <td class="yes">Export / import / packs</td>
+                <td class="no">Cloud-locked</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
                 <td class="no">--</td>
@@ -1173,31 +1173,22 @@
                 <td class="no">--</td>
             </tr>
             <tr>
-                <td>Multi-agent orchestrator</td>
-                <td class="yes">Up to 10 workers</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-            </tr>
-            <tr>
                 <td>100% local / private</td>
                 <td class="yes">Yes</td>
-                <td class="no">Supabase</td>
                 <td class="no">Cloud</td>
                 <td class="no">Cloud</td>
+                <td class="yes">Yes</td>
                 <td class="yes">Yes</td>
                 <td class="yes">Yes</td>
             </tr>
             <tr>
-                <td>Agent agnostic</td>
-                <td class="yes">Any LLM</td>
-                <td class="yes">Any LLM</td>
-                <td class="no">SDK only</td>
-                <td class="yes">Any LLM</td>
-                <td class="yes">Any LLM</td>
-                <td class="no">LangChain only</td>
+                <td>Single pip install</td>
+                <td class="yes">pip install aibrain</td>
+                <td class="yes">pip install mem0ai</td>
+                <td class="yes">pip install crewai</td>
+                <td class="yes">pip install letta</td>
+                <td class="yes">pip install langgraph</td>
+                <td class="yes">pip install agno</td>
             </tr>
         </table>
     </div>
