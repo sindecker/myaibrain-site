@@ -13,14 +13,16 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
     <style>
         :root {
-            --teal: #00f5d4;
-            --dark: #0a0a0f;
-            --darker: #06060a;
-            --card: #111118;
-            --border: #1a1a25;
-            --text: #e0e0e8;
-            --dim: #6b6b80;
-            --pro: #a78bfa;
+            --brand: #F59E0B;
+            --cta: #F97316;
+            --accent: #FBBF24;
+            --dark: #0a0a0a;
+            --darker: #060606;
+            --card: #18181b;
+            --border: #27272a;
+            --text: #f4f4f5;
+            --dim: #71717a;
+            --pro: #FBBF24;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -29,7 +31,7 @@
             color: var(--text);
             line-height: 1.6;
         }
-        a { color: var(--teal); text-decoration: none; }
+        a { color: var(--brand); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
         /* Nav */
@@ -40,13 +42,13 @@
             padding: 1rem 2rem;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-brand { font-weight: 700; font-size: 1.2rem; color: var(--teal); }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; color: var(--brand); }
         .nav-links { display: flex; gap: 2rem; }
         .nav-links a { color: var(--dim); font-size: 0.9rem; }
-        .nav-links a:hover { color: var(--teal); text-decoration: none; }
+        .nav-links a:hover { color: var(--brand); text-decoration: none; }
         .nav-cta {
-            background: var(--teal); color: var(--dark); padding: 0.5rem 1.2rem;
-            border-radius: 6px; font-weight: 600; font-size: 0.9rem;
+            background: var(--cta); color: var(--dark); padding: 0.5rem 1.2rem;
+            border-radius: 8px; font-weight: 600; font-size: 0.9rem;
         }
         .nav-cta:hover { opacity: 0.9; text-decoration: none; }
 
@@ -66,7 +68,7 @@
             font-weight: 800; line-height: 1.1;
             margin-bottom: 1.5rem;
         }
-        .hero h1 .accent { color: var(--teal); }
+        .hero h1 .accent { color: var(--brand); }
         .hero p {
             font-size: 1.25rem; color: var(--dim);
             max-width: 650px; margin: 0 auto 2.5rem;
@@ -79,8 +81,8 @@
             margin-bottom: 0.75rem; cursor: pointer;
             transition: border-color 0.2s;
         }
-        .hero-install:hover { border-color: var(--teal); }
-        .hero-install .prompt { color: var(--teal); }
+        .hero-install:hover { border-color: var(--brand); }
+        .hero-install .prompt { color: var(--brand); }
         .hero-install .cmd { color: var(--text); }
         .hero-sub { font-size: 0.85rem; color: var(--dim); }
 
@@ -90,7 +92,7 @@
             padding: 2rem; flex-wrap: wrap;
         }
         .stat { text-align: center; }
-        .stat-num { font-size: 2rem; font-weight: 800; color: var(--teal); }
+        .stat-num { font-size: 2rem; font-weight: 800; color: var(--brand); }
         .stat-label { font-size: 0.85rem; color: var(--dim); }
 
         /* Sections */
@@ -114,15 +116,15 @@
             border-radius: 12px; padding: 1.5rem;
             transition: border-color 0.2s, transform 0.2s;
         }
-        .pack-card:hover { border-color: var(--teal); transform: translateY(-2px); }
+        .pack-card:hover { border-color: var(--brand); transform: translateY(-2px); }
         .pack-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
         .pack-name { font-size: 1.1rem; font-weight: 700; }
         .pack-badge {
             font-size: 0.7rem; padding: 0.2rem 0.6rem;
             border-radius: 10px; font-weight: 600;
         }
-        .badge-free { background: rgba(0,245,212,0.15); color: var(--teal); }
-        .badge-pro { background: rgba(167,139,250,0.15); color: var(--pro); }
+        .badge-free { background: rgba(245,158,11,0.15); color: var(--brand); }
+        .badge-pro { background: rgba(251,191,36,0.15); color: var(--pro); }
 
         .pack-tagline { color: var(--dim); font-size: 0.9rem; margin-bottom: 0.5rem; }
         .pack-count { font-size: 0.8rem; color: var(--dim); }
@@ -149,9 +151,9 @@
         }
         .step-num {
             width: 48px; height: 48px; border-radius: 50%;
-            background: rgba(0,245,212,0.1); border: 2px solid var(--teal);
+            background: rgba(245,158,11,0.1); border: 2px solid var(--brand);
             display: flex; align-items: center; justify-content: center;
-            font-weight: 800; color: var(--teal); font-size: 1.2rem;
+            font-weight: 800; color: var(--brand); font-size: 1.2rem;
             margin: 0 auto 1rem;
         }
         .step h3 { margin-bottom: 0.5rem; }
@@ -168,7 +170,7 @@
             border-radius: 12px; padding: 2rem;
             transition: border-color 0.2s, transform 0.2s;
         }
-        .deepdive-card:hover { border-color: var(--teal); transform: translateY(-2px); }
+        .deepdive-card:hover { border-color: var(--brand); transform: translateY(-2px); }
         .deepdive-card h3 { font-size: 1.1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
         .deepdive-card h3 .icon { font-size: 1.4rem; }
         .deepdive-card p { color: var(--dim); font-size: 0.9rem; margin-bottom: 0.75rem; }
@@ -177,12 +179,12 @@
             font-size: 0.85rem; color: var(--dim); padding: 0.2rem 0;
         }
         .deepdive-card ul li::before {
-            content: "+"; color: var(--teal); margin-right: 0.5rem; font-weight: 700;
+            content: "+"; color: var(--brand); margin-right: 0.5rem; font-weight: 700;
         }
 
         /* Boss Agent Orchestrator */
         .orchestrator-section {
-            background: linear-gradient(135deg, rgba(0,245,212,0.03) 0%, rgba(167,139,250,0.03) 100%);
+            background: linear-gradient(135deg, rgba(245,158,11,0.03) 0%, rgba(251,191,36,0.03) 100%);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 3rem;
@@ -191,7 +193,7 @@
         }
         .orchestrator-section .section-title { margin-bottom: 2rem; }
         .orchestrator-headline {
-            font-size: 1.3rem; color: var(--teal); font-weight: 700;
+            font-size: 1.3rem; color: var(--brand); font-weight: 700;
             text-align: center; margin-bottom: 2rem;
         }
         .orchestrator-grid {
@@ -204,7 +206,7 @@
             border-radius: 12px; padding: 1.5rem;
             transition: border-color 0.2s, transform 0.2s;
         }
-        .orchestrator-usecase:hover { border-color: var(--teal); transform: translateY(-2px); }
+        .orchestrator-usecase:hover { border-color: var(--brand); transform: translateY(-2px); }
         .orchestrator-usecase h4 {
             font-size: 1rem; margin-bottom: 0.5rem;
             display: flex; align-items: center; gap: 0.5rem;
@@ -233,10 +235,10 @@
             background: var(--darker); border: 1px solid var(--border);
             border-radius: 8px; padding: 1.5rem;
         }
-        .orchestrator-tier.tier-highlight { border-color: var(--teal); }
+        .orchestrator-tier.tier-highlight { border-color: var(--brand); }
         .orchestrator-tier h4 { font-size: 1rem; margin-bottom: 0.25rem; }
         .orchestrator-tier .tier-detail { font-size: 0.85rem; color: var(--dim); }
-        .orchestrator-tier .tier-price { font-size: 1.1rem; font-weight: 700; color: var(--teal); margin-top: 0.25rem; }
+        .orchestrator-tier .tier-price { font-size: 1.1rem; font-weight: 700; color: var(--brand); margin-top: 0.25rem; }
 
         /* Architecture */
         .arch-diagram {
@@ -256,7 +258,7 @@
             min-width: 120px;
         }
         .arch-box.primary {
-            border-color: var(--teal); color: var(--teal); font-weight: 700;
+            border-color: var(--brand); color: var(--brand); font-weight: 700;
         }
         .arch-box.secondary {
             border-color: var(--pro); color: var(--pro);
@@ -284,7 +286,7 @@
             text-align: center; min-width: 140px;
             transition: border-color 0.2s;
         }
-        .compat-item:hover { border-color: var(--teal); }
+        .compat-item:hover { border-color: var(--brand); }
         .compat-item .compat-name { font-weight: 700; font-size: 1rem; margin-top: 0.5rem; }
         .compat-item .compat-type { font-size: 0.8rem; color: var(--dim); }
 
@@ -300,7 +302,7 @@
             transition: border-color 0.2s, transform 0.2s;
             display: block;
         }
-        .doc-card:hover { border-color: var(--teal); transform: translateY(-2px); text-decoration: none; }
+        .doc-card:hover { border-color: var(--brand); transform: translateY(-2px); text-decoration: none; }
         .doc-card h3 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--text); }
         .doc-card p { color: var(--dim); font-size: 0.85rem; }
 
@@ -336,7 +338,7 @@
             border-radius: 12px; padding: 2.5rem;
             display: flex; flex-direction: column;
         }
-        .price-card.featured { border-color: var(--teal); }
+        .price-card.featured { border-color: var(--brand); }
         .price-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
         .price-amount {
             font-size: 2.5rem; font-weight: 800; margin-bottom: 0.25rem;
@@ -349,7 +351,7 @@
             border-bottom: 1px solid var(--border);
         }
         .price-features li:last-child { border: none; }
-        .price-features .check { color: var(--teal); margin-right: 0.5rem; }
+        .price-features .check { color: var(--brand); margin-right: 0.5rem; }
         .price-features { flex: 1; }
         .price-cta {
             display: block; text-align: center; padding: 0.75rem;
@@ -357,7 +359,7 @@
             transition: opacity 0.2s;
         }
         .price-cta:hover { opacity: 0.9; text-decoration: none; }
-        .price-cta.primary { background: var(--teal); color: var(--dark); }
+        .price-cta.primary { background: var(--cta); color: var(--dark); }
         .price-cta.secondary { border: 1px solid var(--border); color: var(--text); }
 
         /* Comparison */
@@ -373,7 +375,7 @@
         .comparison td { padding: 0.5rem; font-size: 0.9rem; }
         .comparison tr { border-bottom: 1px solid var(--border); }
         .comparison tr:last-child { border: none; }
-        .yes { color: var(--teal); }
+        .yes { color: var(--brand); }
         .no { color: var(--dim); }
 
         /* CTA */
@@ -397,7 +399,7 @@
         }
         .footer-col h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); }
         .footer-col a { display: block; color: var(--dim); font-size: 0.85rem; padding: 0.2rem 0; }
-        .footer-col a:hover { color: var(--teal); text-decoration: none; }
+        .footer-col a:hover { color: var(--brand); text-decoration: none; }
         .footer-bottom {
             text-align: center; font-size: 0.85rem; color: var(--dim);
             padding-top: 2rem; border-top: 1px solid var(--border);
@@ -459,7 +461,7 @@
 
 <!-- Hero -->
 <div class="hero">
-    <div class="hero-badge">v1.0 — The Portable Agent Operating System</div>
+    <div class="hero-badge">v1.1.7 — The Portable Agent Operating System</div>
     <h1>Your agent,<br><span class="accent">better from day one</span></h1>
     <p>AIBrain gives any AI agent persistent memory, 200+ self-learning workflows, 9 MCP servers, mesh networking, and a full browser dashboard. Install a brain pack and your agent has years of expertise in minutes.</p>
 
@@ -481,7 +483,7 @@
         <div class="stat-label">Tools</div>
     </div>
     <div class="stat">
-        <div class="stat-num">53</div>
+        <div class="stat-num">200+</div>
         <div class="stat-label">Workflows</div>
     </div>
     <div class="stat">
@@ -574,21 +576,21 @@
         <div class="price-card">
             <h3>Free</h3>
             <p style="color: var(--dim); margin-bottom: 1rem;">Everything you need to start</p>
-            <div class="price-amount" style="color: var(--teal);">$0</div>
+            <div class="price-amount" style="color: var(--brand);">$0</div>
             <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Single instance &bull; 200+ workflows &bull; 9 MCP servers &bull; Local SQLite &bull; No credit card</p>
             <a href="#install" class="btn btn-secondary" style="margin-top: auto; text-align: center;">Install Free</a>
         </div>
         <div class="price-card featured">
             <h3>Pro</h3>
             <p style="color: var(--dim); margin-bottom: 1rem;">For power users and professionals</p>
-            <div class="price-amount" style="color: var(--teal);">$9.95<span style="font-size: 1rem; font-weight: 400;">/mo</span></div>
+            <div class="price-amount" style="color: var(--brand);">$9.95<span style="font-size: 1rem; font-weight: 400;">/mo</span></div>
             <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Up to 3 workers &bull; Boss Agent &bull; Model routing &bull; Session merge &bull; Skill evolution &bull; Brain Marketplace</p>
             <a href="https://myaibrain.org" class="btn btn-primary" style="margin-top: auto; text-align: center;">Get Pro</a>
         </div>
         <div class="price-card">
             <h3>Team</h3>
             <p style="color: var(--dim); margin-bottom: 1rem;">Multi-machine, multi-agent</p>
-            <div class="price-amount" style="color: var(--teal);">$29.95<span style="font-size: 1rem; font-weight: 400;">/mo</span></div>
+            <div class="price-amount" style="color: var(--brand);">$29.95<span style="font-size: 1rem; font-weight: 400;">/mo</span></div>
             <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Up to 10 workers &bull; Cross-machine via Tailscale &bull; Team brain sharing &bull; Priority support</p>
             <a href="https://myaibrain.org" class="btn btn-secondary" style="margin-top: auto; text-align: center;">Get Team</a>
         </div>
