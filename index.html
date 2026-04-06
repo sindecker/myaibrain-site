@@ -473,6 +473,13 @@
         <span class="prompt">$</span> <span class="cmd">pip install aibrain && aibrain setup --auto</span>
     </div>
     <br>
+    <div class="hero-install" style="text-align: left; display: block; max-width: 520px; margin: 0.75rem auto; font-size: 0.88rem; line-height: 1.7;" onclick="navigator.clipboard.writeText('from aibrain import Brain\nbrain = Brain()\nbrain.add(&quot;I love tennis&quot;, user_id=&quot;alice&quot;)\nbrain.search(&quot;hobbies&quot;, user_id=&quot;alice&quot;)')">
+        <span style="color: var(--dim);"># Mem0-compatible Brain API</span><br>
+        <span style="color: #c084fc;">from</span> <span class="cmd">aibrain</span> <span style="color: #c084fc;">import</span> <span class="cmd">Brain</span><br>
+        <span class="cmd">brain = Brain()</span><br>
+        <span class="cmd">brain.add(</span><span style="color: #86efac;">"I love tennis"</span><span class="cmd">, user_id=</span><span style="color: #86efac;">"alice"</span><span class="cmd">)</span><br>
+        <span class="cmd">brain.search(</span><span style="color: #86efac;">"hobbies"</span><span class="cmd">, user_id=</span><span style="color: #86efac;">"alice"</span><span class="cmd">)</span>
+    </div>
     <div class="hero-sub">Click to copy. Python 3.10+. Works on Linux, Mac, and Windows.</div>
 </div>
 
@@ -611,7 +618,7 @@
         <div class="feature">
             <div class="feature-icon">&#x1f9e0;</div>
             <h3>Self-Learning Memory</h3>
-            <p>Persistent memory with SelRoute — the research-backed retrieval engine validated on 62,000+ instances. Your agent learns from every conversation and improves autonomously.</p>
+            <p>Mem0-compatible Brain API — add memories in 3 lines of code. Automatic fact extraction from conversations, memory deduplication (no duplicates ever), per-user memory scoping, and full change history tracking. Powered by SelRoute, the research-backed retrieval engine validated on 62,000+ instances.</p>
         </div>
         <div class="feature">
             <div class="feature-icon">&#x1f310;</div>
@@ -705,8 +712,13 @@
     <div class="deepdive-grid">
         <div class="deepdive-card">
             <h3><span class="icon">&#x1f9e0;</span> Self-Learning Memory</h3>
-            <p>SQLite + FTS5 full-text search with optional vector embeddings. Powered by SelRoute, a research-backed hybrid retrieval engine published on arXiv.</p>
+            <p>Mem0-compatible Brain API — add, search, and manage memories in 3 lines of code. SQLite + FTS5 full-text search with optional vector embeddings. Powered by SelRoute, a research-backed hybrid retrieval engine published on arXiv.</p>
             <ul>
+                <li>Mem0-compatible API: Brain().add(), .search(), .get_all(), .delete()</li>
+                <li>Automatic fact extraction from conversations</li>
+                <li>Memory deduplication — no duplicates ever stored</li>
+                <li>Per-user memory scoping with user_id parameter</li>
+                <li>Full change history tracking for every memory</li>
                 <li>Semantic search with MiniLM or bge-base embeddings</li>
                 <li>6 memory types: user, feedback, project, reference, pattern, decision</li>
                 <li>Hyperedge relationships and entity extraction</li>
@@ -1084,7 +1096,7 @@
             </tr>
             <tr>
                 <td>Persistent memory</td>
-                <td class="yes">Vector + graph + satellites</td>
+                <td class="yes">Mem0-compatible API + vector + graph + satellites</td>
                 <td class="yes">Graph memory</td>
                 <td class="no">--</td>
                 <td class="yes">Self-editing</td>
