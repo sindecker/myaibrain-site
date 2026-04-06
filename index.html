@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIBrain — Your Agent, Better Every Day</title>
-    <meta name="description" content="The portable operating system for AI agents. Persistent memory, 189 self-learning workflows, 9 MCP servers, mesh networking, and a full dashboard. 100% local. Works with any LLM.">
+    <meta name="description" content="The portable operating system for AI agents. Persistent memory, Agent/Task/Team composition, Flow engine, document ingestion, universal MCP, 189 workflows, 9 MCP servers, and a 45-page dashboard. 100% local. Works with any LLM.">
     <meta property="og:title" content="AIBrain — Your Agent, Better Every Day">
-    <meta property="og:description" content="Persistent memory, 189 workflows, 9 MCP servers, mesh networking. Install a brain pack and your agent has years of expertise in minutes.">
+    <meta property="og:description" content="Persistent memory, Agent Teams, Flow engine, document ingestion, universal MCP, 189 workflows, 9 MCP servers. Install a brain pack and your agent has years of expertise in minutes.">
     <meta property="og:url" content="https://myaibrain.org">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
@@ -461,20 +461,20 @@
 
 <!-- Hero -->
 <div class="hero">
-    <div class="hero-badge">v1.1.7 — The Portable Agent Operating System</div>
+    <div class="hero-badge">v1.2.0 — The Portable Agent Operating System</div>
     <div style="text-align: center; margin-bottom: 1.5rem;">
         <span style="font-size: clamp(3rem, 6vw, 4.5rem); margin-right: 0.5rem;">🧠</span>
         <span style="font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; color: var(--brand);">AIBrain</span>
     </div>
     <h1>Your agent,<br><span class="accent">better from day one</span></h1>
-    <p>AIBrain gives any AI agent persistent memory, 189 self-learning workflows, 54 skills, 9 MCP servers, mesh networking, and a full browser dashboard. Install a brain pack and your agent has years of expertise in minutes.</p>
+    <p>AIBrain gives any AI agent persistent memory, Agent/Task/Team composition, a Flow engine, document ingestion, universal MCP connectivity, 189 self-learning workflows, 9 MCP servers, mesh networking, and a 45-page browser dashboard. Install a brain pack and your agent has years of expertise in minutes.</p>
 
     <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain && aibrain setup --auto')">
         <span class="prompt">$</span> <span class="cmd">pip install aibrain && aibrain setup --auto</span>
     </div>
     <br>
     <div class="hero-install" style="text-align: left; display: block; max-width: 520px; margin: 0.75rem auto; font-size: 0.88rem; line-height: 1.7;" onclick="navigator.clipboard.writeText('from aibrain import Brain\nbrain = Brain()\nbrain.add(&quot;I love tennis&quot;, user_id=&quot;alice&quot;)\nbrain.search(&quot;hobbies&quot;, user_id=&quot;alice&quot;)')">
-        <span style="color: var(--dim);"># Mem0-compatible Brain API</span><br>
+        <span style="color: var(--dim);"># Brain API</span><br>
         <span style="color: #c084fc;">from</span> <span class="cmd">aibrain</span> <span style="color: #c084fc;">import</span> <span class="cmd">Brain</span><br>
         <span class="cmd">brain = Brain()</span><br>
         <span class="cmd">brain.add(</span><span style="color: #86efac;">"I love tennis"</span><span class="cmd">, user_id=</span><span style="color: #86efac;">"alice"</span><span class="cmd">)</span><br>
@@ -498,8 +498,12 @@
         <div class="stat-label">Workflows</div>
     </div>
     <div class="stat">
-        <div class="stat-num">30</div>
-        <div class="stat-label">Dashboard Components</div>
+        <div class="stat-num">45+</div>
+        <div class="stat-label">Dashboard Pages</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">617</div>
+        <div class="stat-label">Tests Passing</div>
     </div>
     <div class="stat">
         <div class="stat-num">100%</div>
@@ -588,14 +592,14 @@
             <h3>Free</h3>
             <p style="color: var(--dim); margin-bottom: 1rem;">Everything you need to start</p>
             <div class="price-amount" style="color: var(--brand);">$0</div>
-            <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Single instance &bull; 189 workflows &bull; 9 MCP servers &bull; Local SQLite &bull; No credit card</p>
+            <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Single instance &bull; 189 workflows &bull; 9 MCP servers &bull; 45-page dashboard &bull; Local SQLite &bull; No credit card</p>
             <a href="#install" class="btn btn-secondary" style="margin-top: auto; text-align: center;">Install Free</a>
         </div>
         <div class="price-card featured">
             <h3>Pro</h3>
             <p style="color: var(--dim); margin-bottom: 1rem;">For power users and professionals</p>
             <div class="price-amount" style="color: var(--brand);">$9.95<span style="font-size: 1rem; font-weight: 400;">/mo</span></div>
-            <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Up to 3 workers &bull; Boss Agent &bull; Model routing &bull; Session merge &bull; Skill evolution &bull; Brain Marketplace</p>
+            <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Agent Teams &bull; Flows &bull; Document Ingestion &bull; MCP Client &bull; Boss Agent &bull; Model routing &bull; Skill evolution</p>
             <a href="https://myaibrain.org" class="btn btn-primary" style="margin-top: auto; text-align: center;">Get Pro</a>
         </div>
         <div class="price-card">
@@ -618,7 +622,27 @@
         <div class="feature">
             <div class="feature-icon">&#x1f9e0;</div>
             <h3>Self-Learning Memory</h3>
-            <p>Mem0-compatible Brain API — add memories in 3 lines of code. Automatic fact extraction from conversations, memory deduplication (no duplicates ever), per-user memory scoping, and full change history tracking. Powered by SelRoute, the research-backed retrieval engine validated on 62,000+ instances.</p>
+            <p>Brain API — add memories in 3 lines of code. Automatic fact extraction from conversations, memory deduplication (no duplicates ever), per-user memory scoping, and full change history tracking. Powered by SelRoute, the research-backed retrieval engine validated on 62,000+ instances.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">&#x1f465;</div>
+            <h3>Agent Teams</h3>
+            <p>Typed multi-agent composition. Define agents with role, goal, and backstory. Create tasks with expected output and guardrails. Run teams with sequential or hierarchical processes — agents delegate, retry, and produce structured results.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">&#x1f500;</div>
+            <h3>Flow Engine</h3>
+            <p>Decorator-driven state machines. @start, @listen, @router decorators build execution graphs with conditional routing. Typed state, persistence for long-running flows, human-in-the-loop pause/resume, @retry, @timeout, and visualization.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">&#x1f4c4;</div>
+            <h3>Document Ingestion</h3>
+            <p>brain.ingest("file.pdf") — feed documents directly into memory. 7 source types: PDF, CSV, Excel, JSON, JSONL, Text, Markdown, and directories. Sentence-aware chunking. Incremental — re-running skips already-processed files.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">&#x1f50c;</div>
+            <h3>Universal MCP Client</h3>
+            <p>Connect to any MCP server from Python. Three transports: stdio, HTTP, SSE. Tool bridging turns remote MCP tools into local callable functions. Registry manages multiple servers from code or the dashboard.</p>
         </div>
         <div class="feature">
             <div class="feature-icon">&#x1f310;</div>
@@ -712,9 +736,9 @@
     <div class="deepdive-grid">
         <div class="deepdive-card">
             <h3><span class="icon">&#x1f9e0;</span> Self-Learning Memory</h3>
-            <p>Mem0-compatible Brain API — add, search, and manage memories in 3 lines of code. SQLite + FTS5 full-text search with optional vector embeddings. Powered by SelRoute, a research-backed hybrid retrieval engine published on arXiv.</p>
+            <p>Brain API — add, search, and manage memories in 3 lines of code. SQLite + FTS5 full-text search with optional vector embeddings. Powered by SelRoute, a research-backed hybrid retrieval engine published on arXiv.</p>
             <ul>
-                <li>Mem0-compatible API: Brain().add(), .search(), .get_all(), .delete()</li>
+                <li>Full Brain API: Brain().add(), .search(), .get_all(), .delete()</li>
                 <li>Automatic fact extraction from conversations</li>
                 <li>Memory deduplication — no duplicates ever stored</li>
                 <li>Per-user memory scoping with user_id parameter</li>
@@ -724,6 +748,59 @@
                 <li>Hyperedge relationships and entity extraction</li>
                 <li>Evolution cycles that compress, merge, and strengthen memories</li>
                 <li>Export/import your entire brain as JSON</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f465;</span> Agent/Task/Team System</h3>
+            <p>Typed multi-agent composition — define agents, create tasks, run teams. Sequential or hierarchical processes with delegation and guardrails.</p>
+            <ul>
+                <li>from aibrain import Agent, Task, Team — three imports, you're building</li>
+                <li>Agents with role, goal, and backstory</li>
+                <li>Tasks with expected output, tools, and validation guardrails</li>
+                <li>Sequential process: tasks run in order, outputs chain</li>
+                <li>Hierarchical process: manager delegates to workers</li>
+                <li>Delegation between agents within a team</li>
+                <li>Automatic retry with configurable limits on guardrail failure</li>
+                <li>Structured output: TeamOutput and TaskOutput objects</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f500;</span> Flow Engine</h3>
+            <p>Decorator-driven state machines for complex, multi-step workflows. Build execution graphs with conditional routing, persistence, and human-in-the-loop support.</p>
+            <ul>
+                <li>@start, @listen, @router decorators define the execution graph</li>
+                <li>Typed state objects via Pydantic — validated and serializable</li>
+                <li>Conditional routing: @router returns a string to select the next branch</li>
+                <li>Persistence for long-running flows — save and resume later</li>
+                <li>Human-in-the-loop: pause for approval, resume programmatically</li>
+                <li>@retry and @timeout decorators for resilience</li>
+                <li>Flow visualization — generate diagrams of execution paths</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f4c4;</span> Document Ingestion</h3>
+            <p>Feed documents directly into brain memory. brain.ingest() handles 7 source types with intelligent chunking and incremental processing.</p>
+            <ul>
+                <li>brain.ingest("file.pdf") — one line to ingest any document</li>
+                <li>PDF, CSV, Excel, JSON, JSONL, Text, Markdown support</li>
+                <li>Directory ingestion — point at a folder, ingest everything</li>
+                <li>Sentence-aware chunking with configurable overlap</li>
+                <li>Incremental: re-running skips already-processed files</li>
+                <li>Named collections for organizing ingested content</li>
+                <li>Search across all ingested documents with brain.search()</li>
+            </ul>
+        </div>
+        <div class="deepdive-card">
+            <h3><span class="icon">&#x1f517;</span> Universal MCP Client</h3>
+            <p>Connect to any MCP server from Python. Three transports, tool bridging, and a registry for managing multiple servers.</p>
+            <ul>
+                <li>MCPServerStdio: launch subprocess-based servers (npx, python)</li>
+                <li>MCPServerHTTP: connect to remote HTTP MCP endpoints</li>
+                <li>MCPServerSSE: Server-Sent Events streaming transport</li>
+                <li>Tool bridging: remote MCP tools become local Python functions</li>
+                <li>Registry manages multiple servers with named entries</li>
+                <li>Dashboard /mcp page for visual management</li>
+                <li>Works alongside AIBrain's 9 built-in MCP servers</li>
             </ul>
         </div>
         <div class="deepdive-card">
@@ -771,8 +848,8 @@
             </ul>
         </div>
         <div class="deepdive-card">
-            <h3><span class="icon">&#x1f4ca;</span> 30-Component Dashboard</h3>
-            <p>Full browser UI for everything your agent does. Not a toy dashboard — 30 production components with real-time WebSocket updates.</p>
+            <h3><span class="icon">&#x1f4ca;</span> 45-Page Dashboard</h3>
+            <p>Full browser UI for everything your agent does. Not a toy dashboard — 45+ pages with teams, flows, ingestion, MCP management, and real-time WebSocket updates.</p>
             <ul>
                 <li>Visual workflow builder with drag-and-drop node editor</li>
                 <li>Interactive knowledge graph with entity extraction</li>
@@ -861,7 +938,7 @@
             <div class="selling-point">
                 <div class="sp-icon">&#x1f4ca;</div>
                 <h4>Full Dashboard</h4>
-                <p>41-page dashboard with org charts, agent detail, task tracking, cost analytics, and evolution monitoring.</p>
+                <p>45-page dashboard with teams, flows, ingestion, org charts, agent detail, task tracking, cost analytics, and evolution monitoring.</p>
             </div>
             <div class="selling-point">
                 <div class="sp-icon">&#x1f504;</div>
@@ -919,9 +996,17 @@
         <div class="arch-label">Capabilities</div>
         <div class="arch-row">
             <div class="arch-box">Memory DB</div>
-            <div class="arch-box">189 workflows</div>
+            <div class="arch-box">Agent Teams</div>
+            <div class="arch-box">Flow Engine</div>
             <div class="arch-box">9 MCP Servers</div>
-            <div class="arch-box">Mesh Network</div>
+        </div>
+        <div style="margin-top:1rem;">
+            <div class="arch-row">
+                <div class="arch-box">Doc Ingestion</div>
+                <div class="arch-box">MCP Client</div>
+                <div class="arch-box">189 Workflows</div>
+                <div class="arch-box">Mesh Network</div>
+            </div>
         </div>
         <div style="margin-top:1rem;">
             <div class="arch-row">
@@ -1055,17 +1140,16 @@
             <div class="price-note">Launch price — <span class="countdown-remaining" style="font-weight:bold;">200</span> of 200 spots remaining</div>
             <ul class="price-features">
                 <li><span class="check">+</span> Everything in Free</li>
+                <li><span class="check">+</span> Agent/Task/Team composition</li>
+                <li><span class="check">+</span> Flow engine with state machines</li>
+                <li><span class="check">+</span> Document ingestion (7 formats)</li>
+                <li><span class="check">+</span> Universal MCP client (3 transports)</li>
                 <li><span class="check">+</span> 9 MCP servers (72 tools total)</li>
                 <li><span class="check">+</span> 189 workflows across all domains</li>
                 <li><span class="check">+</span> Tailscale mesh networking</li>
                 <li><span class="check">+</span> IT support + automated remediation</li>
                 <li><span class="check">+</span> Desktop automation (any app)</li>
-                <li><span class="check">+</span> Design + content generation</li>
                 <li><span class="check">+</span> Skill evolution + auto-experiment</li>
-                <li><span class="check">+</span> File transfer + brain sync</li>
-                <li><span class="check">+</span> Full calendar (CalDAV)</li>
-                <li><span class="check">+</span> Push notifications (mobile)</li>
-                <li><span class="check">+</span> Brain marketplace access</li>
                 <li><span class="check">+</span> Boss Agent: up to 3 workers + model routing</li>
             </ul>
             <a href="https://buy.stripe.com/8x2fZi6BJ0w16dS7jgg7e06" class="price-cta primary">Get Pro</a>
@@ -1077,6 +1161,7 @@
             <ul class="price-features">
                 <li><span class="check">+</span> Everything in Pro</li>
                 <li><span class="check">+</span> AI Companies with org charts</li>
+                <li><span class="check">+</span> Teams in Companies — run agent teams from the dashboard</li>
                 <li><span class="check">+</span> Goal tracking with milestones</li>
                 <li><span class="check">+</span> Role-based access control (RBAC)</li>
                 <li><span class="check">+</span> Encrypted secrets vault</li>
@@ -1089,118 +1174,75 @@
 
     <!-- Comparison table -->
     <div class="comparison">
-        <h3>AIBrain vs the alternatives</h3>
+        <h3>What you get with AIBrain</h3>
         <table>
             <tr>
-                <th></th><th>AIBrain</th><th>Mem0</th><th>CrewAI</th><th>Letta</th><th>LangGraph</th><th>Agno</th>
+                <th>Capability</th><th>AIBrain</th><th>Typical alternatives</th>
             </tr>
             <tr>
                 <td>Persistent memory</td>
-                <td class="yes">Mem0-compatible API + vector + graph + satellites</td>
-                <td class="yes">Graph memory</td>
-                <td class="no">--</td>
-                <td class="yes">Self-editing</td>
-                <td class="yes">LangMem add-on</td>
-                <td class="no">Basic KV</td>
+                <td class="yes">Full API + vector + graph + satellites</td>
+                <td class="no">Partial or cloud-only</td>
+            </tr>
+            <tr>
+                <td>Agent/Task/Team composition</td>
+                <td class="yes">Typed agents, sequential + hierarchical, delegation, guardrails</td>
+                <td class="no">Manual setup or limited</td>
+            </tr>
+            <tr>
+                <td>Flow engine</td>
+                <td class="yes">Decorator-driven state machines with routing, persistence, HITL</td>
+                <td class="no">Build your own or use external tools</td>
+            </tr>
+            <tr>
+                <td>Document ingestion</td>
+                <td class="yes">7 formats, sentence-aware chunking, incremental</td>
+                <td class="no">Separate tools required</td>
+            </tr>
+            <tr>
+                <td>Universal MCP client</td>
+                <td class="yes">3 transports, tool bridging, registry</td>
+                <td class="no">Single protocol or none</td>
             </tr>
             <tr>
                 <td>Self-learning workflows</td>
                 <td class="yes">189 included</td>
-                <td class="no">--</td>
-                <td class="no">Manual crews</td>
-                <td class="no">--</td>
                 <td class="no">Build your own</td>
-                <td class="no">--</td>
             </tr>
             <tr>
                 <td>Self-improvement / evolution</td>
                 <td class="yes">Full engine</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">Partial</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
+                <td class="no">Not available</td>
             </tr>
             <tr>
                 <td>Multi-agent companies</td>
-                <td class="yes">CEO → managers → workers</td>
-                <td class="no">--</td>
-                <td class="yes">Crews</td>
-                <td class="no">--</td>
-                <td class="yes">Graphs</td>
-                <td class="yes">Teams</td>
-            </tr>
-            <tr>
-                <td>LLM adapters</td>
-                <td class="yes">8 providers</td>
-                <td class="no">API only</td>
-                <td class="yes">Multiple</td>
-                <td class="yes">Multiple</td>
-                <td class="yes">Via LangChain</td>
-                <td class="yes">Multiple</td>
+                <td class="yes">CEO, managers, workers, 8 LLM adapters</td>
+                <td class="no">Basic multi-agent or cloud-only</td>
             </tr>
             <tr>
                 <td>Dashboard / UI</td>
-                <td class="yes">41 pages</td>
-                <td class="no">--</td>
-                <td class="yes">Cloud UI</td>
-                <td class="yes">Cloud UI</td>
-                <td class="yes">LangSmith</td>
-                <td class="yes">Cloud UI</td>
+                <td class="yes">45+ pages, fully local</td>
+                <td class="no">Cloud UI or none</td>
             </tr>
             <tr>
                 <td>MCP servers</td>
-                <td class="yes">9 servers</td>
-                <td class="no">1 SDK</td>
-                <td class="no">--</td>
-                <td class="no">1 server</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
+                <td class="yes">9 servers (72 tools)</td>
+                <td class="no">0-1 servers</td>
             </tr>
             <tr>
                 <td>Knowledge graph</td>
-                <td class="yes">Interactive</td>
-                <td class="yes">Graph-based</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-            </tr>
-            <tr>
-                <td>Brain portability</td>
-                <td class="yes">Export / import / packs</td>
-                <td class="no">Cloud-locked</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-            </tr>
-            <tr>
-                <td>Research-backed retrieval</td>
-                <td class="yes">SelRoute (arXiv)</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
-                <td class="no">--</td>
+                <td class="yes">Interactive force-directed</td>
+                <td class="no">Rare</td>
             </tr>
             <tr>
                 <td>100% local / private</td>
-                <td class="yes">Yes</td>
-                <td class="no">Cloud</td>
-                <td class="no">Cloud</td>
-                <td class="yes">Yes</td>
-                <td class="yes">Yes</td>
-                <td class="yes">Yes</td>
+                <td class="yes">Yes — your machine, your data</td>
+                <td class="no">Often cloud-dependent</td>
             </tr>
             <tr>
-                <td>Single pip install</td>
-                <td class="yes">pip install aibrain</td>
-                <td class="yes">pip install mem0ai</td>
-                <td class="yes">pip install crewai</td>
-                <td class="yes">pip install letta</td>
-                <td class="yes">pip install langgraph</td>
-                <td class="yes">pip install agno</td>
+                <td>Research-backed retrieval</td>
+                <td class="yes">SelRoute (arXiv-published)</td>
+                <td class="no">Standard retrieval</td>
             </tr>
         </table>
     </div>
