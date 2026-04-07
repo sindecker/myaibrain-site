@@ -1,0 +1,11 @@
+name = "aibrain-stripe-webhook"
+main = "src/index.js"
+compatibility_date = "2026-04-07"
+
+# Secrets (set via `wrangler secret put`):
+#   STRIPE_WEBHOOK_SECRET  — whsec_... from Stripe dashboard
+#   AIBRAIN_SIGNING_KEY    — same key used by aibrain_licensing.py
+#   RESEND_API_KEY         — Resend API key for transactional email
+
+[[routes]]
+pattern = "myaibrain.org/api/webhooks/stripe"
