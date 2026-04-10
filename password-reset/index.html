@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reset password — AIBrain</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="/account/account.css">
+</head>
+<body>
+<nav>
+    <span class="nav-brand"><a href="/">🧠 AIBrain</a></span>
+    <div class="nav-links">
+        <a href="/login" class="nav-ghost">Log in</a>
+        <a href="/signup" class="nav-cta">Sign up</a>
+    </div>
+</nav>
+
+<div class="auth-shell">
+    <h1>Reset your password</h1>
+    <p class="sub">We'll email you a reset link — it expires in 15 minutes.</p>
+
+    <div class="card">
+        <div id="notice" class="notice" style="display:none;"></div>
+        <form id="reset-form" novalidate>
+            <div class="form-row">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <button type="submit" class="btn" id="submit-btn">Send reset link</button>
+        </form>
+        <div class="muted-footer">
+            <a href="/login">Back to login</a>
+        </div>
+    </div>
+</div>
+
+<script src="/account/auth.js"></script>
+<script>
+(function () {
+    const A = window.AIBrainAuth;
+    const notice = document.getElementById('notice');
+    const form = document.getElementById('reset-form');
+    const btn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        A.clearNotice(notice);
+        const email = document.getElementById('email').value.trim();
+        if (!A.validateEmail(email)) {
+            A.showNotice(notice, 'error', 'Enter a valid email address.');
+            return;
+        }
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        try {
+            await A.apiCall('/auth/password/reset/request', 'POST', { email: email });
+            A.showNotice(notice, 'ok', 'If an account exists for that email, a reset link is on its way.');
+            btn.textContent = 'Sent';
+        } catch (err) {
+            btn.disabled = false;
+            btn.textContent = 'Send reset link';
+            A.showNotice(notice, 'error', err.detail || 'Request failed.');
+        }
+    });
+})();
+</script>
+</body>
+</html>

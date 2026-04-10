@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify email — AIBrain</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="/account/account.css">
+</head>
+<body>
+<nav>
+    <span class="nav-brand"><a href="/">🧠 AIBrain</a></span>
+    <div class="nav-links">
+        <a href="/account" class="nav-ghost">Dashboard</a>
+    </div>
+</nav>
+
+<div class="auth-shell">
+    <h1>Verifying your email…</h1>
+    <p class="sub">This should only take a second.</p>
+    <div class="card">
+        <div id="notice" class="notice" style="display:none;"></div>
+        <div id="status" style="text-align:center; color: var(--dim);">
+            <span class="spinner"></span> Checking token…
+        </div>
+    </div>
+</div>
+
+<script src="/account/auth.js"></script>
+<script>
+(async function () {
+    const A = window.AIBrainAuth;
+    const notice = document.getElementById('notice');
+    const status = document.getElementById('status');
+    const token = A.getQueryParam('token');
+
+    if (!token) {
+        A.showNotice(notice, 'error', 'Missing verification token.');
+        status.style.display = 'none';
+        return;
+    }
+    try {
+        await A.apiCall('/auth/verify-email?token=' + encodeURIComponent(token));
+        A.showNotice(notice, 'ok', 'Email verified. Redirecting to your account…');
+        status.style.display = 'none';
+        setTimeout(function () { window.location.href = '/account'; }, 1500);
+    } catch (err) {
+        A.showNotice(notice, 'error', err.detail || 'Verification failed.');
+        status.style.display = 'none';
+    }
+})();
+</script>
+</body>
+</html>

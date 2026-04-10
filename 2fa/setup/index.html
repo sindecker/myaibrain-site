@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two-factor setup — AIBrain</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="/account/account.css">
+</head>
+<body>
+<nav>
+    <span class="nav-brand"><a href="/">🧠 AIBrain</a></span>
+    <div class="nav-links">
+        <a href="/account" class="nav-ghost">Account</a>
+    </div>
+</nav>
+
+<div class="auth-shell">
+    <h1>Enable two-factor auth</h1>
+    <p class="sub">Scan the QR code with your authenticator app, then enter the current 6-digit code to confirm.</p>
+
+    <div class="card">
+        <div id="notice" class="notice" style="display:none;"></div>
+
+        <div id="reauth-section">
+            <div class="form-row">
+                <label for="reauth-password">Confirm your password</label>
+                <input id="reauth-password" type="password" autocomplete="current-password" required>
+            </div>
+            <button class="btn" id="reauth-btn">Continue</button>
+        </div>
+
+        <div id="qr-section" style="display:none;">
+            <div class="qr-box">
+                <img id="qr-img" alt="TOTP QR code">
+            </div>
+            <div style="text-align:center; margin-bottom:1rem;">
+                <div style="font-size:0.85rem; color:var(--dim);">Can't scan? Enter this secret manually:</div>
+                <code id="secret" class="inline"></code>
+            </div>
+
+            <div class="form-row">
+                <label for="code">6-digit code</label>
+                <input id="code" type="text" inputmode="numeric" pattern="\d{6}" placeholder="123456" autocomplete="one-time-code">
+            </div>
+            <button class="btn" id="verify-btn">Enable 2FA</button>
+        </div>
+    </div>
+</div>
+
+<script src="/account/auth.js"></script>
+<script>
+(function () {
+    const A = window.AIBrainAuth;
+    const notice = document.getElementById('notice');
+
+    document.getElementById('reauth-btn').addEventListener('click', async function () {
+        A.clearNotice(notice);
+        const password = document.getElementById('reauth-password').value;
+        if (!password) { A.showNotice(notice, 'error', 'Password required.'); return; }
+        try {
+            const data = await A.apiCall('/auth/2fa/setup', 'POST', { password: password });
+            document.getElementById('reauth-section').style.display = 'none';
+            document.getElementById('qr-section').style.display = 'block';
+            document.getElementById('secret').textContent = data.secret;
+            // Use a QR image service (avoids bundling a QR lib). Encodes the otpauth:// URI.
+            const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(data.otpauth_uri);
+            document.getElementById('qr-img').src = qrSrc;
+        } catch (err) {
+            A.showNotice(notice, 'error', err.detail || 'Reauth failed.');
+        }
+    });
+
+    document.getElementById('verify-btn').addEventListener('click', async function () {
+        A.clearNotice(notice);
+        const code = document.getElementById('code').value.trim();
+        if (!/^\d{6}$/.test(code)) { A.showNotice(notice, 'error', 'Enter the 6-digit code.'); return; }
+        try {
+            await A.apiCall('/auth/2fa/verify', 'POST', { code: code });
+            A.showNotice(notice, 'ok', '2FA enabled. Redirecting…');
+            setTimeout(function () { window.location.href = '/account'; }, 1200);
+        } catch (err) {
+            A.showNotice(notice, 'error', err.detail || 'Verification failed.');
+        }
+    });
+})();
+</script>
+</body>
+</html>

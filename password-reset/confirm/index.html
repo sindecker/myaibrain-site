@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Set new password — AIBrain</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="/account/account.css">
+</head>
+<body>
+<nav>
+    <span class="nav-brand"><a href="/">🧠 AIBrain</a></span>
+    <div class="nav-links">
+        <a href="/login" class="nav-ghost">Log in</a>
+    </div>
+</nav>
+
+<div class="auth-shell">
+    <h1>Set a new password</h1>
+    <p class="sub">Choose a new password for your account.</p>
+
+    <div class="card">
+        <div id="notice" class="notice" style="display:none;"></div>
+        <form id="confirm-form" novalidate>
+            <div class="form-row">
+                <label for="new-password">New password</label>
+                <input id="new-password" name="new_password" type="password" autocomplete="new-password" required>
+                <div class="hint">At least 10 characters with letters and at least one number or symbol.</div>
+            </div>
+            <div class="form-row">
+                <label for="confirm-password">Confirm new password</label>
+                <input id="confirm-password" name="confirm_password" type="password" autocomplete="new-password" required>
+            </div>
+            <button type="submit" class="btn" id="submit-btn">Update password</button>
+        </form>
+    </div>
+</div>
+
+<script src="/account/auth.js"></script>
+<script>
+(function () {
+    const A = window.AIBrainAuth;
+    const notice = document.getElementById('notice');
+    const form = document.getElementById('confirm-form');
+    const btn = document.getElementById('submit-btn');
+    const token = A.getQueryParam('token');
+
+    if (!token) {
+        A.showNotice(notice, 'error', 'Missing reset token. Request a new link from the reset page.');
+        form.querySelectorAll('input, button').forEach(function (el) { el.disabled = true; });
+        return;
+    }
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        A.clearNotice(notice);
+        const p1 = document.getElementById('new-password').value;
+        const p2 = document.getElementById('confirm-password').value;
+        const pwErr = A.validatePassword(p1);
+        if (pwErr) { A.showNotice(notice, 'error', pwErr); return; }
+        if (p1 !== p2) { A.showNotice(notice, 'error', 'Passwords do not match.'); return; }
+        btn.disabled = true;
+        btn.textContent = 'Updating…';
+        try {
+            await A.apiCall('/auth/password/reset/confirm', 'POST', { token: token, new_password: p1 });
+            A.showNotice(notice, 'ok', 'Password updated. Redirecting to login…');
+            setTimeout(function () { window.location.href = '/login'; }, 1500);
+        } catch (err) {
+            btn.disabled = false;
+            btn.textContent = 'Update password';
+            A.showNotice(notice, 'error', err.detail || 'Reset failed.');
+        }
+    });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign up — AIBrain</title>
+<meta name="description" content="Create your AIBrain account — persistent memory, 200+ workflows, and a dashboard for your agent.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="/account/account.css">
+</head>
+<body>
+<nav>
+    <span class="nav-brand"><a href="/">🧠 AIBrain</a></span>
+    <div class="nav-links">
+        <a href="/#pricing">Pricing</a>
+        <a href="/docs/getting-started">Docs</a>
+        <a href="/login" class="nav-ghost">Log in</a>
+    </div>
+</nav>
+
+<div class="auth-shell">
+    <h1>Create your account</h1>
+    <p class="sub">One account for AIBrain, your license key, and billing.</p>
+
+    <div class="card">
+        <div id="notice" class="notice" style="display:none;"></div>
+
+        <div id="oauth-buttons" class="oauth-buttons"></div>
+        <div id="oauth-divider" class="divider" style="display:none;">or sign up with email</div>
+
+        <form id="signup-form" novalidate>
+            <div class="form-row">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="form-row">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" autocomplete="new-password" required>
+                <div class="hint">At least 10 characters with letters and at least one number or symbol.</div>
+            </div>
+            <button type="submit" class="btn" id="submit-btn">Create account</button>
+        </form>
+
+        <div class="muted-footer">
+            Already have an account? <a href="/login">Log in</a>
+        </div>
+    </div>
+</div>
+
+<script src="/account/auth.js"></script>
+<script>
+(async function () {
+    const A = window.AIBrainAuth;
+    const notice = document.getElementById('notice');
+    const form = document.getElementById('signup-form');
+    const btn = document.getElementById('submit-btn');
+
+    // OAuth buttons
+    const providers = await A.loadProviders();
+    if (providers.length > 0) {
+        A.renderOauthButtons(document.getElementById('oauth-buttons'), providers, 'signup');
+        document.getElementById('oauth-divider').style.display = 'block';
+    }
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        A.clearNotice(notice);
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (!A.validateEmail(email)) {
+            A.showNotice(notice, 'error', 'Enter a valid email address.');
+            return;
+        }
+        const pwErr = A.validatePassword(password);
+        if (pwErr) {
+            A.showNotice(notice, 'error', pwErr);
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Creating account…';
+        try {
+            await A.apiCall('/auth/signup', 'POST', { email: email, password: password });
+            window.location.href = '/account?welcome=1';
+        } catch (err) {
+            btn.disabled = false;
+            btn.textContent = 'Create account';
+            A.showNotice(notice, 'error', err.detail || 'Signup failed.');
+        }
+    });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — AIBrain</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="/account/account.css">
+</head>
+<body>
+<nav>
+    <span class="nav-brand"><a href="/">🧠 AIBrain</a></span>
+    <div class="nav-links">
+        <a href="/#pricing">Pricing</a>
+        <a href="/docs/getting-started">Docs</a>
+        <a href="/signup" class="nav-cta">Sign up</a>
+    </div>
+</nav>
+
+<div class="auth-shell">
+    <h1>Log in</h1>
+    <p class="sub">Welcome back.</p>
+
+    <div class="card">
+        <div id="notice" class="notice" style="display:none;"></div>
+
+        <div id="oauth-buttons" class="oauth-buttons"></div>
+        <div id="oauth-divider" class="divider" style="display:none;">or with email and password</div>
+
+        <form id="login-form" novalidate>
+            <div class="form-row">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="form-row">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required>
+            </div>
+            <div id="totp-row" class="form-row" style="display:none;">
+                <label for="totp">Two-factor code</label>
+                <input id="totp" name="totp" type="text" inputmode="numeric" pattern="\d{6}" autocomplete="one-time-code" placeholder="123456">
+                <div class="hint">Enter the 6-digit code from your authenticator app.</div>
+            </div>
+            <button type="submit" class="btn" id="submit-btn">Log in</button>
+        </form>
+
+        <div class="muted-footer">
+            <a href="/password-reset">Forgot password?</a> &nbsp;·&nbsp;
+            New here? <a href="/signup">Sign up</a>
+        </div>
+    </div>
+</div>
+
+<script src="/account/auth.js"></script>
+<script>
+(async function () {
+    const A = window.AIBrainAuth;
+    const notice = document.getElementById('notice');
+    const form = document.getElementById('login-form');
+    const btn = document.getElementById('submit-btn');
+    const totpRow = document.getElementById('totp-row');
+
+    // Surface OAuth callback errors
+    const oauthErr = A.getQueryParam('oauth_error');
+    if (oauthErr) A.showNotice(notice, 'error', 'OAuth login failed: ' + oauthErr);
+
+    const providers = await A.loadProviders();
+    if (providers.length > 0) {
+        A.renderOauthButtons(document.getElementById('oauth-buttons'), providers, 'login');
+        document.getElementById('oauth-divider').style.display = 'block';
+    }
+
+    let totpRequired = false;
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        A.clearNotice(notice);
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const totp = document.getElementById('totp').value.trim();
+
+        if (!A.validateEmail(email)) {
+            A.showNotice(notice, 'error', 'Enter a valid email address.');
+            return;
+        }
+        if (!password) {
+            A.showNotice(notice, 'error', 'Password required.');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Logging in…';
+        try {
+            const body = { email: email, password: password };
+            if (totp) body.totp = totp;
+            const data = await A.apiCall('/auth/login', 'POST', body);
+            if (data && data.status === 'totp_required') {
+                totpRequired = true;
+                totpRow.style.display = 'block';
+                document.getElementById('totp').focus();
+                A.showNotice(notice, 'warn', 'Enter your 6-digit two-factor code.');
+                btn.disabled = false;
+                btn.textContent = 'Log in';
+                return;
+            }
+            window.location.href = '/account';
+        } catch (err) {
+            btn.disabled = false;
+            btn.textContent = 'Log in';
+            A.showNotice(notice, 'error', err.detail || 'Login failed.');
+        }
+    });
+})();
+</script>
+</body>
+</html>

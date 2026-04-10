@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your account — AIBrain</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="stylesheet" href="/account/account.css">
+</head>
+<body>
+<nav>
+    <span class="nav-brand"><a href="/">🧠 AIBrain</a></span>
+    <div class="nav-links">
+        <a href="/docs/getting-started">Docs</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="#" id="logout-link" class="nav-ghost">Log out</a>
+    </div>
+</nav>
+
+<div class="auth-shell" style="max-width: 720px;">
+    <div class="acct-header">
+        <h1>Your account</h1>
+    </div>
+
+    <div id="notice" class="notice" style="display:none;"></div>
+    <div id="loading" style="text-align:center; color:var(--dim); padding:2rem;">
+        <span class="spinner"></span> Loading your account…
+    </div>
+
+    <div id="content" style="display:none;">
+        <!-- Profile -->
+        <div class="acct-section">
+            <h2>Profile</h2>
+            <div class="acct-row">
+                <span class="k">Email</span>
+                <span class="v" id="f-email"></span>
+            </div>
+            <div class="acct-row">
+                <span class="k">Verified</span>
+                <span class="v" id="f-verified"></span>
+            </div>
+            <div class="acct-row">
+                <span class="k">Signed up</span>
+                <span class="v" id="f-created"></span>
+            </div>
+            <div class="acct-row">
+                <span class="k">Last login</span>
+                <span class="v" id="f-last-login"></span>
+            </div>
+        </div>
+
+        <!-- Login methods -->
+        <div class="acct-section">
+            <h2>Login methods</h2>
+            <div class="acct-row">
+                <span class="k">Password</span>
+                <span class="v" id="m-password"></span>
+            </div>
+            <div class="acct-row">
+                <span class="k">GitHub</span>
+                <span class="v" id="m-github"></span>
+            </div>
+            <div class="acct-row">
+                <span class="k">Google</span>
+                <span class="v" id="m-google"></span>
+            </div>
+            <div class="acct-row">
+                <span class="k">Microsoft</span>
+                <span class="v" id="m-microsoft"></span>
+            </div>
+            <div class="acct-actions" style="margin-top: 1rem;">
+                <button class="btn ghost small" id="btn-add-github">Add GitHub</button>
+                <button class="btn ghost small" id="btn-add-google">Add Google</button>
+                <button class="btn ghost small" id="btn-add-microsoft">Add Microsoft</button>
+                <a href="/password-reset" class="btn ghost small">Change password</a>
+            </div>
+        </div>
+
+        <!-- 2FA -->
+        <div class="acct-section">
+            <h2>Two-factor authentication</h2>
+            <div class="acct-row">
+                <span class="k">Status</span>
+                <span class="v" id="f-2fa"></span>
+            </div>
+            <div class="acct-actions" style="margin-top: 1rem;">
+                <a href="/2fa/setup" class="btn ghost small" id="btn-2fa-enable">Enable 2FA</a>
+                <button class="btn ghost small danger" id="btn-2fa-disable" style="display:none;">Disable 2FA</button>
+            </div>
+        </div>
+
+        <!-- Subscription -->
+        <div class="acct-section">
+            <h2>Subscription</h2>
+            <div class="acct-row">
+                <span class="k">Tier</span>
+                <span class="v" id="f-tier"></span>
+            </div>
+            <div class="acct-row">
+                <span class="k">License key</span>
+                <span class="v mono" id="f-license"></span>
+            </div>
+            <div class="acct-row">
+                <span class="k">Valid until</span>
+                <span class="v" id="f-valid-until"></span>
+            </div>
+            <div class="acct-actions" style="margin-top: 1rem;">
+                <button class="btn small" id="btn-portal">Manage subscription</button>
+                <button class="btn ghost small danger" id="btn-cancel">Cancel subscription</button>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin: 2rem 0;">
+            <button class="btn ghost" id="btn-logout">Log out</button>
+        </div>
+    </div>
+</div>
+
+<script src="/account/auth.js"></script>
+<script>
+(async function () {
+    const A = window.AIBrainAuth;
+    const notice = document.getElementById('notice');
+    const loading = document.getElementById('loading');
+    const content = document.getElementById('content');
+
+    function badge(ok) {
+        return ok
+            ? '<span class="badge ok">Linked</span>'
+            : '<span class="badge off">Not linked</span>';
+    }
+
+    function fmtDate(s) {
+        if (!s) return '—';
+        try {
+            const d = new Date(s.replace(' ', 'T') + 'Z');
+            return d.toLocaleString();
+        } catch (_e) { return s; }
+    }
+
+    let me = null;
+    try {
+        me = await A.apiCall('/auth/me');
+    } catch (err) {
+        if (err.status === 401) {
+            window.location.href = '/login';
+            return;
+        }
+        loading.style.display = 'none';
+        A.showNotice(notice, 'error', err.detail || 'Could not load account.');
+        return;
+    }
+
+    loading.style.display = 'none';
+    content.style.display = 'block';
+
+    // Welcome banner for signup redirect
+    if (A.getQueryParam('welcome')) {
+        A.showNotice(notice, 'ok', 'Account created. Check your email to verify your address.');
+    } else if (!me.email_verified) {
+        A.showNotice(notice, 'warn', 'Your email is not yet verified. Check your inbox for the verification link.');
+    }
+
+    document.getElementById('f-email').textContent = me.email;
+    document.getElementById('f-verified').innerHTML = me.email_verified ? '<span class="badge ok">Verified</span>' : '<span class="badge off">Unverified</span>';
+    document.getElementById('f-created').textContent = fmtDate(me.created_at);
+    document.getElementById('f-last-login').textContent = fmtDate(me.last_login_at);
+
+    document.getElementById('m-password').innerHTML = badge(me.linked_methods.password);
+    document.getElementById('m-github').innerHTML = badge(me.linked_methods.github);
+    document.getElementById('m-google').innerHTML = badge(me.linked_methods.google);
+    document.getElementById('m-microsoft').innerHTML = badge(me.linked_methods.microsoft);
+
+    // Hide provider buttons if backend says provider not enabled
+    const enabled = new Set(me.oauth_providers_enabled || []);
+    ['github','google','microsoft'].forEach(function (p) {
+        const btn = document.getElementById('btn-add-' + p);
+        if (!enabled.has(p) || me.linked_methods[p]) btn.style.display = 'none';
+    });
+
+    document.getElementById('f-2fa').innerHTML = me.totp_enabled
+        ? '<span class="badge ok">Enabled</span>'
+        : '<span class="badge off">Disabled</span>';
+    if (me.totp_enabled) {
+        document.getElementById('btn-2fa-enable').style.display = 'none';
+        document.getElementById('btn-2fa-disable').style.display = 'inline-block';
+    }
+
+    const tier = me.license.tier || 'free';
+    document.getElementById('f-tier').innerHTML = tier === 'free'
+        ? '<span class="badge free">Free</span>'
+        : '<span class="badge pro">' + tier.toUpperCase() + '</span>';
+
+    // License key with reveal toggle
+    const licEl = document.getElementById('f-license');
+    if (me.license.license_key_masked) {
+        licEl.innerHTML = '<code class="inline">' + me.license.license_key_masked + '</code>';
+    } else {
+        licEl.textContent = '—';
+    }
+
+    document.getElementById('f-valid-until').textContent = fmtDate(me.license.valid_until);
+
+    // Link buttons — each initiates a link flow by hitting POST /auth/oauth/<p>/link
+    ['github','google','microsoft'].forEach(function (p) {
+        const btn = document.getElementById('btn-add-' + p);
+        btn.addEventListener('click', async function () {
+            try {
+                const data = await A.apiCall('/auth/oauth/' + p + '/link', 'POST', {});
+                window.location.href = data.authorize_url;
+            } catch (err) {
+                A.showNotice(notice, 'error', err.detail || 'Could not start OAuth flow.');
+            }
+        });
+    });
+
+    document.getElementById('btn-2fa-disable').addEventListener('click', async function () {
+        const pw = prompt('Confirm your password to disable 2FA:');
+        if (!pw) return;
+        try {
+            await A.apiCall('/auth/2fa/disable', 'POST', { password: pw });
+            window.location.reload();
+        } catch (err) {
+            A.showNotice(notice, 'error', err.detail || 'Disable failed.');
+        }
+    });
+
+    document.getElementById('btn-portal').addEventListener('click', function () {
+        // Stripe portal session — existing stripe-portal endpoint on the site.
+        // If not configured, show a message.
+        if (me.license.stripe_customer_id) {
+            window.location.href = '/api/stripe/portal?customer=' + encodeURIComponent(me.license.stripe_customer_id);
+        } else {
+            A.showNotice(notice, 'warn', 'No active subscription to manage.');
+        }
+    });
+
+    document.getElementById('btn-cancel').addEventListener('click', function () {
+        if (!confirm('Cancel your subscription? You will keep access until the end of the current period.')) return;
+        if (me.license.stripe_customer_id) {
+            window.location.href = '/api/stripe/portal?customer=' + encodeURIComponent(me.license.stripe_customer_id) + '&action=cancel';
+        } else {
+            A.showNotice(notice, 'warn', 'No active subscription to cancel.');
+        }
+    });
+
+    async function doLogout() {
+        try { await A.apiCall('/auth/logout', 'POST', {}); } catch (_e) {}
+        window.location.href = '/';
+    }
+    document.getElementById('btn-logout').addEventListener('click', doLogout);
+    document.getElementById('logout-link').addEventListener('click', function (e) {
+        e.preventDefault();
+        doLogout();
+    });
+})();
+</script>
+</body>
+</html>
