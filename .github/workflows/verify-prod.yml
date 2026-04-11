@@ -1,15 +1,22 @@
-name: verify-prod (smoke test)
+name: verify (prod routes + public content)
 
-# Smoke test cron — runs every 15 minutes against the live myaibrain.org
-# customer surface and pages Decker via Telegram on any red.
+# Two parallel smoke jobs that run every 15 minutes:
 #
-# This is the structural fix for "Stripe is working but not working" — the
-# loop that catches drift between deploys (DNS, secret expiry, Pages cache,
-# wrangler-version-induced route format breaks, frontend pointing at routes
-# that no longer exist, etc) within 15 minutes instead of when a customer
-# complains.
+#   verify-prod    — curls every customer-facing route on myaibrain.org
+#                    and asserts each one returns the contracted shape.
+#                    Catches "Stripe code shipped but not actually wired
+#                    at the edge" — the failure mode that fired 10+ times.
 #
-# Also runs on every push to main + every PR — gates merge on a green run.
+#   verify-public  — fetches every public-facing content artifact
+#                    (README, CHANGELOG, GUIDEBOOK across the sindecker
+#                    repos + the live landing page) and asserts each one
+#                    references the current version per
+#                    aibrain_live_truth_v1_4_0.md. Catches the failure
+#                    mode where v1.4.0 ships but the public face still
+#                    says v1.2.4 for 5 days.
+#
+# Both jobs page Decker via Telegram on any red. Both also run on every
+# push to main + every PR — they gate merges.
 #
 # Required GitHub repo secrets (set via Settings > Secrets and variables > Actions):
 #   TELEGRAM_BOT_TOKEN — bot token from @BotFather (matches local TELEGRAM_TOKEN)
@@ -97,4 +104,69 @@ jobs:
         if: steps.verify.outputs.exit != '0'
         run: |
           echo "verify-prod exited with status ${{ steps.verify.outputs.exit }}"
+          exit 1
+
+  public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run verify-public
+        id: verify
+        run: |
+          python verify-public.py --json > verify-public.out
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+        continue-on-error: true
+
+      - name: Print human-readable result
+        run: |
+          python verify-public.py || true
+
+      - name: Surface failures (Telegram)
+        if: failure() || steps.verify.outcome == 'failure'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "Telegram secrets not configured — skipping notification."
+            exit 0
+          fi
+          summary=$(python - <<'PY'
+          import json
+          try:
+              with open('verify-public.out') as f:
+                  data = json.load(f)
+          except Exception as e:
+              print(f"verify-public.out unreadable: {e}")
+              raise SystemExit(0)
+          fails = [r for r in data.get('results', []) if not r.get('passed')]
+          if not fails:
+              print("verify-public failed but no individual artifact reds — investigate run logs.")
+              raise SystemExit(0)
+          lines = [f"📰 verify-public RED ({data['passed']}/{data['total']} current — version {data['current_version']})"]
+          for r in fails[:10]:
+              lines.append(f"  • {r['id']}")
+              for err in r.get('errors', [])[:3]:
+                  lines.append(f"      - {err}")
+          print("\n".join(lines))
+          PY
+          )
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "text=${summary}" \
+            -d "disable_web_page_preview=true" > /dev/null
+          echo "Telegram notification sent."
+
+      - name: Fail the job if verify-public was red
+        if: steps.verify.outputs.exit != '0'
+        run: |
+          echo "verify-public exited with status ${{ steps.verify.outputs.exit }}"
           exit 1
