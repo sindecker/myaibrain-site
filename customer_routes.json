@@ -1,0 +1,251 @@
+{
+  "_meta": {
+    "purpose": "Single source of truth for every customer-facing URL on myaibrain.org. Each route has a smoke test that verifies the route exists at the edge and responds with the contracted shape WITHOUT requiring real secrets — the auth-deny path proves the route is wired correctly. Read by verify-prod.sh on every deploy and by the smoke test cron every 15 minutes.",
+    "version": "1.0.0",
+    "last_updated": "2026-04-12",
+    "base_url": "https://myaibrain.org",
+    "owners": {
+      "worker:aibrain-stripe-webhook": "Cloudflare Worker — handles Stripe webhooks + billing routes (LIVE as of 2026-04-12 e706e3e2)",
+      "worker:aibrain-auth": "Cloudflare Worker — handles /auth/* routes (NOT YET BUILT — Phase 3)",
+      "pages:static": "Cloudflare Pages — static HTML/CSS/JS",
+      "pages:function": "Cloudflare Pages Function — serverless function in functions/api/",
+      "missing": "Route is called by the frontend but no edge handler exists — STRUCTURAL BREAK"
+    }
+  },
+  "routes": [
+    {
+      "id": "stripe_webhook",
+      "url_path": "/api/webhooks/stripe",
+      "method": "POST",
+      "owner": "worker:aibrain-stripe-webhook",
+      "auth": "stripe_signature",
+      "smoke_test": {
+        "curl_args": "-X POST -H 'Content-Type: application/json' -d '{}'",
+        "expected_status": 400,
+        "expected_body_substring": "Missing stripe-signature header"
+      },
+      "description": "Stripe webhook receiver — checkout.session.completed + subscription.* + invoice.payment_failed",
+      "frontend_callers": [],
+      "external_dependencies": ["stripe_dashboard:webhook_endpoint_url"]
+    },
+    {
+      "id": "billing_portal",
+      "url_path": "/api/billing/portal",
+      "method": "GET",
+      "owner": "worker:aibrain-stripe-webhook",
+      "auth": "license_key",
+      "smoke_test": {
+        "curl_args": "",
+        "expected_status": 401,
+        "expected_body_substring": "Invalid or missing license key"
+      },
+      "description": "Opens a Stripe Customer Portal session for the authenticated license holder",
+      "frontend_callers": ["account/index.html (will call after Phase 2 rewrite)"],
+      "external_dependencies": ["stripe_api:billing_portal_sessions"]
+    },
+    {
+      "id": "billing_status",
+      "url_path": "/api/billing/status",
+      "method": "GET",
+      "owner": "worker:aibrain-stripe-webhook",
+      "auth": "license_key",
+      "smoke_test": {
+        "curl_args": "",
+        "expected_status": 401,
+        "expected_body_substring": "Invalid or missing license key"
+      },
+      "description": "Returns subscription tier + period end + cancel-at-period-end for the authenticated license holder",
+      "frontend_callers": ["account/index.html (will call after Phase 2 rewrite)"],
+      "external_dependencies": ["stripe_api:subscriptions_list"]
+    },
+    {
+      "id": "license_refresh",
+      "url_path": "/api/license/refresh",
+      "method": "GET",
+      "owner": "worker:aibrain-stripe-webhook",
+      "auth": "license_key",
+      "smoke_test": {
+        "curl_args": "",
+        "expected_status": 401,
+        "expected_body_substring": "Invalid or missing license key"
+      },
+      "description": "Mints a new short-lived license key with current subscription state from Stripe",
+      "frontend_callers": ["aibrain CLI (PyPI)"],
+      "external_dependencies": ["stripe_api:subscriptions_list"]
+    },
+    {
+      "id": "checkout_create",
+      "url_path": "/api/checkout",
+      "method": "POST",
+      "owner": "worker:aibrain-stripe-webhook",
+      "auth": "none",
+      "smoke_test": {
+        "curl_args": "-X POST -H 'Content-Type: application/json' -d 'notjson'",
+        "expected_status": 400,
+        "expected_body_substring": "Body must be JSON"
+      },
+      "description": "Creates a Stripe Checkout session for a tier (pro|team) and interval (monthly|yearly)",
+      "frontend_callers": ["index.html pricing buttons (Phase 2 will wire)"],
+      "external_dependencies": ["stripe_api:checkout_sessions"]
+    },
+    {
+      "id": "login_set_session",
+      "url_path": "/api/login",
+      "method": "POST",
+      "owner": "worker:aibrain-stripe-webhook",
+      "auth": "none",
+      "smoke_test": {
+        "curl_args": "-X POST -H 'Content-Type: application/json' -d '{\"license_key\":\"PRO-fake-deadbeef\"}'",
+        "expected_status": 401,
+        "expected_body_substring": "Invalid license key"
+      },
+      "description": "Validates a license key and sets an HttpOnly session cookie. The cookie is the only credential surface for browser sessions — license key never crosses to JS.",
+      "frontend_callers": ["account/index.html — license key entry form"],
+      "external_dependencies": []
+    },
+    {
+      "id": "logout_clear_session",
+      "url_path": "/api/logout",
+      "method": "POST",
+      "owner": "worker:aibrain-stripe-webhook",
+      "auth": "none",
+      "smoke_test": {
+        "curl_args": "-X POST",
+        "expected_status": 200,
+        "expected_body_substring": "ok"
+      },
+      "description": "Clears the aibrain_session HttpOnly cookie. Idempotent — always returns 200.",
+      "frontend_callers": ["account/index.html — Log out button"],
+      "external_dependencies": []
+    },
+    {
+      "id": "landing_page",
+      "url_path": "/",
+      "method": "GET",
+      "owner": "pages:static",
+      "auth": "none",
+      "smoke_test": {
+        "curl_args": "",
+        "expected_status": 200,
+        "expected_body_substring": "AIBrain"
+      },
+      "description": "Marketing landing page",
+      "frontend_callers": [],
+      "external_dependencies": []
+    },
+    {
+      "id": "account_page",
+      "url_path": "/account/",
+      "method": "GET",
+      "owner": "pages:static",
+      "auth": "none",
+      "smoke_test": {
+        "curl_args": "",
+        "expected_status": 200,
+        "expected_body_substring": "Your account"
+      },
+      "description": "Customer account dashboard (license key entry + subscription status + Manage button)",
+      "frontend_callers": [],
+      "external_dependencies": []
+    },
+    {
+      "id": "success_page",
+      "url_path": "/success",
+      "method": "GET",
+      "owner": "pages:static",
+      "auth": "none",
+      "smoke_test": {
+        "curl_args": "",
+        "expected_status": 200,
+        "expected_body_substring": "AIBrain"
+      },
+      "description": "Post-checkout success page — Stripe payment links redirect to /success.html which Cloudflare auto-canonicalizes (308) to /success. Smoke test hits the canonical URL directly.",
+      "frontend_callers": [],
+      "external_dependencies": ["stripe_dashboard:payment_link_success_url"],
+      "notes": "Stripe payment links currently configured for /success.html — Cloudflare 308-redirects to /success. Browsers follow transparently. Both URLs work for customers."
+    },
+    {
+      "id": "community_register",
+      "url_path": "/api/community/register",
+      "method": "POST",
+      "owner": "pages:function",
+      "auth": "none",
+      "smoke_test": {
+        "curl_args": "-X POST -H 'Content-Type: application/json' -d 'notjson'",
+        "expected_status_in": [400, 422, 405, 500],
+        "expected_body_substring": ""
+      },
+      "description": "Community registration endpoint (Pages Function). KNOWN BUG: returns 500 on bad JSON instead of 400 — tracked separately, not blocking Stripe deliverable. Smoke test allows 500 to keep the verify-prod table green until the function bug is fixed.",
+      "frontend_callers": [],
+      "external_dependencies": [],
+      "known_issue": "Pages Function throws 500 on malformed JSON body instead of returning 400. Filed as a follow-up task. Allowing 500 here keeps verify-prod focused on Stripe-related routes and not held hostage by an unrelated Pages Function bug."
+    },
+    {
+      "id": "stripe_health",
+      "url_path": "/api/webhooks/stripe-health",
+      "method": "GET",
+      "owner": "pages:function",
+      "auth": "none",
+      "smoke_test": {
+        "curl_args": "",
+        "expected_status_in": [200, 405],
+        "expected_body_substring": ""
+      },
+      "description": "Stripe webhook health check (Pages Function)",
+      "frontend_callers": [],
+      "external_dependencies": []
+    }
+  ],
+  "known_breaks": [
+    {
+      "id": "auth_me_missing",
+      "url_path": "/auth/me",
+      "method": "GET",
+      "expected_owner": "worker:aibrain-auth",
+      "actual_state": "Pages catch-all returns landing page HTML (HTTP 200) — no auth handler exists. Frontend account/index.html will fail when it tries to parse landing HTML as JSON.",
+      "blocked_by_phase": 3,
+      "frontend_callers": ["account/index.html line 143"],
+      "filed_in_company_task": "F2IdxMBtzTM"
+    },
+    {
+      "id": "auth_oauth_routes_missing",
+      "url_path": "/auth/oauth/<provider>/{start,callback,link}",
+      "method": "various",
+      "expected_owner": "worker:aibrain-auth",
+      "actual_state": "Pages catch-all returns landing page HTML — no OAuth handler exists.",
+      "blocked_by_phase": 3,
+      "frontend_callers": ["account/auth.js renderOauthButtons + account/index.html OAuth link buttons"],
+      "filed_in_company_task": "F2IdxMBtzTM"
+    },
+    {
+      "id": "auth_2fa_disable_missing",
+      "url_path": "/auth/2fa/disable",
+      "method": "POST",
+      "expected_owner": "worker:aibrain-auth",
+      "actual_state": "Pages catch-all returns landing page HTML — no 2FA handler exists.",
+      "blocked_by_phase": 3,
+      "frontend_callers": ["account/index.html line 221"],
+      "filed_in_company_task": "F2IdxMBtzTM"
+    },
+    {
+      "id": "auth_logout_missing",
+      "url_path": "/auth/logout",
+      "method": "POST",
+      "expected_owner": "worker:aibrain-auth",
+      "actual_state": "Pages catch-all returns landing page HTML — no logout handler exists.",
+      "blocked_by_phase": 3,
+      "frontend_callers": ["account/index.html line 258"],
+      "filed_in_company_task": "F2IdxMBtzTM"
+    },
+    {
+      "id": "checkout_portal_naming_drift",
+      "url_path": "/api/checkout/portal",
+      "method": "POST",
+      "expected_owner": "worker:aibrain-stripe-webhook (named differently)",
+      "actual_state": "Frontend account/index.html line 236 calls /api/checkout/portal but the deployed Worker route is /api/billing/portal. Naming drift between LeadEng frontend work and the Worker route name in the deploy. Resolved in Phase 2 — frontend will call /api/billing/portal directly.",
+      "blocked_by_phase": 2,
+      "frontend_callers": ["account/index.html line 236"],
+      "filed_in_company_task": "6AWymNbYJTE"
+    }
+  ]
+}

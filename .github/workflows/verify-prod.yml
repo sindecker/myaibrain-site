@@ -1,0 +1,100 @@
+name: verify-prod (smoke test)
+
+# Smoke test cron — runs every 15 minutes against the live myaibrain.org
+# customer surface and pages Decker via Telegram on any red.
+#
+# This is the structural fix for "Stripe is working but not working" — the
+# loop that catches drift between deploys (DNS, secret expiry, Pages cache,
+# wrangler-version-induced route format breaks, frontend pointing at routes
+# that no longer exist, etc) within 15 minutes instead of when a customer
+# complains.
+#
+# Also runs on every push to main + every PR — gates merge on a green run.
+#
+# Required GitHub repo secrets (set via Settings > Secrets and variables > Actions):
+#   TELEGRAM_BOT_TOKEN — bot token from @BotFather (matches local TELEGRAM_TOKEN)
+#   TELEGRAM_CHAT_ID   — group chat id (matches local -5288572284)
+#
+# These are READ-ONLY operations from GitHub's runners — never expose them
+# in step output, never echo them.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # every 15 minutes
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch: {}      # manual run button in the Actions tab
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-prod-${{ github.ref }}
+  cancel-in-progress: false  # let scheduled runs queue, do not cancel
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run verify-prod (with deploy-lag retry)
+        id: verify
+        run: |
+          python verify-prod.py --retry --json > verify-prod.out
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+        continue-on-error: true
+
+      - name: Print human-readable result
+        run: |
+          python verify-prod.py --retry || true
+
+      - name: Surface failures (Telegram)
+        if: failure() || steps.verify.outcome == 'failure'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "Telegram secrets not configured — skipping notification."
+            exit 0
+          fi
+          # Build a compact failure summary from the JSON output
+          summary=$(python - <<'PY'
+          import json
+          try:
+              with open('verify-prod.out') as f:
+                  data = json.load(f)
+          except Exception as e:
+              print(f"verify-prod.out unreadable: {e}")
+              raise SystemExit(0)
+          fails = [r for r in data.get('results', []) if not r.get('passed')]
+          if not fails:
+              print("verify-prod failed but no individual route reds — investigate run logs.")
+              raise SystemExit(0)
+          lines = [f"🚨 verify-prod RED on {data['base_url']} ({data['passed']}/{data['total']} green)"]
+          for r in fails[:10]:
+              lines.append(f"  • {r['method']} {r['url_path']} → {r['status']} ({r.get('error','')})")
+          print("\n".join(lines))
+          PY
+          )
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "text=${summary}" \
+            -d "disable_web_page_preview=true" > /dev/null
+          echo "Telegram notification sent."
+
+      - name: Fail the job if verify-prod was red
+        if: steps.verify.outputs.exit != '0'
+        run: |
+          echo "verify-prod exited with status ${{ steps.verify.outputs.exit }}"
+          exit 1

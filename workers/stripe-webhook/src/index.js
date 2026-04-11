@@ -54,6 +54,12 @@ export default {
     if (url.pathname === "/api/checkout") {
       return handleCreateCheckout(request, env);
     }
+    if (url.pathname === "/api/login") {
+      return handleLogin(request, env);
+    }
+    if (url.pathname === "/api/logout") {
+      return handleLogout(request, env);
+    }
 
     // --- Stripe webhook (the original, unchanged behavior) ---
     // Only accept POST
@@ -451,10 +457,28 @@ async function verifyLicenseKey(key, signingKey) {
 }
 
 /**
- * Extract a license key from the Authorization header.
- * Accepts: `Authorization: Bearer <key>` or `Authorization: <key>`.
+ * Extract a license key from either the Authorization header or the
+ * aibrain_session HttpOnly cookie. The cookie is preferred for browser
+ * sessions (so the key never reaches JS via localStorage and cannot be
+ * stolen by XSS). The header is preferred for the CLI (PyPI) which
+ * doesn't have a cookie jar by default.
+ *
+ * Cookie format: aibrain_session=<license_key>
+ * Header format: Authorization: Bearer <license_key>
+ *                Authorization: <license_key>
  */
 function extractLicenseKey(request) {
+  // 1. Cookie first (browser session)
+  const cookieHeader = request.headers.get("cookie") || "";
+  if (cookieHeader) {
+    for (const part of cookieHeader.split(";")) {
+      const trimmed = part.trim();
+      if (trimmed.startsWith("aibrain_session=")) {
+        return decodeURIComponent(trimmed.slice("aibrain_session=".length));
+      }
+    }
+  }
+  // 2. Authorization header (CLI / direct API)
   const auth = request.headers.get("authorization") || "";
   if (!auth) return "";
   const trimmed = auth.trim();
@@ -462,6 +486,101 @@ function extractLicenseKey(request) {
     return trimmed.slice(7).trim();
   }
   return trimmed;
+}
+
+// ---------------------------------------------------------------------------
+// Item 10 — /api/login (license key → HttpOnly session cookie)
+// ---------------------------------------------------------------------------
+
+/**
+ * Validate a license key and set it as an HttpOnly session cookie.
+ *
+ * Body: {license_key: "PRO-..."}
+ * Returns: 200 {tier, valid_until} + Set-Cookie header on success
+ *          401 {error} on invalid key
+ *
+ * The cookie is HttpOnly + Secure + SameSite=Strict + Max-Age=86400 (24h).
+ * Frontend JS can never read it — protects against XSS key theft.
+ * SameSite=Strict prevents CSRF on state-changing routes.
+ *
+ * The customer flow:
+ *   1. Customer pastes their license key into /account/ form
+ *   2. Frontend POSTs {license_key} to /api/login
+ *   3. Worker validates HMAC, sets cookie, returns tier
+ *   4. Frontend reloads — subsequent /api/billing/* calls use the cookie
+ */
+async function handleLogin(request, env) {
+  if (request.method !== "POST") {
+    return new Response("Method not allowed", { status: 405 });
+  }
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ error: "Body must be JSON" }, 400);
+  }
+  const licenseKey = (body.license_key || "").trim();
+  if (!licenseKey) {
+    return jsonResponse({ error: "license_key required" }, 400);
+  }
+  const verified = await verifyLicenseKey(licenseKey, env.AIBRAIN_SIGNING_KEY);
+  if (!verified) {
+    return jsonResponse({ error: "Invalid license key" }, 401);
+  }
+
+  // Cookie attributes — HARD security defaults, no exceptions:
+  // - HttpOnly: no JS access (XSS-safe)
+  // - Secure: HTTPS only (TLS-required)
+  // - SameSite=Strict: no cross-origin sends (CSRF-safe on state changes)
+  // - Path=/: sent on all routes
+  // - Max-Age=86400: 24 hour session, matches the license refresh cadence
+  const cookie =
+    "aibrain_session=" + encodeURIComponent(licenseKey) +
+    "; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400";
+
+  return new Response(
+    JSON.stringify({
+      ok: true,
+      tier: verified.tier,
+      valid_until: verified.payload.x || null,
+      email: verified.payload.e || null,
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Set-Cookie": cookie,
+      },
+    }
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Item 11 — /api/logout (clear session cookie)
+// ---------------------------------------------------------------------------
+
+/**
+ * Clear the session cookie. Returns 200 always (idempotent).
+ *
+ * Sets the same cookie name with Max-Age=0, which the browser interprets
+ * as immediate deletion.
+ */
+async function handleLogout(request, env) {
+  if (request.method !== "POST") {
+    return new Response("Method not allowed", { status: 405 });
+  }
+  const expired =
+    "aibrain_session=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0";
+  return new Response(
+    JSON.stringify({ ok: true }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Set-Cookie": expired,
+      },
+    }
+  );
 }
 
 // ---------------------------------------------------------------------------

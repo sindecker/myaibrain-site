@@ -32,3 +32,11 @@ zone_name = "myaibrain.org"
 [[routes]]
 pattern = "myaibrain.org/api/checkout"
 zone_name = "myaibrain.org"
+
+[[routes]]
+pattern = "myaibrain.org/api/login"
+zone_name = "myaibrain.org"
+
+[[routes]]
+pattern = "myaibrain.org/api/logout"
+zone_name = "myaibrain.org"

@@ -4,266 +4,571 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your account — AIBrain</title>
+<meta name="description" content="Manage your AIBrain subscription. Sign in with the license key from your welcome email.">
+<meta name="robots" content="noindex,nofollow">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
-<link rel="stylesheet" href="/account/account.css">
+<style>
+  :root {
+    --brand: #F59E0B;
+    --cta: #F97316;
+    --accent: #FBBF24;
+    --dark: #0a0a0a;
+    --darker: #060606;
+    --card: #18181b;
+    --border: #27272a;
+    --text: #f4f4f5;
+    --dim: #71717a;
+    --pro: #FBBF24;
+    --ok: #10b981;
+    --err: #ef4444;
+    --warn: #f59e0b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(10,10,15,0.9); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-brand { font-weight: 700; font-size: 1.2rem; color: var(--brand); }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { color: var(--dim); font-size: 0.9rem; }
+  .nav-links a:hover { color: var(--brand); text-decoration: none; }
+
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 4rem;
+  }
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle {
+    color: var(--dim);
+    margin-bottom: 2rem;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--brand);
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+  }
+  .row:last-child { border-bottom: none; }
+  .k { color: var(--dim); font-size: 0.9rem; }
+  .v { color: var(--text); font-weight: 500; text-align: right; word-break: break-all; }
+  .v.mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.85rem; }
+
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge.free { background: rgba(113,113,122,0.2); color: var(--dim); }
+  .badge.pro { background: rgba(251,191,36,0.15); color: var(--pro); }
+  .badge.team { background: rgba(245,158,11,0.15); color: var(--brand); }
+  .badge.enterprise { background: rgba(249,115,22,0.15); color: var(--cta); }
+  .badge.ok { background: rgba(16,185,129,0.15); color: var(--ok); }
+  .badge.err { background: rgba(239,68,68,0.15); color: var(--err); }
+
+  label {
+    display: block;
+    color: var(--dim);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  input[type="text"], textarea {
+    width: 100%;
+    background: var(--darker);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.9rem;
+    transition: border-color 0.15s;
+  }
+  input[type="text"]:focus, textarea:focus {
+    outline: none;
+    border-color: var(--brand);
+  }
+  textarea {
+    min-height: 90px;
+    resize: vertical;
+    word-break: break-all;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--cta);
+    color: var(--dark);
+  }
+  .btn-primary:hover {
+    background: var(--brand);
+  }
+  .btn-secondary {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+  .btn-danger {
+    background: transparent;
+    color: var(--err);
+    border: 1px solid var(--err);
+  }
+  .btn-danger:hover {
+    background: rgba(239,68,68,0.1);
+  }
+  .btn-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .notice {
+    padding: 0.85rem 1.1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    display: none;
+  }
+  .notice.ok { background: rgba(16,185,129,0.1); border: 1px solid var(--ok); color: var(--ok); display: block; }
+  .notice.err { background: rgba(239,68,68,0.1); border: 1px solid var(--err); color: var(--err); display: block; }
+  .notice.warn { background: rgba(245,158,11,0.1); border: 1px solid var(--warn); color: var(--warn); display: block; }
+
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(245,158,11,0.3);
+    border-top-color: var(--brand);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .help {
+    color: var(--dim);
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+  }
+  .help a { color: var(--brand); }
+
+  .hidden { display: none !important; }
+</style>
 </head>
 <body>
+
 <nav>
-    <span class="nav-brand"><a href="/">🧠 AIBrain</a></span>
-    <div class="nav-links">
-        <a href="/docs/getting-started">Docs</a>
-        <a href="/#pricing">Pricing</a>
-        <a href="#" id="logout-link" class="nav-ghost">Log out</a>
-    </div>
+  <span class="nav-brand"><a href="/">🧠 AIBrain</a></span>
+  <div class="nav-links">
+    <a href="/#pricing">Pricing</a>
+    <a href="https://pypi.org/project/aibrain/">PyPI</a>
+    <a href="https://docs.myaibrain.org">Docs</a>
+  </div>
 </nav>
 
-<div class="auth-shell" style="max-width: 720px;">
-    <div class="acct-header">
-        <h1>Your account</h1>
+<main>
+
+  <h1>Your account</h1>
+  <p class="subtitle">Manage your AIBrain subscription.</p>
+
+  <div id="notice" class="notice"></div>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       SIGN IN — shown when there is no valid session
+       ───────────────────────────────────────────────────────────────── -->
+  <div id="signin-card" class="card hidden">
+    <h2>Sign in</h2>
+    <p style="color: var(--dim); margin-bottom: 1rem; font-size: 0.9rem;">
+      Paste the license key from your welcome email. Your key never leaves
+      this page in JavaScript — it is sent over TLS once and the server
+      sets a secure HttpOnly session cookie that JavaScript cannot read.
+    </p>
+    <form id="signin-form">
+      <label for="license-key-input">License key</label>
+      <textarea
+        id="license-key-input"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="PRO-eyJ0Ijoi...-1a2b3c4d5e6f7890"
+        required
+      ></textarea>
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="signin-btn">
+          Sign in
+        </button>
+      </div>
+    </form>
+    <p class="help">
+      No key yet? <a href="/#pricing">Choose a plan</a> — your key arrives by email seconds after checkout.<br>
+      Lost your key? Email <a href="mailto:support@myaibrain.org">support@myaibrain.org</a>.
+    </p>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       LOADING — shown while we check session state on first load
+       ───────────────────────────────────────────────────────────────── -->
+  <div id="loading-card" class="card">
+    <p style="text-align: center; color: var(--dim); padding: 1rem;">
+      <span class="spinner"></span>Checking session…
+    </p>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────────────────
+       SIGNED IN — shown when /api/billing/status returns valid data
+       ───────────────────────────────────────────────────────────────── -->
+  <div id="signed-in" class="hidden">
+
+    <div class="card">
+      <h2>Subscription</h2>
+      <div class="row">
+        <span class="k">Tier</span>
+        <span class="v"><span id="f-tier">—</span></span>
+      </div>
+      <div class="row">
+        <span class="k">Status</span>
+        <span class="v"><span id="f-status">—</span></span>
+      </div>
+      <div class="row">
+        <span class="k">Renews / cancels on</span>
+        <span class="v" id="f-period-end">—</span>
+      </div>
+      <div class="row">
+        <span class="k">Cancel at period end</span>
+        <span class="v" id="f-cancel-eop">—</span>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="btn-portal">Manage subscription</button>
+        <button type="button" class="btn btn-secondary" id="btn-refresh">Refresh license key</button>
+      </div>
+      <p class="help">
+        "Manage subscription" opens the Stripe Customer Portal where you can update payment method,
+        download invoices, or cancel.
+      </p>
     </div>
 
-    <div id="notice" class="notice" style="display:none;"></div>
-    <div id="loading" style="text-align:center; color:var(--dim); padding:2rem;">
-        <span class="spinner"></span> Loading your account…
+    <div class="card hidden" id="refreshed-key-card">
+      <h2>New license key</h2>
+      <p style="color: var(--dim); font-size: 0.9rem; margin-bottom: 0.75rem;">
+        Copy this key and run <code style="color: var(--brand);">aibrain license activate &lt;key&gt;</code>
+        to update your CLI installation.
+      </p>
+      <textarea id="refreshed-key-value" readonly style="font-size: 0.75rem;"></textarea>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="btn-copy-key">Copy to clipboard</button>
+      </div>
     </div>
 
-    <div id="content" style="display:none;">
-        <!-- Profile -->
-        <div class="acct-section">
-            <h2>Profile</h2>
-            <div class="acct-row">
-                <span class="k">Email</span>
-                <span class="v" id="f-email"></span>
-            </div>
-            <div class="acct-row">
-                <span class="k">Verified</span>
-                <span class="v" id="f-verified"></span>
-            </div>
-            <div class="acct-row">
-                <span class="k">Signed up</span>
-                <span class="v" id="f-created"></span>
-            </div>
-            <div class="acct-row">
-                <span class="k">Last login</span>
-                <span class="v" id="f-last-login"></span>
-            </div>
-        </div>
-
-        <!-- Login methods -->
-        <div class="acct-section">
-            <h2>Login methods</h2>
-            <div class="acct-row">
-                <span class="k">Password</span>
-                <span class="v" id="m-password"></span>
-            </div>
-            <div class="acct-row">
-                <span class="k">GitHub</span>
-                <span class="v" id="m-github"></span>
-            </div>
-            <div class="acct-row">
-                <span class="k">Google</span>
-                <span class="v" id="m-google"></span>
-            </div>
-            <div class="acct-row">
-                <span class="k">Microsoft</span>
-                <span class="v" id="m-microsoft"></span>
-            </div>
-            <div class="acct-actions" style="margin-top: 1rem;">
-                <button class="btn ghost small" id="btn-add-github">Add GitHub</button>
-                <button class="btn ghost small" id="btn-add-google">Add Google</button>
-                <button class="btn ghost small" id="btn-add-microsoft">Add Microsoft</button>
-                <a href="/password-reset" class="btn ghost small">Change password</a>
-            </div>
-        </div>
-
-        <!-- 2FA -->
-        <div class="acct-section">
-            <h2>Two-factor authentication</h2>
-            <div class="acct-row">
-                <span class="k">Status</span>
-                <span class="v" id="f-2fa"></span>
-            </div>
-            <div class="acct-actions" style="margin-top: 1rem;">
-                <a href="/2fa/setup" class="btn ghost small" id="btn-2fa-enable">Enable 2FA</a>
-                <button class="btn ghost small danger" id="btn-2fa-disable" style="display:none;">Disable 2FA</button>
-            </div>
-        </div>
-
-        <!-- Subscription -->
-        <div class="acct-section">
-            <h2>Subscription</h2>
-            <div class="acct-row">
-                <span class="k">Tier</span>
-                <span class="v" id="f-tier"></span>
-            </div>
-            <div class="acct-row">
-                <span class="k">License key</span>
-                <span class="v mono" id="f-license"></span>
-            </div>
-            <div class="acct-row">
-                <span class="k">Valid until</span>
-                <span class="v" id="f-valid-until"></span>
-            </div>
-            <div class="acct-actions" style="margin-top: 1rem;">
-                <button class="btn small" id="btn-portal">Manage subscription</button>
-                <button class="btn ghost small danger" id="btn-cancel">Cancel subscription</button>
-            </div>
-        </div>
-
-        <div style="text-align:center; margin: 2rem 0;">
-            <button class="btn ghost" id="btn-logout">Log out</button>
-        </div>
+    <div class="card">
+      <h2>Session</h2>
+      <div class="row">
+        <span class="k">Email on file</span>
+        <span class="v" id="f-email">—</span>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-danger" id="btn-logout">Log out</button>
+      </div>
+      <p class="help">
+        Logging out clears the secure session cookie on this device. Your license key keeps working from the CLI.
+      </p>
     </div>
-</div>
 
-<script src="/account/auth.js"></script>
+  </div>
+
+</main>
+
 <script>
-(async function () {
-    const A = window.AIBrainAuth;
-    const notice = document.getElementById('notice');
-    const loading = document.getElementById('loading');
-    const content = document.getElementById('content');
+(function () {
+  'use strict';
+  // ─────────────────────────────────────────────────────────────────
+  // AIBrain account dashboard — license-key-only flow.
+  //
+  // Security model:
+  //   1. Customer pastes license key into form
+  //   2. POST /api/login over TLS — Worker validates HMAC and sets a
+  //      Secure + HttpOnly + SameSite=Strict session cookie
+  //   3. JavaScript NEVER reads or stores the license key. The cookie is
+  //      the only credential surface. XSS cannot steal it.
+  //   4. All state-changing routes use SameSite=Strict, so CSRF is blocked.
+  //
+  // No localStorage, no sessionStorage, no JS-readable token. The license
+  // key only exists in the customer's email (their copy) and the worker's
+  // HMAC verification (server-side). Lowest possible attack surface.
+  // ─────────────────────────────────────────────────────────────────
 
-    function badge(ok) {
-        return ok
-            ? '<span class="badge ok">Linked</span>'
-            : '<span class="badge off">Not linked</span>';
-    }
+  var noticeEl    = document.getElementById('notice');
+  var loadingCard = document.getElementById('loading-card');
+  var signinCard  = document.getElementById('signin-card');
+  var signedIn    = document.getElementById('signed-in');
+  var signinForm  = document.getElementById('signin-form');
+  var signinBtn   = document.getElementById('signin-btn');
+  var keyInput    = document.getElementById('license-key-input');
 
-    function fmtDate(s) {
-        if (!s) return '—';
-        try {
-            const d = new Date(s.replace(' ', 'T') + 'Z');
-            return d.toLocaleString();
-        } catch (_e) { return s; }
-    }
+  function show(el)  { el.classList.remove('hidden'); }
+  function hide(el)  { el.classList.add('hidden'); }
+  function notice(kind, msg) {
+    noticeEl.className = 'notice ' + kind;
+    noticeEl.textContent = msg;
+  }
+  function clearNotice() {
+    noticeEl.className = 'notice';
+    noticeEl.textContent = '';
+  }
 
-    let me = null;
+  function fmtDate(secondsOrIso) {
+    if (!secondsOrIso) return '—';
     try {
-        me = await A.apiCall('/auth/me');
-    } catch (err) {
-        if (err.status === 401) {
-            window.location.href = '/login';
-            return;
+      var d;
+      if (typeof secondsOrIso === 'number') {
+        d = new Date(secondsOrIso * 1000);
+      } else {
+        d = new Date(secondsOrIso);
+      }
+      if (isNaN(d.getTime())) return String(secondsOrIso);
+      return d.toLocaleDateString(undefined, {
+        year: 'numeric', month: 'short', day: 'numeric'
+      });
+    } catch (_e) { return String(secondsOrIso); }
+  }
+
+  function tierBadge(tier) {
+    var t = (tier || 'free').toLowerCase();
+    var cls = 'badge ' + (t === 'free' ? 'free' : (t === 'pro' ? 'pro' : (t === 'team' ? 'team' : 'enterprise')));
+    return '<span class="' + cls + '">' + t.toUpperCase() + '</span>';
+  }
+
+  function statusBadge(status) {
+    var s = (status || 'unknown').toLowerCase();
+    var cls = (s === 'active' || s === 'trialing') ? 'ok' : 'err';
+    return '<span class="badge ' + cls + '">' + s + '</span>';
+  }
+
+  // Fetch helper — always send credentials so the HttpOnly cookie goes along.
+  // Throws an object {status, body} on non-2xx.
+  function call(path, method, body) {
+    var opts = {
+      method: method || 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    };
+    if (body !== undefined) opts.body = JSON.stringify(body);
+    return fetch(path, opts).then(function (resp) {
+      return resp.text().then(function (text) {
+        var data = null;
+        try { data = JSON.parse(text); } catch (_e) { /* non-JSON body */ }
+        if (!resp.ok) {
+          throw { status: resp.status, body: data || text };
         }
-        loading.style.display = 'none';
-        A.showNotice(notice, 'error', err.detail || 'Could not load account.');
-        return;
-    }
-
-    loading.style.display = 'none';
-    content.style.display = 'block';
-
-    // Welcome banner for signup redirect
-    if (A.getQueryParam('welcome')) {
-        A.showNotice(notice, 'ok', 'Account created. Check your email to verify your address.');
-    } else if (!me.email_verified) {
-        A.showNotice(notice, 'warn', 'Your email is not yet verified. Check your inbox for the verification link.');
-    }
-
-    document.getElementById('f-email').textContent = me.email;
-    document.getElementById('f-verified').innerHTML = me.email_verified ? '<span class="badge ok">Verified</span>' : '<span class="badge off">Unverified</span>';
-    document.getElementById('f-created').textContent = fmtDate(me.created_at);
-    document.getElementById('f-last-login').textContent = fmtDate(me.last_login_at);
-
-    document.getElementById('m-password').innerHTML = badge(me.linked_methods.password);
-    document.getElementById('m-github').innerHTML = badge(me.linked_methods.github);
-    document.getElementById('m-google').innerHTML = badge(me.linked_methods.google);
-    document.getElementById('m-microsoft').innerHTML = badge(me.linked_methods.microsoft);
-
-    // Hide provider buttons if backend says provider not enabled
-    const enabled = new Set(me.oauth_providers_enabled || []);
-    ['github','google','microsoft'].forEach(function (p) {
-        const btn = document.getElementById('btn-add-' + p);
-        if (!enabled.has(p) || me.linked_methods[p]) btn.style.display = 'none';
+        return data;
+      });
     });
+  }
 
-    document.getElementById('f-2fa').innerHTML = me.totp_enabled
-        ? '<span class="badge ok">Enabled</span>'
-        : '<span class="badge off">Disabled</span>';
-    if (me.totp_enabled) {
-        document.getElementById('btn-2fa-enable').style.display = 'none';
-        document.getElementById('btn-2fa-disable').style.display = 'inline-block';
+  // ─────────────────────────────────────────────────────────────────
+  // Sign in flow
+  // ─────────────────────────────────────────────────────────────────
+  signinForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearNotice();
+    var key = keyInput.value.trim();
+    if (!key) {
+      notice('err', 'Paste your license key.');
+      return;
     }
+    signinBtn.disabled = true;
+    signinBtn.innerHTML = '<span class="spinner"></span>Signing in…';
+    call('/api/login', 'POST', { license_key: key }).then(function (data) {
+      // SUCCESS — the worker set the cookie. Wipe the key from the input
+      // immediately so it does not linger in the form's value.
+      keyInput.value = '';
+      // Reload to enter the signed-in code path. The cookie is now in the
+      // browser jar; the next /api/billing/status call will succeed.
+      window.location.reload();
+    }).catch(function (err) {
+      signinBtn.disabled = false;
+      signinBtn.textContent = 'Sign in';
+      var msg = 'Sign in failed.';
+      if (err && err.status === 401) {
+        msg = 'That license key did not validate. Check for typos or extra whitespace.';
+      } else if (err && err.body && err.body.error) {
+        msg = err.body.error;
+      } else if (err && err.status === 0) {
+        msg = 'Network error — could not reach the server.';
+      }
+      notice('err', msg);
+    });
+  });
 
-    const tier = me.license.tier || 'free';
-    document.getElementById('f-tier').innerHTML = tier === 'free'
-        ? '<span class="badge free">Free</span>'
-        : '<span class="badge pro">' + tier.toUpperCase() + '</span>';
+  // ─────────────────────────────────────────────────────────────────
+  // First-load: try to read the session via /api/billing/status
+  // ─────────────────────────────────────────────────────────────────
+  function loadStatus() {
+    call('/api/billing/status', 'GET').then(function (data) {
+      hide(loadingCard);
+      hide(signinCard);
+      show(signedIn);
+      renderStatus(data);
+    }).catch(function (err) {
+      hide(loadingCard);
+      if (err && err.status === 401) {
+        // No session — show the sign-in form
+        show(signinCard);
+      } else {
+        show(signinCard);
+        notice('err', 'Could not load session: ' + (err && err.body && err.body.error ? err.body.error : 'unknown error'));
+      }
+    });
+  }
 
-    // License key with reveal toggle
-    const licEl = document.getElementById('f-license');
-    if (me.license.license_key_masked) {
-        licEl.innerHTML = '<code class="inline">' + me.license.license_key_masked + '</code>';
-    } else {
-        licEl.textContent = '—';
+  function renderStatus(data) {
+    document.getElementById('f-tier').innerHTML = tierBadge(data.tier);
+    document.getElementById('f-status').innerHTML = statusBadge(data.status);
+    document.getElementById('f-period-end').textContent = fmtDate(data.current_period_end);
+    var cancelEop = data.cancel_at_period_end ? 'Yes' : 'No';
+    document.getElementById('f-cancel-eop').textContent = cancelEop;
+    document.getElementById('f-email').textContent = data.email || '—';
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // Manage subscription → Stripe Customer Portal
+  // ─────────────────────────────────────────────────────────────────
+  document.getElementById('btn-portal').addEventListener('click', function () {
+    var btn = this;
+    var orig = btn.textContent;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Opening portal…';
+    call('/api/billing/portal', 'POST').then(function (data) {
+      if (data && data.portal_url) {
+        window.location.href = data.portal_url;
+      } else {
+        btn.disabled = false;
+        btn.textContent = orig;
+        notice('err', 'Portal URL not returned.');
+      }
+    }).catch(function (err) {
+      btn.disabled = false;
+      btn.textContent = orig;
+      var msg = (err && err.body && err.body.error) || 'Could not open portal.';
+      notice('err', msg);
+    });
+  });
+
+  // ─────────────────────────────────────────────────────────────────
+  // Refresh license key (calls /api/license/refresh)
+  // ─────────────────────────────────────────────────────────────────
+  document.getElementById('btn-refresh').addEventListener('click', function () {
+    var btn = this;
+    var orig = btn.textContent;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Refreshing…';
+    call('/api/license/refresh', 'POST').then(function (data) {
+      btn.disabled = false;
+      btn.textContent = orig;
+      if (data && data.license_key) {
+        var card = document.getElementById('refreshed-key-card');
+        document.getElementById('refreshed-key-value').value = data.license_key;
+        show(card);
+        notice('ok', 'New license key minted. Copy it and update your CLI.');
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        notice('err', 'Refresh did not return a key.');
+      }
+    }).catch(function (err) {
+      btn.disabled = false;
+      btn.textContent = orig;
+      var msg = (err && err.body && err.body.error) || 'Refresh failed.';
+      notice('err', msg);
+    });
+  });
+
+  // Copy refreshed key to clipboard
+  document.getElementById('btn-copy-key').addEventListener('click', function () {
+    var ta = document.getElementById('refreshed-key-value');
+    ta.select();
+    try {
+      document.execCommand('copy');
+      var btn = this;
+      var orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(function () { btn.textContent = orig; }, 1500);
+    } catch (_e) {
+      notice('warn', 'Copy failed — select and copy manually.');
     }
+  });
 
-    document.getElementById('f-valid-until').textContent = fmtDate(me.license.valid_until);
-
-    // Link buttons — each initiates a link flow by hitting POST /auth/oauth/<p>/link
-    ['github','google','microsoft'].forEach(function (p) {
-        const btn = document.getElementById('btn-add-' + p);
-        btn.addEventListener('click', async function () {
-            try {
-                const data = await A.apiCall('/auth/oauth/' + p + '/link', 'POST', {});
-                window.location.href = data.authorize_url;
-            } catch (err) {
-                A.showNotice(notice, 'error', err.detail || 'Could not start OAuth flow.');
-            }
-        });
+  // ─────────────────────────────────────────────────────────────────
+  // Log out → clear cookie
+  // ─────────────────────────────────────────────────────────────────
+  document.getElementById('btn-logout').addEventListener('click', function () {
+    call('/api/logout', 'POST').then(function () {
+      window.location.reload();
+    }).catch(function () {
+      // Even if logout fails, force-reload — worst case the cookie is still
+      // there but the user explicitly asked to leave.
+      window.location.reload();
     });
+  });
 
-    document.getElementById('btn-2fa-disable').addEventListener('click', async function () {
-        const pw = prompt('Confirm your password to disable 2FA:');
-        if (!pw) return;
-        try {
-            await A.apiCall('/auth/2fa/disable', 'POST', { password: pw });
-            window.location.reload();
-        } catch (err) {
-            A.showNotice(notice, 'error', err.detail || 'Disable failed.');
-        }
-    });
+  // Show the welcome banner if redirected from a successful checkout
+  if (window.location.search.indexOf('welcome=1') !== -1) {
+    notice('ok', 'Payment received. Check your email for your license key, then paste it below to sign in.');
+  }
 
-    // Open the Stripe customer portal via the backend POST /api/checkout/portal endpoint.
-    // Body shape: {customer_id}. Returns {portal_url}. We redirect on success.
-    async function openStripePortal() {
-        if (!me.license || !me.license.stripe_customer_id) {
-            A.showNotice(notice, 'warn', 'No active subscription to manage.');
-            return;
-        }
-        try {
-            const res = await A.apiCall('/api/checkout/portal', 'POST', {
-                customer_id: me.license.stripe_customer_id,
-            });
-            if (res && res.portal_url) {
-                window.location.href = res.portal_url;
-            } else {
-                A.showNotice(notice, 'error', 'Portal session not returned.');
-            }
-        } catch (err) {
-            A.showNotice(notice, 'error', (err && err.detail) || 'Failed to open portal.');
-        }
-    }
-
-    document.getElementById('btn-portal').addEventListener('click', openStripePortal);
-
-    document.getElementById('btn-cancel').addEventListener('click', function () {
-        if (!confirm('Cancel your subscription? You will keep access until the end of the current period.')) return;
-        // The Stripe Customer Portal handles cancel — no separate endpoint needed.
-        openStripePortal();
-    });
-
-    async function doLogout() {
-        try { await A.apiCall('/auth/logout', 'POST', {}); } catch (_e) {}
-        window.location.href = '/';
-    }
-    document.getElementById('btn-logout').addEventListener('click', doLogout);
-    document.getElementById('logout-link').addEventListener('click', function (e) {
-        e.preventDefault();
-        doLogout();
-    });
+  // Kick off the session check immediately
+  loadStatus();
 })();
 </script>
+
 </body>
 </html>

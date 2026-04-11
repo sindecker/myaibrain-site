@@ -59,10 +59,30 @@ echo "=== Deploying worker ==="
 npx --yes wrangler deploy
 
 echo ""
+echo "=== Verifying live customer surface (verify-prod with retry) ==="
+# verify-prod.py reads customer_routes.json and curl-tests every customer-facing
+# route on myaibrain.org. --retry waits up to 60s for Cloudflare zone route
+# propagation after the Worker deploy. If ANY route is red, this script exits
+# non-zero and the deploy is considered failed.
+#
+# This is the gate that catches "Stripe code shipped but routes are not actually
+# wired at the edge" — the structural failure mode that has fired 10+ times.
+cd "$(dirname "$0")/../.."
+if ! python verify-prod.py --retry; then
+  echo ""
+  echo "❌ DEPLOY VERIFICATION FAILED — one or more customer routes are red."
+  echo "   The Worker upload succeeded but the live customer surface is broken."
+  echo "   Inspect the table above, fix the issue, and re-run ./deploy.sh."
+  exit 1
+fi
+
+echo ""
 echo "=== Done ==="
-echo "Worker deployed. Routes:"
+echo "Worker deployed AND verified live. Routes:"
 echo "  POST https://myaibrain.org/api/webhooks/stripe"
 echo "  GET/POST https://myaibrain.org/api/billing/portal"
 echo "  GET/POST https://myaibrain.org/api/billing/status"
 echo "  GET/POST https://myaibrain.org/api/license/refresh"
 echo "  POST https://myaibrain.org/api/checkout"
+echo "  POST https://myaibrain.org/api/login"
+echo "  POST https://myaibrain.org/api/logout"
