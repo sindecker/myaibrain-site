@@ -1,47 +1,68 @@
 #!/usr/bin/env bash
-# Deploy the Stripe webhook worker to Cloudflare
+# Deploy the Stripe webhook + billing Worker to Cloudflare
 #
 # Prerequisites:
-#   - wrangler CLI authenticated (`wrangler login`)
-#   - myaibrain.org domain configured in Cloudflare
+#   - wrangler CLI authenticated (`wrangler login`) OR npx wrangler will work
+#   - myaibrain.org zone exists in Cloudflare
 #   - Resend domain verified for myaibrain.org
+#   - .decker_env (or equivalent) sourced in the calling shell with the 8 vars below
 #
-# Manual steps after deploy:
-#   - Stripe dashboard: add webhook endpoint https://myaibrain.org/api/webhooks/stripe
-#     - Select event: checkout.session.completed
-#   - Stripe dashboard: set payment link success_url to https://myaibrain.org/success.html
-#   - Stripe dashboard: add metadata.tier = "pro" (or "team"/"enterprise") to each product
+# Usage:
+#   set -a; source ~/.decker_env; set +a
+#   ./deploy.sh
+#
+# Manual Stripe dashboard steps after first deploy:
+#   - Webhooks -> Add endpoint: https://myaibrain.org/api/webhooks/stripe
+#     Select events: checkout.session.completed, customer.subscription.updated,
+#                    customer.subscription.deleted, invoice.payment_failed
+#   - Each Payment Link / Product: metadata.tier = "pro" | "team" | "enterprise"
 
 set -euo pipefail
 cd "$(dirname "$0")"
 
-echo "=== Setting secrets ==="
-echo "You will be prompted for each secret value."
-echo ""
+# Map env -> Worker secret name. The Worker uses STRIPE_API_KEY internally;
+# the .decker_env names this STRIPE_SECRET_KEY (the live sk_live_... key).
+declare -A SECRETS=(
+  [STRIPE_WEBHOOK_SECRET]="${STRIPE_WEBHOOK_SECRET:-}"
+  [AIBRAIN_SIGNING_KEY]="${AIBRAIN_SIGNING_KEY:-}"
+  [RESEND_API_KEY]="${RESEND_API_KEY:-}"
+  [STRIPE_API_KEY]="${STRIPE_SECRET_KEY:-}"
+  [STRIPE_PRICE_PRO_MONTHLY]="${STRIPE_PRICE_PRO_MONTHLY:-}"
+  [STRIPE_PRICE_PRO_YEARLY]="${STRIPE_PRICE_PRO_YEARLY:-}"
+  [STRIPE_PRICE_TEAM_MONTHLY]="${STRIPE_PRICE_TEAM_MONTHLY:-}"
+  [STRIPE_PRICE_TEAM_YEARLY]="${STRIPE_PRICE_TEAM_YEARLY:-}"
+)
 
-echo "1/3: STRIPE_WEBHOOK_SECRET (whsec_... from Stripe webhook settings)"
-wrangler secret put STRIPE_WEBHOOK_SECRET
+# Verify all 8 vars are present in the calling environment
+missing=()
+for name in "${!SECRETS[@]}"; do
+  if [[ -z "${SECRETS[$name]}" ]]; then
+    missing+=("$name")
+  fi
+done
+if (( ${#missing[@]} > 0 )); then
+  echo "ERROR: missing env vars in calling shell: ${missing[*]}" >&2
+  echo "Hint: set -a; source ~/.decker_env; set +a" >&2
+  exit 1
+fi
 
-echo ""
-echo "2/3: AIBRAIN_SIGNING_KEY (must match AIBRAIN_SIGNING_KEY env used by clients)"
-wrangler secret put AIBRAIN_SIGNING_KEY
-
-echo ""
-echo "3/3: RESEND_API_KEY (from resend.com dashboard)"
-wrangler secret put RESEND_API_KEY
+echo "=== Setting 8 secrets on aibrain-stripe-webhook ==="
+for name in STRIPE_WEBHOOK_SECRET AIBRAIN_SIGNING_KEY RESEND_API_KEY STRIPE_API_KEY \
+            STRIPE_PRICE_PRO_MONTHLY STRIPE_PRICE_PRO_YEARLY \
+            STRIPE_PRICE_TEAM_MONTHLY STRIPE_PRICE_TEAM_YEARLY; do
+  echo "  -> $name"
+  printf '%s' "${SECRETS[$name]}" | npx --yes wrangler secret put "$name" >/dev/null 2>&1
+done
 
 echo ""
 echo "=== Deploying worker ==="
-wrangler deploy
+npx --yes wrangler deploy
 
 echo ""
 echo "=== Done ==="
-echo "Worker deployed to: https://myaibrain.org/api/webhooks/stripe"
-echo ""
-echo "Remaining manual steps:"
-echo "  1. Stripe dashboard -> Webhooks -> Add endpoint:"
-echo "     URL: https://myaibrain.org/api/webhooks/stripe"
-echo "     Events: checkout.session.completed"
-echo "  2. Stripe payment links -> Each link -> After payment:"
-echo "     Success URL: https://myaibrain.org/success.html"
-echo "  3. Stripe products -> metadata -> tier = pro|team|enterprise"
+echo "Worker deployed. Routes:"
+echo "  POST https://myaibrain.org/api/webhooks/stripe"
+echo "  GET/POST https://myaibrain.org/api/billing/portal"
+echo "  GET/POST https://myaibrain.org/api/billing/status"
+echo "  GET/POST https://myaibrain.org/api/license/refresh"
+echo "  POST https://myaibrain.org/api/checkout"

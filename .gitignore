@@ -1,1 +1,6 @@
 docs/faceless-ai-influencer-playbook.md
+
+# Wrangler local cache — Worker deploy state
+workers/*/.wrangler/
+.wrangler/
+

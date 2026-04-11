@@ -3,9 +3,32 @@ main = "src/index.js"
 compatibility_date = "2026-04-07"
 
 # Secrets (set via `wrangler secret put`):
-#   STRIPE_WEBHOOK_SECRET  — whsec_... from Stripe dashboard
-#   AIBRAIN_SIGNING_KEY    — same key used by aibrain_licensing.py
-#   RESEND_API_KEY         — Resend API key for transactional email
+#   STRIPE_WEBHOOK_SECRET     — whsec_... from Stripe dashboard
+#   AIBRAIN_SIGNING_KEY       — same key used by aibrain_licensing.py
+#   RESEND_API_KEY            — Resend API key for transactional email
+#   STRIPE_API_KEY            — sk_live_... server-side Stripe API key
+#   STRIPE_PRICE_PRO_MONTHLY  — price_... for Pro monthly tier
+#   STRIPE_PRICE_PRO_YEARLY   — price_... for Pro yearly tier
+#   STRIPE_PRICE_TEAM_MONTHLY — price_... for Team monthly tier
+#   STRIPE_PRICE_TEAM_YEARLY  — price_... for Team yearly tier
 
+# Routes — wrangler 4.x requires zone_name on each pattern entry
 [[routes]]
 pattern = "myaibrain.org/api/webhooks/stripe"
+zone_name = "myaibrain.org"
+
+[[routes]]
+pattern = "myaibrain.org/api/billing/portal"
+zone_name = "myaibrain.org"
+
+[[routes]]
+pattern = "myaibrain.org/api/billing/status"
+zone_name = "myaibrain.org"
+
+[[routes]]
+pattern = "myaibrain.org/api/license/refresh"
+zone_name = "myaibrain.org"
+
+[[routes]]
+pattern = "myaibrain.org/api/checkout"
+zone_name = "myaibrain.org"

@@ -225,23 +225,33 @@
         }
     });
 
-    document.getElementById('btn-portal').addEventListener('click', function () {
-        // Stripe portal session — existing stripe-portal endpoint on the site.
-        // If not configured, show a message.
-        if (me.license.stripe_customer_id) {
-            window.location.href = '/api/stripe/portal?customer=' + encodeURIComponent(me.license.stripe_customer_id);
-        } else {
+    // Open the Stripe customer portal via the backend POST /api/checkout/portal endpoint.
+    // Body shape: {customer_id}. Returns {portal_url}. We redirect on success.
+    async function openStripePortal() {
+        if (!me.license || !me.license.stripe_customer_id) {
             A.showNotice(notice, 'warn', 'No active subscription to manage.');
+            return;
         }
-    });
+        try {
+            const res = await A.apiCall('/api/checkout/portal', 'POST', {
+                customer_id: me.license.stripe_customer_id,
+            });
+            if (res && res.portal_url) {
+                window.location.href = res.portal_url;
+            } else {
+                A.showNotice(notice, 'error', 'Portal session not returned.');
+            }
+        } catch (err) {
+            A.showNotice(notice, 'error', (err && err.detail) || 'Failed to open portal.');
+        }
+    }
+
+    document.getElementById('btn-portal').addEventListener('click', openStripePortal);
 
     document.getElementById('btn-cancel').addEventListener('click', function () {
         if (!confirm('Cancel your subscription? You will keep access until the end of the current period.')) return;
-        if (me.license.stripe_customer_id) {
-            window.location.href = '/api/stripe/portal?customer=' + encodeURIComponent(me.license.stripe_customer_id) + '&action=cancel';
-        } else {
-            A.showNotice(notice, 'warn', 'No active subscription to cancel.');
-        }
+        // The Stripe Customer Portal handles cancel — no separate endpoint needed.
+        openStripePortal();
     });
 
     async function doLogout() {

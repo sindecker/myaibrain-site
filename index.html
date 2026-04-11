@@ -603,14 +603,14 @@
             <p style="color: var(--dim); margin-bottom: 1rem;">For power users and professionals</p>
             <div class="price-amount" style="color: var(--brand);">$9.95<span style="font-size: 1rem; font-weight: 400;">/mo</span></div>
             <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Agent Teams &bull; Flows &bull; Document Ingestion &bull; MCP Client &bull; Boss Agent &bull; Model routing &bull; Skill evolution</p>
-            <a href="https://buy.stripe.com/8x2fZi6BJ0w16dS7jgg7e06" class="btn btn-primary" style="margin-top: auto; text-align: center;">Get Pro</a>
+            <a href="https://buy.stripe.com/8x2fZi6BJ0w16dS7jgg7e06" data-checkout-tier="pro" data-fallback-url="https://buy.stripe.com/8x2fZi6BJ0w16dS7jgg7e06" class="btn btn-primary aibrain-checkout-link" style="margin-top: auto; text-align: center;">Get Pro</a>
         </div>
         <div class="price-card">
             <h3>Team</h3>
             <p style="color: var(--dim); margin-bottom: 1rem;">Multi-machine, multi-agent</p>
             <div class="price-amount" style="color: var(--brand);">$29.95<span style="font-size: 1rem; font-weight: 400;">/mo</span></div>
             <p style="color: var(--dim); font-size: 0.9rem; margin-top: 1rem;">Up to 10 workers &bull; Cross-machine via Tailscale &bull; Team brain sharing &bull; Priority support</p>
-            <a href="https://buy.stripe.com/3cI14oaRZemR7hW5b8g7e01" class="btn btn-secondary" style="margin-top: auto; text-align: center;">Get Team</a>
+            <a href="https://buy.stripe.com/3cI14oaRZemR7hW5b8g7e01" data-checkout-tier="team" data-fallback-url="https://buy.stripe.com/3cI14oaRZemR7hW5b8g7e01" class="btn btn-secondary aibrain-checkout-link" style="margin-top: auto; text-align: center;">Get Team</a>
         </div>
     </div>
 </section>
@@ -1155,7 +1155,7 @@
                 <li><span class="check">+</span> Skill evolution + auto-experiment</li>
                 <li><span class="check">+</span> Boss Agent: up to 3 workers + model routing</li>
             </ul>
-            <a href="https://buy.stripe.com/8x2fZi6BJ0w16dS7jgg7e06" class="price-cta primary">Get Pro</a>
+            <a href="https://buy.stripe.com/8x2fZi6BJ0w16dS7jgg7e06" data-checkout-tier="pro" data-fallback-url="https://buy.stripe.com/8x2fZi6BJ0w16dS7jgg7e06" class="price-cta primary aibrain-checkout-link">Get Pro</a>
         </div>
         <div class="price-card">
             <h3>Team</h3>
@@ -1171,7 +1171,7 @@
                 <li><span class="check">+</span> Up to 50 agents</li>
                 <li><span class="check">+</span> Cross-machine sync via Tailscale</li>
             </ul>
-            <a href="https://buy.stripe.com/3cI14oaRZemR7hW5b8g7e01" class="price-cta primary">Get Team</a>
+            <a href="https://buy.stripe.com/3cI14oaRZemR7hW5b8g7e01" data-checkout-tier="team" data-fallback-url="https://buy.stripe.com/3cI14oaRZemR7hW5b8g7e01" class="price-cta primary aibrain-checkout-link">Get Team</a>
         </div>
     </div>
 
@@ -1330,6 +1330,43 @@
     });
   }
   fetch(API).then(function(r){return r.json();}).then(function(d){update(d.remaining||TOTAL);}).catch(function(){update(TOTAL);});
+})();
+
+// Checkout wiring — call /api/checkout on the Worker, fall back to the
+// hardcoded Payment Link if the endpoint is not available. This guarantees
+// that breaking the new flow never breaks the ability to pay.
+(function(){
+  var CHECKOUT_URL = 'https://myaibrain.org/api/checkout';
+  function bind(link){
+    link.addEventListener('click', function(ev){
+      var tier = link.getAttribute('data-checkout-tier');
+      var fallback = link.getAttribute('data-fallback-url') || link.href;
+      if (!tier) return; // no-op — use href
+      ev.preventDefault();
+      fetch(CHECKOUT_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({tier: tier, interval: 'monthly'})
+      })
+      .then(function(r){
+        if (!r.ok) throw new Error('checkout ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        if (data && data.checkout_url) {
+          window.location.href = data.checkout_url;
+        } else {
+          window.location.href = fallback;
+        }
+      })
+      .catch(function(){
+        // Safety net: Worker not yet deployed or misconfigured — fall back
+        // to the proven Payment Link so we never lose a sale.
+        window.location.href = fallback;
+      });
+    });
+  }
+  document.querySelectorAll('a.aibrain-checkout-link').forEach(bind);
 })();
 </script>
 </body>
