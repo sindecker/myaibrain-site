@@ -6,3 +6,16 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://static.cloudflareinsights.com; img-src 'self' data:; connect-src 'self' https://api.stripe.com https://myaibrain-api.deckerops.workers.dev; frame-src https://js.stripe.com; font-src 'self'
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Install scripts — served as plain text so `curl | sh` and `irm | iex` work.
+/install.sh
+  Content-Type: text/x-shellscript; charset=utf-8
+  Cache-Control: public, max-age=300
+
+/install.ps1
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=300
+
+/install
+  Content-Type: text/x-shellscript; charset=utf-8
+  Cache-Control: public, max-age=300

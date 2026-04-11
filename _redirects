@@ -1,6 +1,9 @@
 # Redirects for Cloudflare Pages
 /docs  /docs/index.html  200
 /pricing  /#pricing  301
+# One-line installer aliases — curl -sSL https://myaibrain.org/install | sh
+/install  /install.sh  200
+/install/  /install.sh  200
 # Account pages — directory-index fallbacks
 /signup  /signup/index.html  200
 /login  /login/index.html  200
