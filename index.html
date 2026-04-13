@@ -430,6 +430,23 @@
             .compat-grid { gap: 1rem; }
             .compat-item { min-width: 110px; padding: 1rem; }
         }
+
+        /* Screenshots gallery */
+        .screenshots { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
+        .screenshots h2 { text-align: center; font-size: 2rem; margin-bottom: 0.5rem; }
+        .screenshots .sub { text-align: center; color: var(--dim); margin-bottom: 2.5rem; }
+        .screenshot-tabs { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .screenshot-tab { background: none; border: 1px solid #2d2d35; color: var(--dim); padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .screenshot-tab.active, .screenshot-tab:hover { border-color: var(--brand); color: var(--brand); }
+        .screenshot-display { border-radius: 12px; overflow: hidden; border: 1px solid #2d2d35; background: #111117; }
+        .screenshot-display img { width: 100%; display: block; }
+
+        /* Demo video */
+        .demo-video-section { max-width: 960px; margin: 0 auto; padding: 20px 20px 60px; text-align: center; }
+        .demo-video-section h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .demo-video-section .sub { color: var(--dim); margin-bottom: 2rem; }
+        .demo-video-wrap { border-radius: 12px; overflow: hidden; border: 1px solid #2d2d35; background: #000; }
+        .demo-video-wrap video { width: 100%; display: block; max-height: 540px; }
     </style>
     <!-- Ref tracking -->
     <script>
@@ -464,7 +481,7 @@
 
 <!-- Hero -->
 <div class="hero">
-    <div class="hero-badge">v1.4.0 — The Portable Agent Operating System</div>
+    <div class="hero-badge">v1.5.0 — The Portable Agent Operating System</div>
     <div style="text-align: center; margin-bottom: 1.5rem;">
         <span style="font-size: clamp(3rem, 6vw, 4.5rem); margin-right: 0.5rem;">🧠</span>
         <span style="font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; color: var(--brand);">AIBrain</span>
@@ -513,6 +530,36 @@
         <div class="stat-label">Local / Private</div>
     </div>
 </div>
+
+<!-- Demo Video -->
+<section>
+<div class="demo-video-section">
+    <h2>See it in action</h2>
+    <p class="sub">Native desktop app — persistent memory, 58 workflows, 55-page dashboard</p>
+    <div class="demo-video-wrap">
+        <video autoplay muted loop controls playsinline>
+            <source src="/assets/videos/demo.mp4" type="video/mp4">
+        </video>
+    </div>
+</div>
+</section>
+
+<!-- Screenshots -->
+<section>
+<div class="screenshots">
+    <h2>Inside the dashboard</h2>
+    <p class="sub">55 pages. Everything your agent needs, visible and in control.</p>
+    <div class="screenshot-tabs">
+        <button class="screenshot-tab active" onclick="showScreenshot(this,'dashboard-main')">Dashboard</button>
+        <button class="screenshot-tab" onclick="showScreenshot(this,'dashboard-memories')">Memory Browser</button>
+        <button class="screenshot-tab" onclick="showScreenshot(this,'dashboard-brain')">Brain</button>
+        <button class="screenshot-tab" onclick="showScreenshot(this,'dashboard-buildit')">Buildit</button>
+    </div>
+    <div class="screenshot-display">
+        <img id="screenshot-img" src="/assets/screenshots/dashboard-main.png" alt="AIBrain Dashboard">
+    </div>
+</div>
+</section>
 
 <!-- Brain Packs -->
 <section id="packs">
@@ -629,8 +676,8 @@
         </div>
         <div class="feature">
             <div class="feature-icon">&#x1f465;</div>
-            <h3>Agent Teams</h3>
-            <p>Typed multi-agent composition. Define agents with role, goal, and backstory. Create tasks with expected output and guardrails. Run teams with sequential or hierarchical processes — agents delegate, retry, and produce structured results.</p>
+            <h3>Companies &amp; Teams</h3>
+            <p>Agent Teams with task routing, org charts, company structure, and goal tracking built in.</p>
         </div>
         <div class="feature">
             <div class="feature-icon">&#x1f500;</div>
@@ -674,8 +721,13 @@
         </div>
         <div class="feature">
             <div class="feature-icon">&#x1f5a5;</div>
-            <h3>Desktop Automation</h3>
-            <p>Your agent can control your desktop — click, type, screenshot, manage windows. Learns workflows and saves them as reusable skills. Any app, any platform.</p>
+            <h3>Native Desktop App</h3>
+            <p>Full-featured Tauri desktop app for Windows. No browser required. Brain runs locally, data stays private.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">&#x1f4bb;</div>
+            <h3>Buildit AI Code Editor</h3>
+            <p>Built-in AI code editor with live preview. Write, debug, and deploy code with your agent's help.</p>
         </div>
         <div class="feature">
             <div class="feature-icon">&#x1f4c5;</div>
@@ -688,9 +740,14 @@
             <p>Generate social media images, banners, and thumbnails programmatically. Built-in templates for LinkedIn, X, YouTube. Your agent creates your content visuals.</p>
         </div>
         <div class="feature">
+            <div class="feature-icon">&#x1f4b0;</div>
+            <h3>Cost Analytics</h3>
+            <p>Real-time LLM cost tracking by model and task. Know exactly what each workflow costs.</p>
+        </div>
+        <div class="feature">
             <div class="feature-icon">&#x1f504;</div>
-            <h3>Skill Evolution</h3>
-            <p>Skills are living documents. Version tracking, health monitoring, automatic improvement. Your agent's capabilities evolve and compound over time.</p>
+            <h3>Brain Evolution</h3>
+            <p>Your agent scores every run, extracts learnings, and improves automatically. Compounds across sessions.</p>
         </div>
         <div class="feature">
             <div class="feature-icon">&#x1f9ea;</div>
@@ -1368,6 +1425,14 @@
   }
   document.querySelectorAll('a.aibrain-checkout-link').forEach(bind);
 })();
+</script>
+<script>
+function showScreenshot(btn, name) {
+    document.querySelectorAll('.screenshot-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('screenshot-img').src = '/assets/screenshots/' + name + '.png';
+    document.getElementById('screenshot-img').alt = 'AIBrain ' + btn.textContent;
+}
 </script>
 </body>
 </html>
