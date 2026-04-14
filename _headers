@@ -25,3 +25,8 @@
   Content-Type: text/x-shellscript; charset=utf-8
   Content-Disposition: attachment; filename="install.sh"
   Cache-Control: public, max-age=300
+
+/install.bat
+  Content-Type: application/octet-stream
+  Content-Disposition: attachment; filename="install.bat"
+  Cache-Control: public, max-age=300
