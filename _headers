@@ -18,7 +18,6 @@
 
 /install.ps1
   Content-Type: text/plain; charset=utf-8
-  Content-Disposition: attachment; filename="install.ps1"
   Cache-Control: public, max-age=300
 
 /install

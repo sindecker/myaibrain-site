@@ -18,7 +18,15 @@
 $ErrorActionPreference = 'Stop'
 
 function Say([string]$msg)  { Write-Host ("  " + $msg) }
-function Die([string]$msg)  { Write-Host ("  ERROR: " + $msg) -ForegroundColor Red; exit 1 }
+function Die([string]$msg)  {
+    Write-Host ""
+    Write-Host ("  ERROR: " + $msg) -ForegroundColor Red
+    Write-Host ""
+    Write-Host "  Visit https://myaibrain.org/docs/getting-started for help." -ForegroundColor Yellow
+    Write-Host ""
+    try { $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") } catch { Start-Sleep -Seconds 5 }
+    exit 1
+}
 
 Write-Host ""
 Write-Host "  AIBrain installer"
