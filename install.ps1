@@ -114,9 +114,12 @@ Show-Screen "Installing AIBrain from PyPI..." 45
 # Upgrade pip — capture all output so PS doesn't treat stderr warnings as fatal errors
 $null = & $VENV_PY -m pip install --quiet --upgrade pip 2>&1
 
-# Install aibrain — capture stderr so warnings don't kill the script under Stop mode
-$installOut = & $VENV_PY -m pip install --quiet --upgrade "aibrain[api]" 2>&1
-if ($LASTEXITCODE -ne 0) { Die "Installation failed. Check your internet connection and try again." }
+# Install aibrain — pipe through Out-Null to swallow warnings without triggering Stop mode
+$ErrorActionPreference = 'Continue'
+& $VENV_PY -m pip install --quiet --upgrade "aibrain[api]" 2>&1 | Out-Null
+$pipExit = $LASTEXITCODE
+$ErrorActionPreference = 'Stop'
+if ($pipExit -ne 0) { Die "Installation failed. Check your internet connection and try again." }
 
 $version = "unknown"
 try {
