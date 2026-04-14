@@ -93,9 +93,20 @@ if ($userPath -notlike "*$scriptsDir*") {
 # Also update current session
 $env:Path = "$scriptsDir;$env:Path"
 
+# --- 6. Run setup wizard automatically ---------------------------------------
+Say "Running aibrain setup..."
 Write-Host ""
-Write-Host "  Done. Next steps:"
-Write-Host "      aibrain setup      # interactive configuration"
+try {
+    & $VENV_CLI setup --auto
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  NOTE: Setup wizard exited with warnings. Run 'aibrain setup' to complete configuration." -ForegroundColor Yellow
+    }
+} catch {
+    Write-Host "  NOTE: Could not run setup automatically. Run 'aibrain setup' to complete configuration." -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "  Ready. Start AIBrain:"
 Write-Host "      aibrain serve      # dashboard at http://localhost:8001"
 Write-Host ""
 Write-Host "  Upgrade any time by re-running this installer."

@@ -488,9 +488,45 @@
     <h1>Your agent,<br><span class="accent">better from day one</span></h1>
     <p>AIBrain gives any AI agent persistent memory, Agent/Task/Team composition, a Flow engine, document ingestion, universal MCP connectivity, 58 self-learning workflows, mesh networking, and a 55-page native dashboard. Install a brain pack and your agent has years of expertise in minutes.</p>
 
-    <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain && aibrain setup --auto')">
-        <span class="prompt">$</span> <span class="cmd">pip install aibrain && aibrain setup --auto</span>
+    <!-- Download buttons -->
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;">
+        <a id="btn-download-primary" href="/install.ps1" download="install.ps1"
+           style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--cta);color:#000;font-weight:700;font-size:1.05rem;padding:0.9rem 2rem;border-radius:10px;text-decoration:none;transition:opacity 0.2s;"
+           onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+            <span id="btn-download-icon">⬇</span> <span id="btn-download-label">Download for Windows</span>
+        </a>
+        <a id="btn-other-os" href="/install.sh" download="install.sh"
+           style="display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--brand);font-weight:600;font-size:0.95rem;padding:0.9rem 1.5rem;border-radius:10px;border:1px solid var(--brand);text-decoration:none;transition:opacity 0.2s;"
+           onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+            <span id="btn-other-label">Also for Mac / Linux</span>
+        </a>
     </div>
+    <div class="hero-sub" style="margin-bottom:1.5rem;">Free download. Python 3.10+ required. Works on Windows, Mac, and Linux.</div>
+    <script>
+    (function(){
+        var ua = navigator.userAgent.toLowerCase();
+        var mac = ua.indexOf('mac') > -1;
+        var linux = ua.indexOf('linux') > -1 && ua.indexOf('android') === -1;
+        if (mac || linux) {
+            var primary = document.getElementById('btn-download-primary');
+            primary.href = '/install.sh'; primary.download = 'install.sh';
+            document.getElementById('btn-download-label').textContent = mac ? 'Download for Mac' : 'Download for Linux';
+            var other = document.getElementById('btn-other-os');
+            other.href = '/install.ps1'; other.download = 'install.ps1';
+            document.getElementById('btn-other-label').textContent = 'Also for Windows';
+        }
+    })();
+    </script>
+    <!-- Developer: one-liner -->
+    <details style="max-width:540px;margin:0 auto 0.5rem;text-align:left;">
+        <summary style="color:var(--dim);font-size:0.85rem;cursor:pointer;user-select:none;">Developer? Install via pip ›</summary>
+        <div style="margin-top:0.75rem;">
+            <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='pip install aibrain',1500)" style="font-size:0.88rem;">
+                <span class="cmd">pip install aibrain</span>
+            </div>
+            <div style="color:var(--dim);font-size:0.8rem;margin-top:0.4rem;">Then run: <code style="background:rgba(255,255,255,0.06);padding:0.1rem 0.35rem;border-radius:3px;">aibrain setup</code></div>
+        </div>
+    </details>
     <br>
     <div class="hero-install" style="text-align: left; display: block; max-width: 520px; margin: 0.75rem auto; font-size: 0.88rem; line-height: 1.7;" onclick="navigator.clipboard.writeText('from aibrain import Brain\nbrain = Brain()\nbrain.add(&quot;I love tennis&quot;, user_id=&quot;alice&quot;)\nbrain.search(&quot;hobbies&quot;, user_id=&quot;alice&quot;)')">
         <span style="color: var(--dim);"># Brain API</span><br>
@@ -499,7 +535,7 @@
         <span class="cmd">brain.add(</span><span style="color: #86efac;">"I love tennis"</span><span class="cmd">, user_id=</span><span style="color: #86efac;">"alice"</span><span class="cmd">)</span><br>
         <span class="cmd">brain.search(</span><span style="color: #86efac;">"hobbies"</span><span class="cmd">, user_id=</span><span style="color: #86efac;">"alice"</span><span class="cmd">)</span>
     </div>
-    <div class="hero-sub">Click to copy. Python 3.10+. Works on Linux, Mac, and Windows.</div>
+    <div class="hero-sub">Click to copy.</div>
 </div>
 
 <!-- Stats -->
@@ -1281,26 +1317,46 @@
 <!-- Install CTA -->
 <section id="install" class="cta-section">
     <h2>Get started now</h2>
-    <p>One command. Three minutes. A brain that learns.</p>
+    <p>Download the installer. Double-click. Done.</p>
 
-    <div style="margin-bottom: 1.5rem;">
-        <div style="color: var(--dim); font-size: 0.85rem; margin-bottom: 0.5rem;">Linux / Mac / WSL</div>
-        <div class="hero-install" onclick="navigator.clipboard.writeText('curl -fsSL https://myaibrain.org/install.sh | bash')">
-            <span class="prompt">$</span> <span class="cmd">curl -fsSL https://myaibrain.org/install.sh | bash</span>
-        </div>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">
+        <a href="/install.ps1" download="install.ps1"
+           style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--cta);color:#000;font-weight:700;font-size:1rem;padding:0.85rem 2rem;border-radius:10px;text-decoration:none;transition:opacity 0.2s;"
+           onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+            ⬇ Download for Windows
+        </a>
+        <a href="/install.sh" download="install.sh"
+           style="display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--brand);font-weight:600;font-size:0.95rem;padding:0.85rem 1.5rem;border-radius:10px;border:1px solid var(--brand);text-decoration:none;transition:opacity 0.2s;"
+           onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+            ⬇ Download for Mac / Linux
+        </a>
     </div>
-    <div style="margin-bottom: 1.5rem;">
-        <div style="color: var(--dim); font-size: 0.85rem; margin-bottom: 0.5rem;">Windows (PowerShell)</div>
-        <div class="hero-install" onclick="navigator.clipboard.writeText('irm https://myaibrain.org/install.ps1 | iex')">
-            <span class="prompt">&gt;</span> <span class="cmd">irm https://myaibrain.org/install.ps1 | iex</span>
+    <div class="hero-sub" style="margin-bottom:1.5rem;">Python 3.10+ required. Free download.</div>
+
+    <details style="max-width:540px;margin:0 auto 1.5rem;text-align:left;">
+        <summary style="color:var(--dim);font-size:0.85rem;cursor:pointer;user-select:none;">Developer? Install via terminal ›</summary>
+        <div style="margin-top:0.75rem;display:flex;flex-direction:column;gap:0.75rem;">
+            <div>
+                <div style="color:var(--dim);font-size:0.8rem;margin-bottom:0.3rem;">Windows PowerShell</div>
+                <div class="hero-install" onclick="navigator.clipboard.writeText('irm https://myaibrain.org/install.ps1 | iex'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='irm https://myaibrain.org/install.ps1 | iex',1500)" style="font-size:0.85rem;">
+                    <span class="cmd">irm https://myaibrain.org/install.ps1 | iex</span>
+                </div>
+            </div>
+            <div>
+                <div style="color:var(--dim);font-size:0.8rem;margin-bottom:0.3rem;">Mac / Linux / WSL</div>
+                <div class="hero-install" onclick="navigator.clipboard.writeText('curl -fsSL https://myaibrain.org/install.sh | bash'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='curl -fsSL https://myaibrain.org/install.sh | bash',1500)" style="font-size:0.85rem;">
+                    <span class="cmd">curl -fsSL https://myaibrain.org/install.sh | bash</span>
+                </div>
+            </div>
+            <div>
+                <div style="color:var(--dim);font-size:0.8rem;margin-bottom:0.3rem;">pip</div>
+                <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='pip install aibrain',1500)" style="font-size:0.85rem;">
+                    <span class="cmd">pip install aibrain</span>
+                </div>
+                <div style="color:var(--dim);font-size:0.75rem;margin-top:0.3rem;">Then run: <code style="background:rgba(255,255,255,0.06);padding:0.1rem 0.35rem;border-radius:3px;">aibrain setup</code></div>
+            </div>
         </div>
-    </div>
-    <div style="margin-bottom: 1.5rem;">
-        <div style="color: var(--dim); font-size: 0.85rem; margin-bottom: 0.5rem;">pip</div>
-        <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain && aibrain setup --auto')">
-            <span class="prompt">$</span> <span class="cmd">pip install aibrain && aibrain setup --auto</span>
-        </div>
-    </div>
+    </details>
 
     <div class="hero-sub" style="margin-top: 1rem;">
         <a href="https://pypi.org/project/aibrain/">PyPI</a>
