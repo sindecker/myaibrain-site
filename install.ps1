@@ -131,16 +131,34 @@ Write-Host ""
 Write-Host "  Starting the dashboard..." -ForegroundColor Cyan
 Write-Host ""
 
-# Launch aibrain serve in a new window and open the browser
+# Launch aibrain serve in a new window, wait until it responds, then open browser
 try {
     Start-Process $VENV_CLI -ArgumentList "serve" -WindowStyle Normal
-    Start-Sleep -Seconds 2
-    Start-Process "http://localhost:8001"
-    Write-Host "  Dashboard is starting at http://localhost:8001" -ForegroundColor Green
-    Write-Host "  (A new terminal window is running the server — keep it open.)" -ForegroundColor DarkGray
+    Write-Host "  Waiting for dashboard to start..." -ForegroundColor Cyan
+
+    $ready = $false
+    for ($i = 0; $i -lt 20; $i++) {
+        Start-Sleep -Seconds 1
+        try {
+            $r = Invoke-WebRequest -Uri "http://localhost:8001" -TimeoutSec 1 -UseBasicParsing -ErrorAction Stop
+            if ($r.StatusCode -lt 500) { $ready = $true; break }
+        } catch { }
+        Write-Host "  ." -NoNewline
+    }
+    Write-Host ""
+
+    if ($ready) {
+        Start-Process "http://localhost:8001"
+        Write-Host "  Dashboard is ready at http://localhost:8001" -ForegroundColor Green
+        Write-Host "  (Keep the server window open to stay running.)" -ForegroundColor DarkGray
+    } else {
+        Write-Host "  Server did not start in time." -ForegroundColor Yellow
+        Write-Host "  Open a new terminal and run: aibrain serve" -ForegroundColor Yellow
+        Write-Host "  Then visit http://localhost:8001" -ForegroundColor Yellow
+    }
 } catch {
-    Write-Host "  To start the dashboard, run: aibrain serve" -ForegroundColor Yellow
-    Write-Host "  Then open http://localhost:8001 in your browser." -ForegroundColor Yellow
+    Write-Host "  To start the dashboard, open a new terminal and run: aibrain serve" -ForegroundColor Yellow
+    Write-Host "  Then visit http://localhost:8001" -ForegroundColor Yellow
 }
 
 Write-Host ""
