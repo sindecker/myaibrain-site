@@ -126,8 +126,25 @@ try {
 }
 
 Write-Host ""
-Write-Host "  Ready. Start AIBrain:"
-Write-Host "      aibrain serve      # dashboard at http://localhost:8001"
+Write-Host "  AIBrain installed successfully!" -ForegroundColor Green
 Write-Host ""
-Write-Host "  Upgrade any time by re-running this installer."
+Write-Host "  Starting the dashboard..." -ForegroundColor Cyan
 Write-Host ""
+
+# Launch aibrain serve in a new window and open the browser
+try {
+    Start-Process $VENV_CLI -ArgumentList "serve" -WindowStyle Normal
+    Start-Sleep -Seconds 2
+    Start-Process "http://localhost:8001"
+    Write-Host "  Dashboard is starting at http://localhost:8001" -ForegroundColor Green
+    Write-Host "  (A new terminal window is running the server — keep it open.)" -ForegroundColor DarkGray
+} catch {
+    Write-Host "  To start the dashboard, run: aibrain serve" -ForegroundColor Yellow
+    Write-Host "  Then open http://localhost:8001 in your browser." -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "  Upgrade any time by re-running AIBrain-install.bat"
+Write-Host ""
+Write-Host "  Press any key to close this window..."
+try { $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") } catch { Start-Sleep -Seconds 3 }
