@@ -13,14 +13,14 @@
 $ErrorActionPreference = 'Stop'
 
 # --- UI helpers ---------------------------------------------------------------
-$LOGO = @"
+$LOGO = @'
 
-    ___  ___ ___          _
-   / _ \|_ _| _ )_ _ __ _(_)_ __
-  | (_) || || _ \ '_/ _`` | | '  \
-   \___/|___|___/_| \__,_|_|_||_|
+    _  ___ ___            _
+   /_\|_ _| _ )_ _ __ _(_)_ _
+  / _ \| || _ \ '_/ _` | | ' \
+ /_/ \_\___|___/_| \__,_|_|_||_|
 
-"@
+'@
 
 function Show-Screen {
     param([string]$Status, [int]$Percent, [string]$Color = "Cyan")
@@ -105,7 +105,7 @@ if (-not (Test-Path $VENV_PY)) {
 Show-Screen "Installing AIBrain from PyPI..." 45
 
 & $VENV_PY -m pip install --quiet --upgrade pip 2>$null
-& $VENV_PY -m pip install --quiet --upgrade aibrain 2>$null
+& $VENV_PY -m pip install --quiet --upgrade "aibrain[api]" 2>$null
 if ($LASTEXITCODE -ne 0) { Die "Installation failed. Check your internet connection and try again." }
 
 $version = "unknown"
