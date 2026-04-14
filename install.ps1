@@ -138,58 +138,61 @@ if ($userPath -notlike "*$scriptsDir*") {
 }
 $env:Path = "$scriptsDir;$env:Path"
 
-# --- 6. Run setup wizard ------------------------------------------------------
-Show-Screen "Running setup..." 80
+# --- 6. Run setup wizard (also downloads + installs native desktop app) -------
+Show-Screen "Installing AIBrain desktop app..." 80
 
 try {
-    & $VENV_CLI setup --auto 2>$null | Out-Null
+    & $VENV_CLI setup --auto 2>&1 | Out-Null
 } catch { }
 
-# --- 7. Launch dashboard ------------------------------------------------------
-Show-Screen "Starting dashboard..." 90
+# --- 7. Launch the app --------------------------------------------------------
+Show-Screen "Starting AIBrain..." 90
 
-try {
-    $proc = Start-Process $VENV_CLI -ArgumentList "serve" -WindowStyle Normal -PassThru
+# Check for native desktop app first (installed by setup wizard from GitHub releases)
+$nativeAppPaths = @(
+    "$env:LOCALAPPDATA\Programs\AIBrain\AIBrain.exe",
+    "$env:PROGRAMFILES\AIBrain\AIBrain.exe",
+    "$env:LOCALAPPDATA\AIBrain\AIBrain.exe"
+)
 
-    # Give it 3 seconds — if it dies immediately it crashed
-    Start-Sleep -Seconds 3
-    if ($proc.HasExited) {
-        Show-Screen "AIBrain $version installed." 100 "Green"
-        Write-Host "  Dashboard could not start automatically." -ForegroundColor Yellow
-        Write-Host "  Open a new terminal and run:" -ForegroundColor White
-        Write-Host ""
-        Write-Host "      aibrain serve" -ForegroundColor Cyan
-        Write-Host ""
-        Write-Host "  Then visit http://localhost:8001 in your browser." -ForegroundColor White
-    } else {
-        # Server is running — poll until ready
-        $ready = $false
-        for ($i = 0; $i -lt 20; $i++) {
-            Start-Sleep -Seconds 1
-            try {
-                $r = Invoke-WebRequest -Uri "http://localhost:8001" -TimeoutSec 1 -UseBasicParsing -ErrorAction Stop
-                if ($r.StatusCode -lt 500) { $ready = $true; break }
-            } catch { }
-        }
+$nativeExe = $null
+foreach ($p in $nativeAppPaths) {
+    if (Test-Path $p) { $nativeExe = $p; break }
+}
 
-        if ($ready) {
+if ($nativeExe) {
+    # Native app installed — launch it directly
+    Start-Process $nativeExe
+    Show-Screen "AIBrain $version is ready!" 100 "Green"
+    Write-Host "  AIBrain desktop app launched." -ForegroundColor Green
+    Write-Host "  Find it in your taskbar or Start Menu to reopen." -ForegroundColor DarkGray
+} else {
+    # No native app — fall back to API server + browser
+    try {
+        $proc = Start-Process $VENV_CLI -ArgumentList "serve" -WindowStyle Normal -PassThru
+        Start-Sleep -Seconds 4
+
+        if ($proc.HasExited) {
+            Show-Screen "AIBrain $version installed." 100 "Green"
+            Write-Host "  Open a new terminal and run:  aibrain serve" -ForegroundColor White
+        } else {
+            $ready = $false
+            for ($i = 0; $i -lt 20; $i++) {
+                Start-Sleep -Seconds 1
+                try {
+                    $r = Invoke-WebRequest -Uri "http://localhost:8001" -TimeoutSec 1 -UseBasicParsing -ErrorAction Stop
+                    if ($r.StatusCode -lt 500) { $ready = $true; break }
+                } catch { }
+            }
             Show-Screen "AIBrain $version is ready!" 100 "Green"
             Start-Process "http://localhost:8001"
             Write-Host "  Dashboard open at http://localhost:8001" -ForegroundColor Green
             Write-Host "  Keep the server window open to stay running." -ForegroundColor DarkGray
-        } else {
-            Show-Screen "AIBrain $version is ready!" 100 "Green"
-            Start-Process "http://localhost:8001"
-            Write-Host "  Opening http://localhost:8001 — server may need another moment." -ForegroundColor Cyan
         }
+    } catch {
+        Show-Screen "AIBrain $version installed." 100 "Green"
+        Write-Host "  Run:  aibrain serve" -ForegroundColor Cyan
     }
-} catch {
-    Show-Screen "AIBrain $version installed." 100 "Green"
-    Write-Host "  Open a new terminal and run:" -ForegroundColor White
-    Write-Host ""
-    Write-Host "      aibrain serve" -ForegroundColor Cyan
-    Write-Host ""
-    Write-Host "  Then visit http://localhost:8001 in your browser." -ForegroundColor White
 }
 
 Write-Host ""
