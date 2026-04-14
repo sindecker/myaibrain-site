@@ -474,8 +474,7 @@
         <a href="https://pypi.org/project/aibrain/">PyPI</a>
     </div>
     <div style="display:flex; gap:0.75rem; align-items:center;">
-        <a href="/login" style="color: var(--dim); font-size: 0.9rem;">Log in</a>
-        <a href="/signup" class="nav-cta">Sign up</a>
+        <a href="#pricing" class="nav-cta">Get Pro</a>
     </div>
 </nav>
 
@@ -531,35 +530,6 @@
     </div>
 </div>
 
-<!-- Demo Video -->
-<section>
-<div class="demo-video-section">
-    <h2>See it in action</h2>
-    <p class="sub">Native desktop app — persistent memory, 58 workflows, 55-page dashboard</p>
-    <div class="demo-video-wrap">
-        <video autoplay muted loop controls playsinline>
-            <source src="/assets/videos/demo.mp4" type="video/mp4">
-        </video>
-    </div>
-</div>
-</section>
-
-<!-- Screenshots -->
-<section>
-<div class="screenshots">
-    <h2>Inside the dashboard</h2>
-    <p class="sub">55 pages. Everything your agent needs, visible and in control.</p>
-    <div class="screenshot-tabs">
-        <button class="screenshot-tab active" onclick="showScreenshot(this,'dashboard-main')">Dashboard</button>
-        <button class="screenshot-tab" onclick="showScreenshot(this,'dashboard-memories')">Memory Browser</button>
-        <button class="screenshot-tab" onclick="showScreenshot(this,'dashboard-brain')">Brain</button>
-        <button class="screenshot-tab" onclick="showScreenshot(this,'dashboard-buildit')">Buildit</button>
-    </div>
-    <div class="screenshot-display">
-        <img id="screenshot-img" src="/assets/screenshots/dashboard-main.png" alt="AIBrain Dashboard">
-    </div>
-</div>
-</section>
 
 <!-- Brain Packs -->
 <section id="packs">
@@ -1403,7 +1373,7 @@
       fetch(CHECKOUT_URL, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({tier: tier, interval: 'monthly'})
+        body: JSON.stringify({tier: tier, interval: 'monthly', client_reference_id: (crypto.randomUUID ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(36).slice(2)))})
       })
       .then(function(r){
         if (!r.ok) throw new Error('checkout ' + r.status);
