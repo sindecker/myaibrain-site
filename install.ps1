@@ -101,11 +101,21 @@ if (-not (Test-Path $VENV_PY)) {
     if ($LASTEXITCODE -ne 0) { Die "Could not create Python environment." }
 }
 
+# Clean any corrupted partial installs left by previous failed attempts (~ibrain etc.)
+$sitePackages = Join-Path $VENV_DIR "Lib\site-packages"
+if (Test-Path $sitePackages) {
+    Get-ChildItem $sitePackages -Filter "~*" -ErrorAction SilentlyContinue |
+        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+}
+
 # --- 4. pip install / upgrade aibrain -----------------------------------------
 Show-Screen "Installing AIBrain from PyPI..." 45
 
-& $VENV_PY -m pip install --quiet --upgrade pip 2>$null
-& $VENV_PY -m pip install --quiet --upgrade "aibrain[api]" 2>$null
+# Upgrade pip — capture all output so PS doesn't treat stderr warnings as fatal errors
+$null = & $VENV_PY -m pip install --quiet --upgrade pip 2>&1
+
+# Install aibrain — capture stderr so warnings don't kill the script under Stop mode
+$installOut = & $VENV_PY -m pip install --quiet --upgrade "aibrain[api]" 2>&1
 if ($LASTEXITCODE -ne 0) { Die "Installation failed. Check your internet connection and try again." }
 
 $version = "unknown"
