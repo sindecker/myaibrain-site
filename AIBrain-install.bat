@@ -1,5 +1,5 @@
 @echo off
-title AIBrain Installer
+title AIBrain Installer — myaibrain.org
 echo.
 echo   AIBrain Installer
 echo   -----------------

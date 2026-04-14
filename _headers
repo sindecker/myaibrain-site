@@ -29,3 +29,8 @@
   Content-Type: application/octet-stream
   Content-Disposition: attachment; filename="install.bat"
   Cache-Control: public, max-age=300
+
+/AIBrain-install.bat
+  Content-Type: application/octet-stream
+  Content-Disposition: attachment; filename="AIBrain-install.bat"
+  Cache-Control: public, max-age=300
