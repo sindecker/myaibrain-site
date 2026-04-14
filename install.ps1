@@ -57,7 +57,19 @@ foreach ($exe in @("python", "python3", "py")) {
     } catch { }
 }
 if (-not $python) {
-    Die "Python 3.10+ not found on PATH. Install from https://python.org/downloads/ then rerun."
+    Write-Host ""
+    Write-Host "  Python 3.10+ is required." -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "  1. Install Python from https://python.org/downloads/" -ForegroundColor White
+    Write-Host "  2. On the first installer screen, check 'Add Python to PATH'" -ForegroundColor White
+    Write-Host "  3. After installing, close this window and run AIBrain-install.bat again" -ForegroundColor White
+    Write-Host ""
+    Start-Process "https://www.python.org/downloads/"
+    Write-Host "  Opening Python download page..." -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  Press any key to close..." -ForegroundColor DarkGray
+    try { $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") } catch { Start-Sleep -Seconds 8 }
+    exit 1
 }
 
 # --- 3. Create / reuse isolated venv -----------------------------------------
