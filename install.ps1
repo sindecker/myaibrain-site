@@ -139,31 +139,47 @@ try {
 Show-Screen "Starting dashboard..." 90
 
 try {
-    Start-Process $VENV_CLI -ArgumentList "serve" -WindowStyle Normal
+    $proc = Start-Process $VENV_CLI -ArgumentList "serve" -WindowStyle Normal -PassThru
 
-    $ready = $false
-    for ($i = 0; $i -lt 20; $i++) {
-        Start-Sleep -Seconds 1
-        try {
-            $r = Invoke-WebRequest -Uri "http://localhost:8001" -TimeoutSec 1 -UseBasicParsing -ErrorAction Stop
-            if ($r.StatusCode -lt 500) { $ready = $true; break }
-        } catch { }
-    }
-
-    if ($ready) {
-        Show-Screen "AIBrain $version is ready!" 100 "Green"
-        Start-Process "http://localhost:8001"
-        Write-Host "  Opening dashboard at http://localhost:8001" -ForegroundColor Green
-        Write-Host "  Keep the server window open to stay running." -ForegroundColor DarkGray
-    } else {
+    # Give it 3 seconds — if it dies immediately it crashed
+    Start-Sleep -Seconds 3
+    if ($proc.HasExited) {
         Show-Screen "AIBrain $version installed." 100 "Green"
-        Write-Host "  Start the dashboard: open a terminal and run  aibrain serve" -ForegroundColor Yellow
-        Write-Host "  Then visit http://localhost:8001" -ForegroundColor Yellow
+        Write-Host "  Dashboard could not start automatically." -ForegroundColor Yellow
+        Write-Host "  Open a new terminal and run:" -ForegroundColor White
+        Write-Host ""
+        Write-Host "      aibrain serve" -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "  Then visit http://localhost:8001 in your browser." -ForegroundColor White
+    } else {
+        # Server is running — poll until ready
+        $ready = $false
+        for ($i = 0; $i -lt 20; $i++) {
+            Start-Sleep -Seconds 1
+            try {
+                $r = Invoke-WebRequest -Uri "http://localhost:8001" -TimeoutSec 1 -UseBasicParsing -ErrorAction Stop
+                if ($r.StatusCode -lt 500) { $ready = $true; break }
+            } catch { }
+        }
+
+        if ($ready) {
+            Show-Screen "AIBrain $version is ready!" 100 "Green"
+            Start-Process "http://localhost:8001"
+            Write-Host "  Dashboard open at http://localhost:8001" -ForegroundColor Green
+            Write-Host "  Keep the server window open to stay running." -ForegroundColor DarkGray
+        } else {
+            Show-Screen "AIBrain $version is ready!" 100 "Green"
+            Start-Process "http://localhost:8001"
+            Write-Host "  Opening http://localhost:8001 — server may need another moment." -ForegroundColor Cyan
+        }
     }
 } catch {
     Show-Screen "AIBrain $version installed." 100 "Green"
-    Write-Host "  Start the dashboard: open a terminal and run  aibrain serve" -ForegroundColor Yellow
-    Write-Host "  Then visit http://localhost:8001" -ForegroundColor Yellow
+    Write-Host "  Open a new terminal and run:" -ForegroundColor White
+    Write-Host ""
+    Write-Host "      aibrain serve" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  Then visit http://localhost:8001 in your browser." -ForegroundColor White
 }
 
 Write-Host ""
