@@ -1198,7 +1198,10 @@
                 <li><span class="check">+</span> Productivity brain pack</li>
                 <li><span class="check">+</span> Full API + approval queue</li>
             </ul>
-            <a href="#install" class="price-cta secondary">Install Free</a>
+            <a href="/install.ps1" download class="price-cta secondary"
+               onclick="var ua=navigator.userAgent.toLowerCase();if(ua.indexOf('win')===-1){this.href='/install.sh';this.setAttribute('download','install.sh');}">
+               ⬇ Download Free
+            </a>
         </div>
         <div class="price-card featured">
             <h3>Pro</h3>

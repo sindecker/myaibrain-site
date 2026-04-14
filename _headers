@@ -7,15 +7,21 @@
   Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://static.cloudflareinsights.com; img-src 'self' data:; connect-src 'self' https://api.stripe.com https://myaibrain-api.deckerops.workers.dev; frame-src https://js.stripe.com; font-src 'self'
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
-# Install scripts — served as plain text so `curl | sh` and `irm | iex` work.
+# Install scripts — two URL variants:
+# /install.sh and /install.ps1 = CLI pipe usage (no Content-Disposition, curl/irm friendly)
+# /install.sh?download and /install.ps1?download not needed — Cloudflare Pages doesn't support query routing
+# We use separate /download/ paths for browser downloads (forces save-to-disk)
 /install.sh
   Content-Type: text/x-shellscript; charset=utf-8
+  Content-Disposition: attachment; filename="install.sh"
   Cache-Control: public, max-age=300
 
 /install.ps1
   Content-Type: text/plain; charset=utf-8
+  Content-Disposition: attachment; filename="install.ps1"
   Cache-Control: public, max-age=300
 
 /install
   Content-Type: text/x-shellscript; charset=utf-8
+  Content-Disposition: attachment; filename="install.sh"
   Cache-Control: public, max-age=300
