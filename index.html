@@ -490,7 +490,7 @@
 
     <!-- Download buttons -->
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;">
-        <a id="btn-download-primary" href="/AIBrain-install.bat" download="AIBrain-install.bat"
+        <a id="btn-download-primary" href="/download/windows"
            style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--cta);color:#000;font-weight:700;font-size:1.05rem;padding:0.9rem 2rem;border-radius:10px;text-decoration:none;transition:opacity 0.2s;"
            onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             <span id="btn-download-icon">⬇</span> <span id="btn-download-label">Download for Windows</span>
@@ -501,7 +501,7 @@
             <span id="btn-other-label">Also for Mac / Linux</span>
         </a>
     </div>
-    <div class="hero-sub" style="margin-bottom:1.5rem;">Free download. Python 3.10+ required. Works on Windows, Mac, and Linux.</div>
+    <div class="hero-sub" style="margin-bottom:1.5rem;">Free download. No Python required. Windows 10+ · Mac · Linux.</div>
     <script>
     (function(){
         var ua = navigator.userAgent.toLowerCase();
@@ -512,7 +512,7 @@
             primary.href = '/install.sh'; primary.download = 'install.sh';
             document.getElementById('btn-download-label').textContent = mac ? 'Download for Mac' : 'Download for Linux';
             var other = document.getElementById('btn-other-os');
-            other.href = '/install.bat'; other.download = 'install.bat';
+            other.href = '/download/windows'; other.removeAttribute('download');
             document.getElementById('btn-other-label').textContent = 'Also for Windows';
         }
     })();
@@ -1196,7 +1196,7 @@
                 <li><span class="check">+</span> Productivity brain pack</li>
                 <li><span class="check">+</span> Full API + approval queue</li>
             </ul>
-            <a href="/AIBrain-install.bat" download="AIBrain-install.bat" class="price-cta secondary"
+            <a href="/download/windows" class="price-cta secondary"
                onclick="var ua=navigator.userAgent.toLowerCase();if(ua.indexOf('win')===-1){this.href='/install.sh';this.setAttribute('download','install.sh');}">
                ⬇ Download Free
             </a>
@@ -1321,7 +1321,7 @@
     <p>Download the installer. Double-click. Done.</p>
 
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">
-        <a href="/AIBrain-install.bat" download="AIBrain-install.bat"
+        <a href="/download/windows"
            style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--cta);color:#000;font-weight:700;font-size:1rem;padding:0.85rem 2rem;border-radius:10px;text-decoration:none;transition:opacity 0.2s;"
            onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             ⬇ Download for Windows
@@ -1332,7 +1332,7 @@
             ⬇ Download for Mac / Linux
         </a>
     </div>
-    <div class="hero-sub" style="margin-bottom:1.5rem;">Python 3.10+ required. Free download.</div>
+    <div class="hero-sub" style="margin-bottom:1.5rem;">Free download. No Python required. Windows 10+ · 115 MB installer.</div>
 
     <div style="max-width:540px;margin:0 auto 1.5rem;text-align:left;display:flex;flex-direction:column;gap:0.75rem;">
         <div>
