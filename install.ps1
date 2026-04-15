@@ -141,11 +141,15 @@ if ($userPath -notlike "*$scriptsDir*") {
 }
 $env:Path = "$scriptsDir;$env:Path"
 
-# --- 6. Run setup wizard (also downloads + installs native desktop app) -------
+# --- 6. Download + install native desktop app from GitHub release ---------------
 Show-Screen "Installing AIBrain desktop app..." 80
 
 try {
-    & $VENV_CLI setup --auto 2>&1 | Out-Null
+    $tmpExe = "$env:TEMP\AIBrain-setup.exe"
+    $ProgressPreference = 'SilentlyContinue'
+    Invoke-WebRequest -Uri "https://myaibrain.org/download/windows" -OutFile $tmpExe -UseBasicParsing -MaximumRedirection 5
+    Start-Process $tmpExe -ArgumentList "/S" -Wait
+    Remove-Item $tmpExe -ErrorAction SilentlyContinue
 } catch { }
 
 # --- 7. Launch the app --------------------------------------------------------
