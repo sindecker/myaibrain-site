@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — AIBrain</title>
+  <meta name="description" content="AIBrain Privacy Policy. Your data stays on your machine. We do not collect, sell, or share your personal information." />
+  <link rel="icon" href="/favicon.ico" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --text: #e2e8f0;
+      --dim: #8892a4;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    header a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+    header a:hover { color: var(--accent-light); }
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .updated {
+      color: var(--dim);
+      font-size: 0.9rem;
+      margin-bottom: 3rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 2.5rem 0 0.75rem;
+      color: var(--accent-light);
+    }
+    p { color: var(--dim); margin-bottom: 1rem; }
+    p strong { color: var(--text); }
+    ul {
+      color: var(--dim);
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    ul li { margin-bottom: 0.4rem; }
+    .highlight {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+    }
+    .highlight p { margin: 0; color: var(--text); font-size: 1.05rem; }
+    a { color: var(--accent-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--dim);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--dim); }
+    footer a:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/">← AIBrain</a>
+</header>
+
+<main>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: April 2026</p>
+
+  <div class="highlight">
+    <p><strong>The short version:</strong> AIBrain runs on your machine. Your data — conversations, memory, files — stays on your machine. We do not collect it, store it on our servers, or sell it to anyone.</p>
+  </div>
+
+  <h2>What AIBrain Is</h2>
+  <p>AIBrain is a desktop application and developer tool that runs locally on your computer. It connects to AI providers you configure (such as Anthropic Claude, OpenAI, Google Gemini, or a local Ollama instance) using API keys you supply. All AI conversations are sent directly from your machine to the provider you choose — not through AIBrain servers.</p>
+
+  <h2>Data We Do Not Collect</h2>
+  <p>We do not collect, transmit, or store:</p>
+  <ul>
+    <li>Your conversations or chat history</li>
+    <li>Your AI provider API keys</li>
+    <li>Files, documents, or memory you add to AIBrain</li>
+    <li>Your machine's contents, file system, or environment</li>
+    <li>Usage data, telemetry, or analytics from within the app</li>
+  </ul>
+
+  <h2>What Stays on Your Machine</h2>
+  <p>All AIBrain data is stored in a local SQLite database at <strong>%APPDATA%\aibrain\aibrain.db</strong> (Windows) or <strong>~/.aibrain/aibrain.db</strong> (Mac/Linux). This file never leaves your machine unless you explicitly move or back it up yourself.</p>
+
+  <h2>Network Connections the App Makes</h2>
+  <p>AIBrain makes outbound connections only when you explicitly trigger them:</p>
+  <ul>
+    <li><strong>AI provider APIs</strong> — only when you send a message. Goes to Anthropic, OpenAI, Google, or your configured endpoint. Your API key is used and stays local.</li>
+    <li><strong>Ollama</strong> — connects to localhost only if you configure a local model.</li>
+    <li><strong>Multi-machine sync (optional)</strong> — if you configure a broker for use across multiple machines, connections go only to the broker address you specify.</li>
+  </ul>
+  <p>No other outbound connections are made by the application during normal use.</p>
+
+  <h2>myaibrain.org Website</h2>
+  <p>When you visit <strong>myaibrain.org</strong>, standard web server logs may record your IP address and the pages you visit. This is standard infrastructure logging. We do not use third-party tracking pixels, advertising networks, or behavioural analytics on this site.</p>
+  <p>If you create an account on myaibrain.org (for Pro or Team licensing), we store your email address and license information. We do not store payment details — payments are processed by Stripe or Gumroad and governed by their respective privacy policies.</p>
+
+  <h2>Installer Downloads</h2>
+  <p>The AIBrain Windows installer (<strong>AIBrain_x64-setup.exe</strong>) is a standard NSIS installer. It installs the application to your local machine. It does not contain your personal data and does not phone home during installation.</p>
+  <p>Microsoft SmartScreen may warn that the file is from an unknown publisher. This is expected for new software without an extended validation (EV) code signing certificate. You can verify the download came from <strong>myaibrain.org/download/windows</strong>.</p>
+
+  <h2>Children</h2>
+  <p>AIBrain is not directed at children under 13. We do not knowingly collect information from children.</p>
+
+  <h2>Changes to This Policy</h2>
+  <p>If we make material changes to this policy, we will update the date at the top of this page. Continued use of AIBrain after changes constitutes acceptance of the updated policy.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this privacy policy: <a href="mailto:hello@myaibrain.org">hello@myaibrain.org</a></p>
+
+</main>
+
+<footer>
+  <p><a href="/">myaibrain.org</a> &nbsp;·&nbsp; <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="mailto:hello@myaibrain.org">Contact</a></p>
+</footer>
+
+</body>
+</html>
