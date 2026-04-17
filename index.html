@@ -4,13 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIBrain — Your Agent, Better Every Day</title>
-    <meta name="description" content="The portable operating system for AI agents. Persistent memory, Agent/Task/Team composition, Flow engine, document ingestion, universal MCP, 58 workflows, 55+ dashboard pages, and 2,373 tests passing. 100% local. Works with any LLM.">
+    <meta name="description" content="AIBrain gives AI agents persistent memory that compounds across sessions. Works with LangChain, CrewAI, LlamaIndex, OpenAI Agents, and any MCP tool. Free. pip install aibrain.">
     <meta property="og:title" content="AIBrain — Your Agent, Better Every Day">
     <meta property="og:description" content="Persistent memory, Agent Teams, Flow engine, document ingestion, universal MCP, 58 workflows, 55+ dashboard pages. Install a brain pack and your agent has years of expertise in minutes.">
     <meta property="og:url" content="https://myaibrain.org">
     <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:site_name" content="AIBrain">
+    <meta name="twitter:card" content="summary">
+    <link rel="canonical" href="https://myaibrain.org/">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://myaibrain.org/#organization",
+      "name": "AIBrain",
+      "url": "https://myaibrain.org",
+      "logo": "https://myaibrain.org/og-image.png",
+      "sameAs": [
+        "https://github.com/sindecker/aibrain",
+        "https://pypi.org/project/aibrain/"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://myaibrain.org/#software",
+      "name": "AIBrain",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Windows, macOS, Linux",
+      "description": "Persistent memory layer for AI agents. Install a brain and your agent compounds knowledge across every session. Free, open source, works with any LLM.",
+      "url": "https://myaibrain.org",
+      "downloadUrl": "https://pypi.org/project/aibrain/",
+      "softwareVersion": "1.5.13",
+      "author": {"@id": "https://myaibrain.org/#organization"},
+      "offers": [
+        {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free"},
+        {"@type": "Offer", "price": "9.95", "priceCurrency": "USD", "name": "Pro", "billingPeriod": "P1M"},
+        {"@type": "Offer", "price": "29.95", "priceCurrency": "USD", "name": "Team", "billingPeriod": "P1M"}
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is AIBrain?",
+          "acceptedAnswer": {"@type": "Answer", "text": "AIBrain is a persistent memory layer for AI agents. It gives any LLM agent a brain that compounds across sessions — the longer you run it, the smarter your agent gets."}
+        },
+        {
+          "@type": "Question",
+          "name": "What frameworks does AIBrain support?",
+          "acceptedAnswer": {"@type": "Answer", "text": "AIBrain works with LangChain, LangGraph, LlamaIndex, OpenAI Agents SDK, CrewAI, AutoGen, smolagents, DSPy, Haystack, Semantic Kernel, Google ADK, PydanticAI, MetaGPT, Agno, Strands, and any MCP-compatible tool. Install with pip install aibrain."}
+        },
+        {
+          "@type": "Question",
+          "name": "Is AIBrain free?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. AIBrain is free and open source. Pro ($9.95/mo) and Team ($29.95/mo) plans add multi-user features, priority support, and advanced workflows."}
+        },
+        {
+          "@type": "Question",
+          "name": "How do I install AIBrain?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Run: pip install aibrain then aibrain setup --auto. That's it. Works on Windows, macOS, and Linux."}
+        }
+      ]
+    }
+  ]
+}
+</script>
     <style>
         :root {
             --brand: #F59E0B;
@@ -485,7 +547,7 @@
         <span style="font-size: clamp(3rem, 6vw, 4.5rem); margin-right: 0.5rem;">🧠</span>
         <span style="font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; color: var(--brand);">AIBrain</span>
     </div>
-    <h1>Your agent,<br><span class="accent">better from day one</span></h1>
+    <h1>The Persistent Memory Layer<br><span class="accent">for AI Agents</span></h1>
     <p>AIBrain gives any AI agent persistent memory, Agent/Task/Team composition, a Flow engine, document ingestion, universal MCP connectivity, 58 self-learning workflows, mesh networking, and a 55-page native dashboard. Install a brain pack and your agent has years of expertise in minutes.</p>
 
     <!-- Download buttons -->
@@ -1167,7 +1229,7 @@
             <h3>Workflow Reference</h3>
             <p>All 58 workflows documented. Triggers, schedules, configuration options, and customization.</p>
         </a>
-        <a href="/docs/api" class="doc-card">
+        <a href="/docs/guide" class="doc-card">
             <h3>API Documentation</h3>
             <p>165+ REST endpoints. Memory, workflows, approvals, chat, agents, health checks, and more.</p>
         </a>
@@ -1380,7 +1442,7 @@
             <a href="/docs/getting-started">Getting Started</a>
             <a href="/docs/guide">User Guide</a>
             <a href="/docs/workflows">Workflow Reference</a>
-            <a href="/docs/api">API Docs</a>
+            <a href="/docs/guide">API Docs</a>
         </div>
         <div class="footer-col">
             <h4>Install</h4>
