@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>AIBrain — Live Metrics</title>
-    <meta name="description" content="Real-time install and signup metrics for AIBrain — the portable AI agent operating system.">
-    <meta property="og:title" content="AIBrain — Live Metrics">
+    <title>AIBrain — Metrics</title>
+    <meta name="description" content="Real download numbers for AIBrain — sourced directly from PyPI. No vanity metrics.">
+    <meta property="og:title" content="AIBrain — Metrics">
+    <meta property="og:description" content="Real download numbers for AIBrain, sourced from pypistats.org.">
     <meta property="og:url" content="https://myaibrain.org/metrics">
     <meta property="og:type" content="website">
+    <link rel="canonical" href="https://myaibrain.org/metrics">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
     <style>
         :root {
@@ -56,7 +57,7 @@
         /* Page */
         main {
             padding: 7rem 2rem 4rem;
-            max-width: 900px;
+            max-width: 860px;
             margin: 0 auto;
         }
         .page-header {
@@ -73,6 +74,21 @@
             color: var(--dim);
             font-size: 1.1rem;
         }
+
+        /* Source badge */
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--dim);
+        }
+        .source-badge a { font-size: 0.8rem; color: var(--dim); }
+        .source-badge a:hover { color: var(--brand); }
 
         /* Status bar */
         .status-bar {
@@ -100,7 +116,7 @@
         /* Stat grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
             margin-bottom: 3rem;
         }
@@ -160,6 +176,41 @@
             opacity: 0.7;
         }
 
+        /* Page views row */
+        .pageviews-row {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            gap: 1rem;
+        }
+        .pageviews-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .pageviews-icon { font-size: 1.75rem; }
+        .pageviews-text strong {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--brand);
+        }
+        .pageviews-text span {
+            font-size: 0.85rem;
+            color: var(--dim);
+        }
+        .pageviews-note {
+            font-size: 0.78rem;
+            color: var(--dim);
+            text-align: right;
+            max-width: 220px;
+        }
+
         /* Footer note */
         .metrics-footer {
             text-align: center;
@@ -170,15 +221,12 @@
         }
         .metrics-footer a { font-size: 0.8rem; }
 
-        /* Countdown */
-        #refresh-countdown {
-            font-variant-numeric: tabular-nums;
-        }
-
-        @media (max-width: 600px) {
+        @media (max-width: 640px) {
             .nav-links { display: none; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
             .stat-value { font-size: 2rem; }
+            .pageviews-row { flex-direction: column; align-items: flex-start; }
+            .pageviews-note { text-align: left; max-width: none; }
         }
     </style>
 </head>
@@ -200,55 +248,64 @@
 
 <main>
     <div class="page-header">
-        <h1>Live <span class="accent">Metrics</span></h1>
-        <p>Real-time stats on installs, signups, and usage. Updated every 60 seconds.</p>
+        <h1>AIBrain <span class="accent">by the numbers</span></h1>
+        <p>Public metrics only. No vanity numbers.</p>
+        <div class="source-badge">
+            📦 Download counts from <a href="https://pypistats.org/packages/aibrain" target="_blank" rel="noopener">pypistats.org</a>
+        </div>
     </div>
 
     <div class="status-bar">
         <div class="status-dot loading" id="status-dot"></div>
-        <span id="status-text">Loading stats...</span>
+        <span id="status-text">Loading...</span>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card">
+            <span class="stat-icon">📅</span>
+            <div class="stat-value loading" id="stat-week">—</div>
+            <div class="stat-label">Downloads this week</div>
+            <div class="stat-sub">last 7 days · PyPI</div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">🗓️</span>
+            <div class="stat-value loading" id="stat-month">—</div>
+            <div class="stat-label">Downloads this month</div>
+            <div class="stat-sub">last 30 days · PyPI</div>
+        </div>
+        <div class="stat-card">
             <span class="stat-icon">📦</span>
-            <div class="stat-value loading" id="stat-installs">—</div>
-            <div class="stat-label">PyPI Downloads</div>
-            <div class="stat-sub">last 30 days</div>
+            <div class="stat-value loading" id="stat-alltime">—</div>
+            <div class="stat-label">Total installs</div>
+            <div class="stat-sub">all-time · excl. mirrors</div>
         </div>
-        <div class="stat-card">
-            <span class="stat-icon">👤</span>
-            <div class="stat-value loading" id="stat-signups">—</div>
-            <div class="stat-label">Registered Users</div>
-            <div class="stat-sub">myaibrain.org accounts</div>
+    </div>
+
+    <div class="pageviews-row">
+        <div class="pageviews-left">
+            <span class="pageviews-icon">🌐</span>
+            <div class="pageviews-text">
+                <strong>250K+</strong>
+                <span>page views since launch (Mar 30 2026)</span>
+            </div>
         </div>
-        <div class="stat-card">
-            <span class="stat-icon">🧠</span>
-            <div class="stat-value loading" id="stat-memories">—</div>
-            <div class="stat-label">Memories Stored</div>
-            <div class="stat-sub">across all active brains</div>
-        </div>
-        <div class="stat-card">
-            <span class="stat-icon">⭐</span>
-            <div class="stat-value loading" id="stat-pro">—</div>
-            <div class="stat-label">Pro Subscribers</div>
-            <div class="stat-sub">Pro + Team tiers</div>
+        <div class="pageviews-note">
+            Cloudflare analytics — approximate figure, updated periodically
         </div>
     </div>
 
     <div class="metrics-footer">
-        Stats refreshed every 60 seconds &mdash; next refresh in <span id="refresh-countdown">60</span>s &mdash;
-        <a href="https://pypi.org/project/aibrain/" target="_blank" rel="noopener">PyPI page</a> &middot;
+        Download stats cached 1 hour &mdash; sourced from
+        <a href="https://pypistats.org/packages/aibrain" target="_blank" rel="noopener">pypistats.org</a>
+        &middot;
+        <a href="https://pypi.org/project/aibrain/" target="_blank" rel="noopener">PyPI page</a>
+        &middot;
         <a href="/">Back to home</a>
     </div>
 </main>
 
 <script>
-    const STATS_URL = "/api/stats";
-    const REFRESH_INTERVAL = 60; // seconds
-
-    let countdown = REFRESH_INTERVAL;
-    let countdownTimer = null;
+    const PYPI_STATS_URL = "/api/pypi-stats";
 
     function fmt(n) {
         if (n === null || n === undefined || n < 0) return "—";
@@ -257,23 +314,10 @@
         return n.toLocaleString();
     }
 
-    function setLoading() {
+    function setStatus(state, msg) {
         const dot = document.getElementById("status-dot");
-        dot.className = "status-dot loading";
-        document.getElementById("status-text").textContent = "Fetching latest data...";
-    }
-
-    function setError(msg) {
-        const dot = document.getElementById("status-dot");
-        dot.className = "status-dot error";
-        document.getElementById("status-text").textContent = msg || "Unable to load stats — retrying soon";
-    }
-
-    function setLive(asOf) {
-        const dot = document.getElementById("status-dot");
-        dot.className = "status-dot";
-        const ts = asOf ? new Date(asOf).toLocaleTimeString() : "now";
-        document.getElementById("status-text").textContent = `Live — last updated ${ts}`;
+        dot.className = "status-dot" + (state === "loading" ? " loading" : state === "error" ? " error" : "");
+        document.getElementById("status-text").textContent = msg;
     }
 
     function updateCard(id, value) {
@@ -282,40 +326,27 @@
         el.classList.remove("loading");
     }
 
-    async function fetchStats() {
-        setLoading();
+    async function loadStats() {
+        setStatus("loading", "Fetching PyPI data...");
         try {
-            const resp = await fetch(STATS_URL, { cache: "no-store" });
+            const resp = await fetch(PYPI_STATS_URL, { cache: "no-store" });
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json();
 
-            updateCard("stat-installs", data.total_installs);
-            updateCard("stat-signups", data.total_signups);
-            updateCard("stat-memories", data.memories_stored);
-            updateCard("stat-pro", data.pro_users);
-            setLive(data.as_of);
+            updateCard("stat-week", data.last_week);
+            updateCard("stat-month", data.last_month);
+            updateCard("stat-alltime", data.all_time);
+
+            const ts = data.as_of ? new Date(data.as_of).toLocaleTimeString() : "now";
+            setStatus("live", `Live — updated ${ts}`);
         } catch (err) {
-            console.error("Stats fetch error:", err);
-            setError("Stats temporarily unavailable — retrying in 60s");
+            console.error("PyPI stats error:", err);
+            setStatus("error", "Stats temporarily unavailable");
+            // Show dashes on error — cards already show "—" by default
         }
     }
 
-    function startCountdown() {
-        countdown = REFRESH_INTERVAL;
-        if (countdownTimer) clearInterval(countdownTimer);
-        countdownTimer = setInterval(() => {
-            countdown--;
-            const el = document.getElementById("refresh-countdown");
-            if (el) el.textContent = countdown;
-            if (countdown <= 0) {
-                clearInterval(countdownTimer);
-                fetchStats().then(startCountdown);
-            }
-        }, 1000);
-    }
-
-    // Initial load
-    fetchStats().then(startCountdown);
+    loadStats();
 </script>
 
 </body>
