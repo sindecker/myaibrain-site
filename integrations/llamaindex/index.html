@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIBrain + LlamaIndex — Persistent Memory for LlamaIndex Agents</title>
+    <meta name="description" content="Add persistent memory to LlamaIndex chat engines and agents with AIBrain. Full BaseMemory interface, semantic retrieval, cross-session persistence. pip install aibrain">
+    <link rel="canonical" href="https://myaibrain.org/integrations/llamaindex">
+    <meta property="og:title" content="AIBrain + LlamaIndex — Persistent Memory for LlamaIndex Agents">
+    <meta property="og:description" content="LlamaIndex persistent memory layer. Full BaseMemory interface, semantic retrieval per query. pip install aibrain">
+    <meta property="og:url" content="https://myaibrain.org/integrations/llamaindex">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "AIBrain LlamaIndex Integration",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Windows, macOS, Linux",
+      "description": "Persistent memory layer for LlamaIndex chat engines and agents. Implements BaseMemory with semantic retrieval and cross-session persistence.",
+      "url": "https://myaibrain.org/integrations/llamaindex",
+      "downloadUrl": "https://pypi.org/project/aibrain/",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+    },
+    {
+      "@type": "HowTo",
+      "name": "Add Persistent Memory to LlamaIndex",
+      "description": "Use AIBrain to give LlamaIndex chat engines persistent memory that retrieves relevant context across sessions.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Install AIBrain",
+          "text": "Run: pip install aibrain"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Import the memory adapter",
+          "text": "from aibrain.integrations.llamaindex_adapter import AIBrainChatMemory"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Initialize with your user ID",
+          "text": "memory = AIBrainChatMemory.from_defaults(user_id=\"my-user\", k=5)"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Use in your engine",
+          "text": "engine = SimpleChatEngine.from_defaults(memory=memory)"
+        }
+      ]
+    }
+  ]
+}
+</script>
+    <style>
+        :root {
+            --brand: #F59E0B;
+            --cta: #F97316;
+            --dark: #0a0a0a;
+            --darker: #060606;
+            --card: #18181b;
+            --border: #27272a;
+            --text: #f4f4f5;
+            --dim: #71717a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--dark); color: var(--text); line-height: 1.6; }
+        a { color: var(--brand); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        nav { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(10,10,15,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; color: var(--brand); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: var(--dim); font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--brand); text-decoration: none; }
+        .nav-cta { background: var(--cta); color: var(--dark); padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; }
+        .hero { padding: 8rem 2rem 4rem; max-width: 900px; margin: 0 auto; }
+        .breadcrumb { font-size: 0.85rem; color: var(--dim); margin-bottom: 1.5rem; }
+        .breadcrumb a { color: var(--dim); }
+        .breadcrumb a:hover { color: var(--brand); }
+        .hero-badge { display: inline-block; padding: 0.3rem 1rem; border: 1px solid var(--border); border-radius: 20px; font-size: 0.85rem; color: var(--dim); margin-bottom: 1.5rem; }
+        h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; margin-bottom: 1rem; }
+        .hero-lead { font-size: 1.15rem; color: var(--dim); max-width: 700px; margin-bottom: 2rem; }
+        .install-block { background: var(--darker); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.9rem; display: inline-block; margin-bottom: 1.5rem; }
+        .prompt { color: var(--brand); }
+        section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
+        h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 1rem; }
+        h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; margin-top: 1.5rem; }
+        p { color: var(--dim); margin-bottom: 1rem; }
+        pre { background: var(--darker); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; overflow-x: auto; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.6; margin-bottom: 1.5rem; }
+        code { color: var(--text); }
+        .kw { color: #c084fc; }
+        .str { color: #86efac; }
+        .cmt { color: var(--dim); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+        .feature-card h3 { margin-top: 0; color: var(--text); }
+        .feature-card p { font-size: 0.9rem; }
+        .cta-block { background: var(--card); border: 1px solid var(--brand); border-radius: 12px; padding: 2.5rem; text-align: center; margin-top: 2rem; }
+        .cta-block h2 { margin-bottom: 0.5rem; }
+        .cta-block p { margin-bottom: 1.5rem; }
+        .btn-cta { display: inline-block; background: var(--cta); color: var(--dark); font-weight: 700; padding: 0.75rem 2rem; border-radius: 8px; font-size: 1rem; text-decoration: none; }
+        .btn-cta:hover { opacity: 0.9; text-decoration: none; }
+        .links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .link-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; font-size: 0.9rem; }
+        .link-card a { color: var(--text); display: block; }
+        .link-card a:hover { color: var(--brand); text-decoration: none; }
+        footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; color: var(--dim); font-size: 0.85rem; }
+        @media (max-width: 768px) { nav { padding: 0.75rem 1rem; } .nav-links { display: none; } .hero { padding: 6rem 1.5rem 3rem; } section { padding: 3rem 1.5rem; } }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-brand">🧠 AIBrain</a>
+    <div class="nav-links">
+        <a href="/#packs">Brain Packs</a>
+        <a href="/#inside">What's Inside</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Docs</a>
+    </div>
+    <a href="/pricing" class="nav-cta">Get Pro</a>
+</nav>
+
+<div class="hero">
+    <div class="breadcrumb"><a href="/">AIBrain</a> / <a href="/integrations">Integrations</a> / LlamaIndex</div>
+    <div class="hero-badge">Integration</div>
+    <h1>AIBrain + LlamaIndex<br>Persistent Memory for LlamaIndex Agents</h1>
+    <p class="hero-lead">AIBrain gives LlamaIndex chat engines and agents a persistent memory layer that survives session boundaries. Without AIBrain, every LlamaIndex session resets. With AIBrain, relevant memories from past sessions are injected as context on every new query — your agent remembers what matters.</p>
+    <div class="install-block"><span class="prompt">$</span> pip install aibrain</div>
+</div>
+
+<section>
+    <h2>Quick Start</h2>
+    <p>Use the <code>from_defaults</code> factory — matches LlamaIndex naming conventions. Pass it to any <code>SimpleChatEngine</code> or agent.</p>
+    <pre><code><span class="kw">from</span> aibrain.integrations.llamaindex_adapter <span class="kw">import</span> AIBrainChatMemory
+<span class="kw">from</span> llama_index.core.chat_engine <span class="kw">import</span> SimpleChatEngine
+
+<span class="cmt"># Use the from_defaults factory (LlamaIndex convention)</span>
+memory = AIBrainChatMemory.from_defaults(user_id=<span class="str">"llamaindex-alice"</span>, k=5)
+
+engine = SimpleChatEngine.from_defaults(memory=memory)
+engine.chat(<span class="str">"I work at Acme Corp in the AI team."</span>)
+
+<span class="cmt"># Next session, same user_id:</span>
+engine.chat(<span class="str">"Where do I work?"</span>)
+<span class="cmt"># → "You mentioned you work at Acme Corp in the AI team."</span></code></pre>
+</section>
+
+<section>
+    <h2>Why AIBrain for LlamaIndex</h2>
+    <p>Without AIBrain, LlamaIndex chat engines reset on every session. Context from prior conversations is gone. AIBrain adds a <strong>LlamaIndex memory layer</strong> that retrieves semantically relevant memories from past sessions and injects them as a <code>SYSTEM</code> message before each response — your agent remembers without bloating the context window.</p>
+    <div class="features-grid">
+        <div class="feature-card">
+            <h3>Full BaseMemory Interface</h3>
+            <p>Implements <code>get</code>, <code>put</code>, <code>get_all</code>, <code>set</code>, <code>reset</code>, <code>to_string</code>, and <code>from_string</code>. Works anywhere LlamaIndex expects a memory object.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Semantic Retrieval, Not Full Replay</h3>
+            <p>AIBrain searches for the <code>k</code> most relevant prior memories for each input. Context windows stay lean — no raw history dumps.</p>
+        </div>
+        <div class="feature-card">
+            <h3>In-Session + Cross-Session</h3>
+            <p>In-session chat is buffered for instant access. Memories persist to AIBrain for long-term recall across deployments and machine reboots.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Multi-User, Multi-Agent Scoping</h3>
+            <p><code>user_id</code> and <code>agent_id</code> scoping supports safe multi-user, multi-agent deployments without memory bleed-over.</p>
+        </div>
+        <div class="feature-card">
+            <h3>from_defaults Factory</h3>
+            <p>Follows LlamaIndex naming conventions — slots into existing codebases without friction and no migration needed.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Zero Infrastructure</h3>
+            <p>No Redis, no Postgres. Local SQLite. Works on any machine, works offline. No cloud dependency.</p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Related Integrations</h2>
+    <div class="links-grid">
+        <div class="link-card"><a href="/integrations/langchain">LangChain — BaseMemory Adapter</a></div>
+        <div class="link-card"><a href="/integrations/langgraph">LangGraph — Persistent Checkpoints</a></div>
+        <div class="link-card"><a href="/integrations/openai-agents">OpenAI Agents SDK — Native Tools</a></div>
+        <div class="link-card"><a href="/integrations/crewai">CrewAI — Memory Provider</a></div>
+        <div class="link-card"><a href="/docs">Full Documentation</a></div>
+        <div class="link-card"><a href="/pricing">Pricing</a></div>
+    </div>
+</section>
+
+<section>
+    <div class="cta-block">
+        <h2>LlamaIndex agents that remember across sessions</h2>
+        <p>Free, local, semantic. Install in 5 minutes, no infrastructure required.</p>
+        <a href="https://pypi.org/project/aibrain/" class="btn-cta">pip install aibrain</a>
+    </div>
+</section>
+
+<footer>
+    &copy; 2026 AIBrain &mdash; <a href="/">myaibrain.org</a> &mdash; <a href="/pricing">Pricing</a> &mdash; <a href="/docs">Docs</a>
+</footer>
+
+</body>
+</html>
