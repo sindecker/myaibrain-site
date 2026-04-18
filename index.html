@@ -552,6 +552,58 @@
     <h1>The <span class="accent">Persistent Memory Layer</span><br>for AI Agents</h1>
     <p>AIBrain is the <strong>AI agent memory</strong> layer that compounds across every session. It gives any agent a <strong>persistent memory layer</strong> — plus Agent/Task/Team composition, a Flow engine, document ingestion, universal <strong>MCP memory server</strong> connectivity, 71 self-learning workflows, mesh networking, and a 60-page native dashboard. Install a brain pack and your agent has years of expertise in minutes.</p>
 
+    <!-- Email opt-in (above Download CTA) — forward-fix for v1.0.x uncapturable cohort -->
+    <form id="landing-signup-form" style="max-width:460px;margin:0 auto 1.25rem;display:flex;flex-direction:column;gap:0.4rem;align-items:stretch;" onsubmit="return submitLandingSignup(event)">
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <input id="landing-signup-email" type="email" placeholder="you@example.com (optional — get updates)"
+                aria-label="Email for AIBrain updates"
+                style="flex:1;min-width:200px;padding:0.7rem 0.9rem;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text);font-size:0.9rem;">
+            <button type="submit" id="landing-signup-btn"
+                style="padding:0.7rem 1.1rem;border-radius:8px;border:1px solid var(--brand);background:transparent;color:var(--brand);font-weight:600;font-size:0.9rem;cursor:pointer;transition:opacity 0.2s;"
+                onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">
+                Notify me
+            </button>
+        </div>
+        <div id="landing-signup-msg" style="color:var(--dim);font-size:0.72rem;line-height:1.4;text-align:center;">
+            We&rsquo;ll only email you about AIBrain updates. Unsubscribe any time.
+        </div>
+    </form>
+    <script>
+    async function submitLandingSignup(ev){
+        ev.preventDefault();
+        var el = document.getElementById('landing-signup-email');
+        var msg = document.getElementById('landing-signup-msg');
+        var btn = document.getElementById('landing-signup-btn');
+        var email = (el.value||'').trim();
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+            msg.textContent = 'Please enter a valid email (or skip — just hit Download).';
+            return false;
+        }
+        btn.disabled = true; btn.textContent = 'Sending…';
+        try {
+            await fetch('https://myaibrain-api.deckerops.workers.dev/feedback', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    category: 'newsletter',
+                    message: 'landing-signup: ' + email,
+                    email: email,
+                    source: 'landing-signup',
+                    url: window.location.href,
+                    ua: navigator.userAgent,
+                    ts: new Date().toISOString()
+                })
+            });
+            msg.textContent = 'Thanks — you\u2019re on the list. Download below.';
+            btn.textContent = 'Subscribed';
+        } catch(e) {
+            msg.textContent = 'Could not reach signup server. You can still download below.';
+            btn.disabled = false; btn.textContent = 'Notify me';
+        }
+        return false;
+    }
+    </script>
+
     <!-- Download buttons -->
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;">
         <a id="btn-download-primary" href="/download/windows"
