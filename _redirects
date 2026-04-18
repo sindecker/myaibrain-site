@@ -5,7 +5,7 @@
 /install  /install.sh  200
 /install/  /install.sh  200
 # Desktop installer — version bumped here on each release
-/download/windows  https://github.com/DeckerOps/aibrain/releases/download/v1.5.14/AIBrain_1.5.14_x64-setup.exe  302
+/download/windows  https://github.com/DeckerOps/aibrain/releases/download/v1.5.20/AIBrain_1.5.20_x64-setup.exe  302
 # Account pages — directory-index fallbacks
 /signup  /signup/index.html  200
 /login  /login/index.html  200
