@@ -604,43 +604,16 @@
     }
     </script>
 
-    <!-- Download buttons -->
-    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;">
-        <a id="btn-download-primary" href="/download/windows"
-           style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--cta);color:#000;font-weight:700;font-size:1.05rem;padding:0.9rem 2rem;border-radius:10px;text-decoration:none;transition:opacity 0.2s;"
-           onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-            <span id="btn-download-icon">⬇</span> <span id="btn-download-label">Download for Windows</span>
-        </a>
-        <a id="btn-other-os" href="/install.sh" download="install.sh"
-           style="display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--brand);font-weight:600;font-size:0.95rem;padding:0.9rem 1.5rem;border-radius:10px;border:1px solid var(--brand);text-decoration:none;transition:opacity 0.2s;"
-           onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
-            <span id="btn-other-label">Also for Mac / Linux</span>
-        </a>
-    </div>
-    <div class="hero-sub" style="margin-bottom:1.5rem;">Free download. No Python required. Windows 10+ · Mac · Linux.</div>
-    <script>
-    (function(){
-        var ua = navigator.userAgent.toLowerCase();
-        var mac = ua.indexOf('mac') > -1;
-        var linux = ua.indexOf('linux') > -1 && ua.indexOf('android') === -1;
-        if (mac || linux) {
-            var primary = document.getElementById('btn-download-primary');
-            primary.href = '/install.sh'; primary.download = 'install.sh';
-            document.getElementById('btn-download-label').textContent = mac ? 'Download for Mac' : 'Download for Linux';
-            var other = document.getElementById('btn-other-os');
-            other.href = '/download/windows'; other.removeAttribute('download');
-            document.getElementById('btn-other-label').textContent = 'Also for Windows';
-        }
-    })();
-    </script>
-    <!-- Developer: one-liner (always visible) -->
-    <div style="max-width:540px;margin:0.75rem auto 0.5rem;text-align:left;">
-        <div style="color:var(--dim);font-size:0.8rem;margin-bottom:0.3rem;">or install via pip</div>
-        <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='pip install aibrain',1500)" style="font-size:0.88rem;">
+    <!-- Primary CTA: pip install (native desktop app returning in v3) -->
+    <div style="max-width:560px;margin:0 auto 1rem;text-align:center;">
+        <div style="color:var(--dim);font-size:0.82rem;margin-bottom:0.4rem;">Install from PyPI · click to copy</div>
+        <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='pip install aibrain',1500)" style="font-size:1.15rem;padding:1rem 1.5rem;background:var(--cta);color:#000;border-radius:10px;cursor:pointer;font-weight:700;display:inline-block;min-width:300px;">
             <span class="cmd">pip install aibrain</span>
         </div>
-        <div style="color:var(--dim);font-size:0.8rem;margin-top:0.4rem;">Then run: <code style="background:rgba(255,255,255,0.06);padding:0.1rem 0.35rem;border-radius:3px;">aibrain setup</code></div>
+        <div style="color:var(--dim);font-size:0.85rem;margin-top:0.6rem;">Then run: <code style="background:rgba(255,255,255,0.06);padding:0.15rem 0.45rem;border-radius:3px;">aibrain setup</code></div>
     </div>
+    <div class="hero-sub" style="margin-bottom:1rem;">Free. Python 3.10+ · Windows, macOS, Linux.</div>
+    <div class="hero-sub" style="margin-bottom:1.5rem;font-size:0.85rem;color:var(--dim);max-width:560px;margin-left:auto;margin-right:auto;">Native desktop app returning in v3 — the CLI and API are the stable shipping path today.</div>
     <br>
     <div class="hero-install" style="text-align: left; display: block; max-width: 520px; margin: 0.75rem auto; font-size: 0.88rem; line-height: 1.7;" onclick="navigator.clipboard.writeText('from aibrain import Brain\nbrain = Brain()\nbrain.add(&quot;I love tennis&quot;, user_id=&quot;alice&quot;)\nbrain.search(&quot;hobbies&quot;, user_id=&quot;alice&quot;)')">
         <span style="color: var(--dim);"># Brain API</span><br>
@@ -838,11 +811,6 @@
             <div class="feature-icon">&#x1f4f1;</div>
             <h3>Mobile (PWA)</h3>
             <p>Install AIBrain on your phone as a Progressive Web App. Full dashboard, push notifications for approvals, offline access. No app store needed.</p>
-        </div>
-        <div class="feature">
-            <div class="feature-icon">&#x1f5a5;</div>
-            <h3>Native Desktop App</h3>
-            <p>Full-featured Tauri desktop app for Windows. No browser required. Brain runs locally, data stays private.</p>
         </div>
         <div class="feature">
             <div class="feature-icon">&#x1f4bb;</div>
@@ -1312,9 +1280,8 @@
                 <li><span class="check">+</span> Productivity brain pack</li>
                 <li><span class="check">+</span> Full API + approval queue</li>
             </ul>
-            <a href="/download/windows" class="price-cta secondary"
-               onclick="var ua=navigator.userAgent.toLowerCase();if(ua.indexOf('win')===-1){this.href='/install.sh';this.setAttribute('download','install.sh');}">
-               ⬇ Download Free
+            <a href="https://pypi.org/project/aibrain/" class="price-cta secondary">
+               pip install aibrain
             </a>
         </div>
         <div class="price-card featured">
@@ -1434,41 +1401,29 @@
 <!-- Install CTA -->
 <section id="install" class="cta-section">
     <h2>Get started now</h2>
-    <p>Download the installer. Double-click. Done.</p>
+    <p>One line. Copy it. Run it.</p>
 
-    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">
-        <a href="/download/windows"
-           style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--cta);color:#000;font-weight:700;font-size:1rem;padding:0.85rem 2rem;border-radius:10px;text-decoration:none;transition:opacity 0.2s;"
-           onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-            ⬇ Download for Windows
-        </a>
-        <a href="/install.sh" download="install.sh"
-           style="display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--brand);font-weight:600;font-size:0.95rem;padding:0.85rem 1.5rem;border-radius:10px;border:1px solid var(--brand);text-decoration:none;transition:opacity 0.2s;"
-           onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
-            ⬇ Download for Mac / Linux
-        </a>
+    <div style="max-width:560px;margin:0 auto 1rem;text-align:center;">
+        <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='pip install aibrain',1500)" style="font-size:1.15rem;padding:1rem 1.5rem;background:var(--cta);color:#000;border-radius:10px;cursor:pointer;font-weight:700;display:inline-block;min-width:300px;">
+            <span class="cmd">pip install aibrain</span>
+        </div>
+        <div style="color:var(--dim);font-size:0.85rem;margin-top:0.6rem;">Then run: <code style="background:rgba(255,255,255,0.06);padding:0.15rem 0.45rem;border-radius:3px;">aibrain setup</code></div>
     </div>
-    <div class="hero-sub" style="margin-bottom:1.5rem;">Free download. No Python required. Windows 10+ · 115 MB installer.</div>
+    <div class="hero-sub" style="margin-bottom:1rem;">Free. Python 3.10+ · Windows, macOS, Linux.</div>
+    <div class="hero-sub" style="margin-bottom:1.5rem;font-size:0.85rem;color:var(--dim);max-width:560px;margin-left:auto;margin-right:auto;">Native desktop app returning in v3 — the CLI and API are the stable shipping path today.</div>
 
     <div style="max-width:540px;margin:0 auto 1.5rem;text-align:left;display:flex;flex-direction:column;gap:0.75rem;">
         <div>
-            <div style="color:var(--dim);font-size:0.8rem;margin-bottom:0.3rem;">Windows PowerShell</div>
+            <div style="color:var(--dim);font-size:0.8rem;margin-bottom:0.3rem;">Windows PowerShell one-liner (wraps pip)</div>
             <div class="hero-install" onclick="navigator.clipboard.writeText('irm https://myaibrain.org/install.ps1 | iex'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='irm https://myaibrain.org/install.ps1 | iex',1500)" style="font-size:0.85rem;">
                 <span class="cmd">irm https://myaibrain.org/install.ps1 | iex</span>
             </div>
         </div>
         <div>
-            <div style="color:var(--dim);font-size:0.8rem;margin-bottom:0.3rem;">Mac / Linux / WSL</div>
+            <div style="color:var(--dim);font-size:0.8rem;margin-bottom:0.3rem;">Mac / Linux / WSL one-liner (wraps pip)</div>
             <div class="hero-install" onclick="navigator.clipboard.writeText('curl -fsSL https://myaibrain.org/install.sh | bash'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='curl -fsSL https://myaibrain.org/install.sh | bash',1500)" style="font-size:0.85rem;">
                 <span class="cmd">curl -fsSL https://myaibrain.org/install.sh | bash</span>
             </div>
-        </div>
-        <div>
-            <div style="color:var(--dim);font-size:0.8rem;margin-bottom:0.3rem;">pip</div>
-            <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='pip install aibrain',1500)" style="font-size:0.85rem;">
-                <span class="cmd">pip install aibrain</span>
-            </div>
-            <div style="color:var(--dim);font-size:0.75rem;margin-top:0.3rem;">Then run: <code style="background:rgba(255,255,255,0.06);padding:0.1rem 0.35rem;border-radius:3px;">aibrain setup</code></div>
         </div>
     </div>
 
