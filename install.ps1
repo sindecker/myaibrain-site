@@ -1,209 +1,284 @@
-# AIBrain one-line installer (Windows PowerShell 5.1+ / PowerShell 7+)
-#
-# Usage:
-#     irm https://myaibrain.org/install.ps1 | iex
-#
-# What it does (honestly):
-#   1. Checks that a Python >= 3.10 is on PATH.
-#   2. Creates an isolated venv at $env:USERPROFILE\.aibrain (override with $env:AIBRAIN_HOME).
-#   3. pip installs / upgrades the `aibrain` package from PyPI.
-#   4. Adds the venv Scripts dir to the *user* PATH so `aibrain` works in new shells.
-#   5. Launches aibrain serve and opens the dashboard in your browser.
+#Requires -Version 5.1
+<#
+.SYNOPSIS
+    One-command aibrain installer for Windows.
 
+.DESCRIPTION
+    Detects Python (3.10+), installs aibrain via pip, adds the Scripts directory
+    to the user PATH (HKCU -- no admin required), and verifies aibrain runs in the
+    current session.
+
+.PARAMETER Auto
+    If set, runs 'aibrain setup --yes' automatically after install.
+
+.EXAMPLE
+    irm https://raw.githubusercontent.com/DeckerOps/aibrain/main/scripts/install.ps1 | iex
+
+.EXAMPLE
+    # With auto-setup flag (pass via env since iex cannot receive params directly):
+    $env:AIBRAIN_AUTO_SETUP = "1"
+    irm https://raw.githubusercontent.com/DeckerOps/aibrain/main/scripts/install.ps1 | iex
+#>
+
+param(
+    [switch]$Auto
+)
+
+Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# --- UI helpers ---------------------------------------------------------------
-$LOGO = @'
+# --------------------------------------------------------------------------- #
+# helpers
+# --------------------------------------------------------------------------- #
 
-    _  ___ ___            _
-   /_\|_ _| _ )_ _ __ _(_)_ _
-  / _ \| || _ \ '_/ _` | | ' \
- /_/ \_\___|___/_| \__,_|_|_||_|
-
-'@
-
-function Show-Screen {
-    param([string]$Status, [int]$Percent, [string]$Color = "Cyan")
-    Clear-Host
-    Write-Host $LOGO -ForegroundColor Cyan
-
-    $width  = 36
-    $filled = [math]::Round($width * $Percent / 100)
-    $empty  = $width - $filled
-    $bar    = "  [" + ([string][char]9608 * $filled) + ([string][char]9617 * $empty) + "]  $Percent%"
-    Write-Host $bar -ForegroundColor $Color
-    Write-Host ""
-    Write-Host "  $Status" -ForegroundColor White
-    Write-Host ""
+function Write-Step {
+    param([string]$msg)
+    Write-Host "`n>>> $msg" -ForegroundColor Cyan
 }
 
-function Die([string]$msg) {
-    Clear-Host
-    Write-Host $LOGO -ForegroundColor Cyan
-    Write-Host "  [!!] $msg" -ForegroundColor Red
+function Write-Ok {
+    param([string]$msg)
+    Write-Host "    [OK] $msg" -ForegroundColor Green
+}
+
+function Write-Warn {
+    param([string]$msg)
+    Write-Host "    [!]  $msg" -ForegroundColor Yellow
+}
+
+function Write-Fail {
+    param([string]$msg)
+    Write-Host "`n[FAIL] $msg" -ForegroundColor Red
+}
+
+# Parse version string "3.11.4" -> [int, int, int]
+function Get-PythonVersion {
+    param([string]$exe)
+    try {
+        $raw = & $exe --version 2>&1
+        if ($raw -match '(\d+)\.(\d+)\.(\d+)') {
+            return @([int]$Matches[1], [int]$Matches[2], [int]$Matches[3])
+        }
+    } catch { }
+    return $null
+}
+
+function Test-Version310 {
+    param($ver)
+    if ($null -eq $ver) { return $false }
+    if ($ver[0] -gt 3) { return $true }
+    if ($ver[0] -eq 3 -and $ver[1] -ge 10) { return $true }
+    return $false
+}
+
+# --------------------------------------------------------------------------- #
+# STEP 1: Detect Python 3.10+
+# --------------------------------------------------------------------------- #
+
+Write-Step "Detecting Python 3.10+ ..."
+
+$pythonExe = $null
+$candidates = @('py', 'python', 'python3')
+
+foreach ($cand in $candidates) {
+    $ver = Get-PythonVersion $cand
+    if (Test-Version310 $ver) {
+        $pythonExe = $cand
+        Write-Ok "Found: '$cand' (Python $($ver[0]).$($ver[1]).$($ver[2]))"
+        break
+    } elseif ($null -ne $ver) {
+        Write-Warn "'$cand' found but version $($ver[0]).$($ver[1]).$($ver[2]) is below 3.10 -- skipping"
+    }
+}
+
+if ($null -eq $pythonExe) {
+    Write-Step "Python 3.10+ not found. Installing via winget ..."
+
+    $wingetExe = Get-Command winget -ErrorAction SilentlyContinue
+    if ($null -eq $wingetExe) {
+        Write-Fail "winget is not available on this machine."
+        Write-Host ""
+        Write-Host "  Please install Python 3.11+ manually:" -ForegroundColor Yellow
+        Write-Host "    https://www.python.org/downloads/" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  Then re-run this installer." -ForegroundColor Yellow
+        exit 1
+    }
+
+    try {
+        & winget install --id Python.Python.3.11 -e --accept-source-agreements --accept-package-agreements
+        if ($LASTEXITCODE -ne 0) { throw "winget exited with code $LASTEXITCODE" }
+    } catch {
+        $errMsg = $_.ToString()
+        Write-Fail "winget install failed: $errMsg"
+        Write-Host "  Manual download: https://www.python.org/downloads/" -ForegroundColor Yellow
+        exit 1
+    }
+
+    # Refresh PATH so the newly installed python is visible in this session
+    $machinePath = [System.Environment]::GetEnvironmentVariable('PATH', 'Machine')
+    $userPath    = [System.Environment]::GetEnvironmentVariable('PATH', 'User')
+    $env:PATH = "$machinePath;$userPath"
+
+    # Re-detect after install
+    foreach ($cand in $candidates) {
+        $ver = Get-PythonVersion $cand
+        if (Test-Version310 $ver) {
+            $pythonExe = $cand
+            Write-Ok "Now found: '$cand' (Python $($ver[0]).$($ver[1]).$($ver[2]))"
+            break
+        }
+    }
+
+    if ($null -eq $pythonExe) {
+        Write-Fail "Python was installed but is still not on PATH."
+        Write-Host "  Please open a new terminal and re-run this installer." -ForegroundColor Yellow
+        exit 1
+    }
+}
+
+# --------------------------------------------------------------------------- #
+# STEP 2: pip install aibrain
+# --------------------------------------------------------------------------- #
+
+Write-Step "Installing aibrain via pip ..."
+
+try {
+    & $pythonExe -m pip install -U aibrain
+    if ($LASTEXITCODE -ne 0) { throw "pip exited with code $LASTEXITCODE" }
+    Write-Ok "pip install succeeded"
+} catch {
+    $errMsg = $_.ToString()
+    Write-Fail "pip install failed: $errMsg"
     Write-Host ""
-    Write-Host "  Visit https://myaibrain.org/docs/getting-started for help." -ForegroundColor Yellow
+    Write-Host "  Try manually:" -ForegroundColor Yellow
+    Write-Host "    $pythonExe -m pip install -U aibrain" -ForegroundColor White
     Write-Host ""
-    try { $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") } catch { Start-Sleep -Seconds 8 }
+    Write-Host "  If pip is missing:" -ForegroundColor Yellow
+    Write-Host "    $pythonExe -m ensurepip --upgrade" -ForegroundColor White
     exit 1
 }
 
-# --- 1. Pick install dir ------------------------------------------------------
-Show-Screen "Starting up..." 0
+# --------------------------------------------------------------------------- #
+# STEP 3: Locate Scripts directory
+# --------------------------------------------------------------------------- #
 
-$AIBRAIN_HOME = if ($env:AIBRAIN_HOME) { $env:AIBRAIN_HOME } else { Join-Path $env:USERPROFILE ".aibrain" }
-$VENV_DIR     = Join-Path $AIBRAIN_HOME "venv"
-$VENV_PY      = Join-Path $VENV_DIR "Scripts\python.exe"
-$VENV_CLI     = Join-Path $VENV_DIR "Scripts\aibrain.exe"
+Write-Step "Locating Python Scripts directory ..."
 
-# --- 2. Python >= 3.10 --------------------------------------------------------
-Show-Screen "Checking Python..." 10
+$scriptsDir = $null
+try {
+    $scriptsDir = (& $pythonExe -c "import sysconfig; print(sysconfig.get_path('scripts'))").Trim()
+    Write-Ok "Scripts dir: $scriptsDir"
+} catch {
+    $errMsg = $_.ToString()
+    Write-Fail "Could not determine Scripts directory: $errMsg"
+    exit 1
+}
 
-$python = $null
-foreach ($exe in @("python", "python3", "py")) {
-    $cmd = Get-Command $exe -ErrorAction SilentlyContinue
-    if (-not $cmd) { continue }
+if (-not (Test-Path $scriptsDir)) {
+    Write-Warn "Scripts dir not found at: $scriptsDir"
+    Write-Warn "This may resolve itself -- continuing."
+}
+
+# --------------------------------------------------------------------------- #
+# STEP 4: Add Scripts dir to user PATH
+# --------------------------------------------------------------------------- #
+
+Write-Step "Updating user PATH ..."
+
+$currentPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+if ($null -eq $currentPath) { $currentPath = '' }
+
+# Split on semicolons, trim, drop empty entries, compare case-insensitively
+$pathParts    = $currentPath -split ';' | Where-Object { $_.Trim() -ne '' }
+$alreadyThere = $pathParts | Where-Object { $_.TrimEnd('\') -ieq $scriptsDir.TrimEnd('\') }
+
+if ($alreadyThere) {
+    Write-Ok "Scripts dir already in user PATH -- no change needed"
+} else {
+    $newPath = ($pathParts + $scriptsDir) -join ';'
+    [Environment]::SetEnvironmentVariable('Path', $newPath, 'User')
+    Write-Ok "Added to user PATH (HKCU\Environment\Path)"
+}
+
+# Refresh current session so aibrain is usable immediately
+if ($env:PATH -notlike "*$scriptsDir*") {
+    $env:PATH = $env:PATH.TrimEnd(';') + ";$scriptsDir"
+    Write-Ok "Refreshed current session PATH"
+}
+
+# --------------------------------------------------------------------------- #
+# STEP 5: Verify aibrain command
+# --------------------------------------------------------------------------- #
+
+Write-Step "Verifying aibrain installation ..."
+
+$aibrainExe = Join-Path $scriptsDir 'aibrain.exe'
+$verified   = $false
+
+try {
+    $versionOut = & aibrain --version 2>&1
+    if ($LASTEXITCODE -eq 0 -or ($versionOut -match '\d+\.\d+')) {
+        Write-Ok "aibrain --version: $versionOut"
+        $verified = $true
+    }
+} catch { }
+
+if (-not $verified -and (Test-Path $aibrainExe)) {
     try {
-        $ver = & $cmd.Source -c "import sys;print('%d.%d'%sys.version_info[:2])" 2>$null
-        if ($LASTEXITCODE -eq 0 -and $ver) {
-            $parts = $ver.Trim().Split('.')
-            if ([int]$parts[0] -eq 3 -and [int]$parts[1] -ge 10) {
-                $python = $cmd.Source
-                break
-            }
+        $versionOut = & $aibrainExe --version 2>&1
+        if ($LASTEXITCODE -eq 0 -or ($versionOut -match '\d+\.\d+')) {
+            Write-Ok "aibrain --version (full path): $versionOut"
+            $verified = $true
         }
     } catch { }
 }
 
-if (-not $python) {
-    Clear-Host
-    Write-Host $LOGO -ForegroundColor Cyan
-    Write-Host "  Python 3.10+ is required." -ForegroundColor Yellow
+if (-not $verified) {
+    Write-Warn "Could not invoke 'aibrain --version' in this session."
     Write-Host ""
-    Write-Host "  1. Install Python from https://python.org/downloads/" -ForegroundColor White
-    Write-Host "  2. On the FIRST screen, check  'Add Python to PATH'" -ForegroundColor White
-    Write-Host "  3. After install, double-click AIBrain-install.bat again" -ForegroundColor White
+    Write-Host "  aibrain IS installed. Run via full path until you open a new shell:" -ForegroundColor Yellow
+    Write-Host "    $aibrainExe" -ForegroundColor White
     Write-Host ""
-    Start-Process "https://www.python.org/downloads/"
-    Write-Host "  Opening Python download page..." -ForegroundColor Cyan
-    Write-Host ""
-    Write-Host "  Press any key to close..." -ForegroundColor DarkGray
-    try { $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") } catch { Start-Sleep -Seconds 8 }
-    exit 1
+    Write-Host "  Or open a new terminal and run:" -ForegroundColor Yellow
+    Write-Host "    aibrain setup" -ForegroundColor White
 }
 
-# --- 3. Create / reuse isolated venv ------------------------------------------
-Show-Screen "Setting up environment..." 25
+# --------------------------------------------------------------------------- #
+# STEP 6: Optional auto-setup
+# --------------------------------------------------------------------------- #
 
-New-Item -ItemType Directory -Force -Path $AIBRAIN_HOME | Out-Null
-if (-not (Test-Path $VENV_PY)) {
-    & $python -m venv $VENV_DIR
-    if ($LASTEXITCODE -ne 0) { Die "Could not create Python environment." }
-}
+$runSetup = $Auto -or ($env:AIBRAIN_AUTO_SETUP -eq '1')
 
-# Clean any corrupted partial installs left by previous failed attempts (~ibrain etc.)
-$sitePackages = Join-Path $VENV_DIR "Lib\site-packages"
-if (Test-Path $sitePackages) {
-    Get-ChildItem $sitePackages -Filter "~*" -ErrorAction SilentlyContinue |
-        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-}
-
-# --- 4. pip install / upgrade aibrain -----------------------------------------
-Show-Screen "Installing AIBrain from PyPI..." 45
-
-# Upgrade pip — capture all output so PS doesn't treat stderr warnings as fatal errors
-$null = & $VENV_PY -m pip install --quiet --upgrade pip 2>&1
-
-# Install aibrain — pipe through Out-Null to swallow warnings without triggering Stop mode
-$ErrorActionPreference = 'Continue'
-& $VENV_PY -m pip install --quiet --upgrade "aibrain[api]" 2>&1 | Out-Null
-$pipExit = $LASTEXITCODE
-$ErrorActionPreference = 'Stop'
-if ($pipExit -ne 0) { Die "Installation failed. Check your internet connection and try again." }
-
-$version = "unknown"
-try {
-    $pipShow = & $VENV_PY -m pip show aibrain 2>$null
-    foreach ($line in $pipShow) {
-        if ($line -match '^Version:\s*(.+)$') { $version = $Matches[1].Trim(); break }
-    }
-} catch { }
-
-if (-not (Test-Path $VENV_CLI)) { Die "AIBrain CLI not found after install — please try again." }
-
-# --- 5. Add venv Scripts to user PATH -----------------------------------------
-Show-Screen "Configuring PATH..." 65
-
-$scriptsDir = Split-Path $VENV_CLI
-$userPath   = [Environment]::GetEnvironmentVariable("Path", "User")
-if ($userPath -notlike "*$scriptsDir*") {
-    [Environment]::SetEnvironmentVariable("Path", "$scriptsDir;$userPath", "User")
-}
-$env:Path = "$scriptsDir;$env:Path"
-
-# --- 6. Download + install native desktop app from GitHub release ---------------
-Show-Screen "Installing AIBrain desktop app..." 80
-
-try {
-    $tmpExe = "$env:TEMP\AIBrain-setup.exe"
-    $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest -Uri "https://myaibrain.org/download/windows" -OutFile $tmpExe -UseBasicParsing -MaximumRedirection 5
-    Start-Process $tmpExe -ArgumentList "/S" -Wait
-    Remove-Item $tmpExe -ErrorAction SilentlyContinue
-} catch { }
-
-# --- 7. Launch the app --------------------------------------------------------
-Show-Screen "Starting AIBrain..." 90
-
-# Check for native desktop app first (installed by setup wizard from GitHub releases)
-$nativeAppPaths = @(
-    "$env:LOCALAPPDATA\Programs\AIBrain\AIBrain.exe",
-    "$env:PROGRAMFILES\AIBrain\AIBrain.exe",
-    "$env:LOCALAPPDATA\AIBrain\AIBrain.exe"
-)
-
-$nativeExe = $null
-foreach ($p in $nativeAppPaths) {
-    if (Test-Path $p) { $nativeExe = $p; break }
-}
-
-if ($nativeExe) {
-    # Native app installed — launch it directly
-    Start-Process $nativeExe
-    Show-Screen "AIBrain $version is ready!" 100 "Green"
-    Write-Host "  AIBrain desktop app launched." -ForegroundColor Green
-    Write-Host "  Find it in your taskbar or Start Menu to reopen." -ForegroundColor DarkGray
-} else {
-    # No native app — fall back to API server + browser
+if ($runSetup) {
+    Write-Step "Running aibrain setup --yes ..."
     try {
-        $proc = Start-Process $VENV_CLI -ArgumentList "serve" -WindowStyle Normal -PassThru
-        Start-Sleep -Seconds 4
-
-        if ($proc.HasExited) {
-            Show-Screen "AIBrain $version installed." 100 "Green"
-            Write-Host "  Open a new terminal and run:  aibrain serve" -ForegroundColor White
+        if ($verified) {
+            & aibrain setup --yes
         } else {
-            $ready = $false
-            for ($i = 0; $i -lt 20; $i++) {
-                Start-Sleep -Seconds 1
-                try {
-                    $r = Invoke-WebRequest -Uri "http://localhost:8001" -TimeoutSec 1 -UseBasicParsing -ErrorAction Stop
-                    if ($r.StatusCode -lt 500) { $ready = $true; break }
-                } catch { }
-            }
-            Show-Screen "AIBrain $version is ready!" 100 "Green"
-            Start-Process "http://localhost:8001"
-            Write-Host "  Dashboard open at http://localhost:8001" -ForegroundColor Green
-            Write-Host "  Keep the server window open to stay running." -ForegroundColor DarkGray
+            & $aibrainExe setup --yes
         }
     } catch {
-        Show-Screen "AIBrain $version installed." 100 "Green"
-        Write-Host "  Run:  aibrain serve" -ForegroundColor Cyan
+        $errMsg = $_.ToString()
+        Write-Warn "Setup encountered an issue: $errMsg"
+        Write-Host "  Run manually: aibrain setup" -ForegroundColor Yellow
     }
+} else {
+    Write-Host ""
+    Write-Host "  Run 'aibrain setup' to complete installation." -ForegroundColor Cyan
 }
 
+# --------------------------------------------------------------------------- #
+# Done
+# --------------------------------------------------------------------------- #
+
 Write-Host ""
-Write-Host "  Upgrade anytime by re-running AIBrain-install.bat" -ForegroundColor DarkGray
+Write-Host "========================================" -ForegroundColor Green
+Write-Host "  aibrain installed successfully!" -ForegroundColor Green
+if ($verified) {
+    Write-Host "  'aibrain' command is ready in this shell." -ForegroundColor Green
+} else {
+    Write-Host "  Open a new terminal to use the 'aibrain' command." -ForegroundColor Green
+}
+Write-Host "========================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "  Press any key to close..." -ForegroundColor DarkGray
-try { $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") } catch { Start-Sleep -Seconds 5 }

@@ -1,115 +1,210 @@
 #!/usr/bin/env bash
-# AIBrain one-line installer (macOS / Linux / WSL)
+# aibrain installer for macOS / Linux
 #
 # Usage:
-#     curl -sSL https://myaibrain.org/install | sh
-#     curl -sSL https://myaibrain.org/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/DeckerOps/aibrain/main/scripts/install.sh | bash
 #
-# What it does (honestly):
-#   1. Detects OS (macOS / Linux / WSL) and refuses on unsupported platforms.
-#   2. Finds a Python >= 3.10 on PATH (python3 / python / python3.11 / ...).
-#   3. Creates an isolated venv at ~/.aibrain (override with AIBRAIN_HOME).
-#   4. pip installs / upgrades the `aibrain` package from PyPI.
-#   5. Symlinks the `aibrain` CLI into /usr/local/bin (or ~/.local/bin fallback).
-#   6. Idempotent — re-running upgrades the existing install in place.
-#
-# It does NOT:
-#   - Install Python for you.
-#   - Touch any system Python site-packages.
-#   - Run `aibrain setup` automatically (run it yourself after install).
+# Optional auto-setup:
+#   AIBRAIN_AUTO_SETUP=1 bash <(curl -fsSL https://raw.githubusercontent.com/DeckerOps/aibrain/main/scripts/install.sh)
 
-set -eu
+set -euo pipefail
 
-AIBRAIN_HOME="${AIBRAIN_HOME:-$HOME/.aibrain}"
-VENV_DIR="$AIBRAIN_HOME/venv"
-BIN_CANDIDATES=("/usr/local/bin" "$HOME/.local/bin")
+# --------------------------------------------------------------------------- #
+# helpers
+# --------------------------------------------------------------------------- #
 
-say()  { printf '  %s\n' "$*"; }
-die()  { printf '  ERROR: %s\n' "$*" >&2; exit 1; }
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
 
-printf '\n'
-printf '  AIBrain installer\n'
-printf '  -----------------\n'
-printf '\n'
+step() { echo -e "\n${CYAN}>>> $*${NC}"; }
+ok()   { echo -e "    ${GREEN}[OK]${NC} $*"; }
+warn() { echo -e "    ${YELLOW}[!] ${NC} $*"; }
+fail() { echo -e "\n${RED}[FAIL]${NC} $*"; }
 
-# --- 1. OS detection ---------------------------------------------------------
-uname_s="$(uname -s 2>/dev/null || echo unknown)"
-case "$uname_s" in
-    Darwin)          OS="macos" ;;
-    Linux)
-        if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
-            OS="wsl"
-        else
-            OS="linux"
-        fi ;;
-    *)               die "Unsupported OS: $uname_s (macOS / Linux / WSL only). On Windows, use install.ps1." ;;
-esac
-say "Platform: $OS"
+# Returns 0 if version string ($1) is >= 3.10
+version_ge_310() {
+    local ver="$1"
+    local major minor
+    major=$(echo "$ver" | cut -d. -f1)
+    minor=$(echo "$ver" | cut -d. -f2)
+    if [ "$major" -gt 3 ]; then return 0; fi
+    if [ "$major" -eq 3 ] && [ "$minor" -ge 10 ]; then return 0; fi
+    return 1
+}
 
-# --- 2. Python >= 3.10 -------------------------------------------------------
-PYTHON=""
-for candidate in python3.13 python3.12 python3.11 python3.10 python3 python; do
-    if command -v "$candidate" >/dev/null 2>&1; then
-        ver="$("$candidate" -c 'import sys;print("%d.%d"%sys.version_info[:2])' 2>/dev/null || echo 0.0)"
-        major="${ver%%.*}"
-        minor="${ver##*.}"
-        if [ "$major" -eq 3 ] && [ "$minor" -ge 10 ] 2>/dev/null; then
-            PYTHON="$candidate"
-            say "Python: $candidate ($ver)"
+get_python_version() {
+    local exe="$1"
+    "$exe" --version 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true
+}
+
+# --------------------------------------------------------------------------- #
+# STEP 1: Detect Python 3.10+
+# --------------------------------------------------------------------------- #
+
+step "Detecting Python 3.10+ ..."
+
+PYTHON_EXE=""
+for cand in python3 python py; do
+    if command -v "$cand" >/dev/null 2>&1; then
+        ver=$(get_python_version "$cand")
+        if [ -n "$ver" ] && version_ge_310 "$ver"; then
+            PYTHON_EXE="$cand"
+            ok "Found: '$cand' (Python $ver)"
             break
+        elif [ -n "$ver" ]; then
+            warn "'$cand' found but version $ver is below 3.10 -- skipping"
         fi
     fi
 done
-[ -n "$PYTHON" ] || die "Python 3.10+ not found. Install from https://python.org/downloads/ then rerun."
 
-# --- 3. Create / reuse isolated venv -----------------------------------------
-mkdir -p "$AIBRAIN_HOME"
-if [ -x "$VENV_DIR/bin/python" ]; then
-    say "Reusing venv at $VENV_DIR"
-else
-    say "Creating venv at $VENV_DIR"
-    "$PYTHON" -m venv "$VENV_DIR" || die "venv creation failed. On Debian/Ubuntu: sudo apt install python3-venv"
+if [ -z "$PYTHON_EXE" ]; then
+    fail "Python 3.10+ not found."
+    echo ""
+    echo "  Please install Python 3.11+ and re-run this script:"
+    echo ""
+    if [[ "${OSTYPE:-}" == "darwin"* ]]; then
+        echo "    macOS (Homebrew):"
+        echo "      brew install python@3.11"
+    else
+        echo "    Ubuntu/Debian:"
+        echo "      sudo apt update && sudo apt install python3.11 python3-pip"
+        echo ""
+        echo "    Fedora/RHEL:"
+        echo "      sudo dnf install python3.11"
+    fi
+    echo ""
+    echo "    Or download from: https://www.python.org/downloads/"
+    exit 1
 fi
 
-# --- 4. pip install / upgrade aibrain ----------------------------------------
-say "Installing aibrain from PyPI..."
-"$VENV_DIR/bin/python" -m pip install --quiet --upgrade pip
-"$VENV_DIR/bin/python" -m pip install --quiet --upgrade aibrain
+# --------------------------------------------------------------------------- #
+# STEP 2: pip install aibrain
+# --------------------------------------------------------------------------- #
 
-VERSION="$("$VENV_DIR/bin/python" -m pip show aibrain 2>/dev/null | awk '/^Version:/ {print $2}')"
-[ -n "$VERSION" ] || VERSION="unknown"
-say "Installed aibrain $VERSION"
+step "Installing aibrain via pip ..."
 
-# --- 5. Symlink CLI ----------------------------------------------------------
-CLI_SRC="$VENV_DIR/bin/aibrain"
-[ -x "$CLI_SRC" ] || die "aibrain CLI missing at $CLI_SRC after install."
+if ! "$PYTHON_EXE" -m pip install -U aibrain; then
+    fail "pip install failed."
+    echo ""
+    echo "  Try manually:"
+    echo "    $PYTHON_EXE -m pip install -U aibrain"
+    echo ""
+    echo "  If pip is missing:"
+    echo "    $PYTHON_EXE -m ensurepip --upgrade"
+    exit 1
+fi
 
-LINK_DIR=""
-for dir in "${BIN_CANDIDATES[@]}"; do
-    if [ -d "$dir" ] && [ -w "$dir" ]; then
-        LINK_DIR="$dir"; break
+ok "pip install succeeded"
+
+# --------------------------------------------------------------------------- #
+# STEP 3: Locate Scripts / bin directory
+# --------------------------------------------------------------------------- #
+
+step "Locating Python bin directory ..."
+
+SCRIPTS_DIR=""
+SCRIPTS_DIR=$("$PYTHON_EXE" -c "import sysconfig; print(sysconfig.get_path('scripts'))") || true
+
+if [ -z "$SCRIPTS_DIR" ]; then
+    fail "Could not determine Python scripts directory."
+    exit 1
+fi
+
+ok "Scripts dir: $SCRIPTS_DIR"
+
+# --------------------------------------------------------------------------- #
+# STEP 4: Add to PATH in shell rc files
+# --------------------------------------------------------------------------- #
+
+step "Updating PATH in shell startup files ..."
+
+PATH_LINE="export PATH=\"\$PATH:$SCRIPTS_DIR\""
+MARKER="# Added by aibrain installer"
+
+# Collect rc files to update
+RC_FILES=()
+[ -f "$HOME/.bashrc" ]  && RC_FILES+=("$HOME/.bashrc")
+[ -f "$HOME/.zshrc" ]   && RC_FILES+=("$HOME/.zshrc")
+# Fallback: bash_profile when no .bashrc (common on macOS)
+[ -f "$HOME/.bash_profile" ] && [ ! -f "$HOME/.bashrc" ] && RC_FILES+=("$HOME/.bash_profile")
+# If nothing exists yet, default to .bashrc
+[ ${#RC_FILES[@]} -eq 0 ] && RC_FILES+=("$HOME/.bashrc")
+
+for rc in "${RC_FILES[@]}"; do
+    if grep -qF "$SCRIPTS_DIR" "$rc" 2>/dev/null; then
+        ok "Already present in $rc -- no change"
+    else
+        printf '\n%s\n%s\n' "$MARKER" "$PATH_LINE" >> "$rc"
+        ok "Added to $rc"
     fi
 done
-if [ -z "$LINK_DIR" ] && [ -d /usr/local/bin ]; then
-    # Try sudo-less alternative: create ~/.local/bin
-    mkdir -p "$HOME/.local/bin" && LINK_DIR="$HOME/.local/bin"
-fi
 
-if [ -n "$LINK_DIR" ]; then
-    ln -sf "$CLI_SRC" "$LINK_DIR/aibrain"
-    say "Linked: $LINK_DIR/aibrain -> $CLI_SRC"
-    case ":$PATH:" in
-        *":$LINK_DIR:"*) ;;
-        *) say "Note: $LINK_DIR is not on PATH. Add: export PATH=\"$LINK_DIR:\$PATH\"" ;;
-    esac
+# Refresh the current session immediately
+export PATH="$PATH:$SCRIPTS_DIR"
+ok "Refreshed current session PATH"
+
+# --------------------------------------------------------------------------- #
+# STEP 5: Verify aibrain command
+# --------------------------------------------------------------------------- #
+
+step "Verifying aibrain installation ..."
+
+VERIFIED=0
+if command -v aibrain >/dev/null 2>&1; then
+    VERSION_OUT=$(aibrain --version 2>&1 || true)
+    ok "aibrain --version: $VERSION_OUT"
+    VERIFIED=1
 else
-    say "Note: could not write to /usr/local/bin or ~/.local/bin. Run directly: $CLI_SRC"
+    AIBRAIN_FULL="$SCRIPTS_DIR/aibrain"
+    if [ -f "$AIBRAIN_FULL" ]; then
+        VERSION_OUT=$("$AIBRAIN_FULL" --version 2>&1 || true)
+        ok "aibrain --version (full path): $VERSION_OUT"
+        VERIFIED=1
+    fi
 fi
 
-printf '\n'
-printf '  Done. Next steps:\n'
-printf '      aibrain setup      # interactive configuration\n'
-printf '      aibrain serve      # start the dashboard at http://localhost:8001\n'
-printf '\n'
-printf '  Upgrade any time by re-running this installer.\n'
-printf '\n'
+if [ "$VERIFIED" -eq 0 ]; then
+    warn "Could not run 'aibrain --version' in this session."
+    echo ""
+    echo "  aibrain IS installed. Run via full path until you open a new shell:"
+    echo "    $SCRIPTS_DIR/aibrain"
+    echo ""
+    echo "  Or reload your shell:"
+    echo "    source ~/.bashrc   # or: source ~/.zshrc"
+fi
+
+# --------------------------------------------------------------------------- #
+# STEP 6: Optional auto-setup
+# --------------------------------------------------------------------------- #
+
+RUN_SETUP="${AIBRAIN_AUTO_SETUP:-0}"
+
+if [ "$RUN_SETUP" = "1" ]; then
+    step "Running aibrain setup --yes ..."
+    if [ "$VERIFIED" -eq 1 ]; then
+        aibrain setup --yes || warn "Setup had an issue. Run 'aibrain setup' manually."
+    else
+        "$SCRIPTS_DIR/aibrain" setup --yes || warn "Setup had an issue. Run 'aibrain setup' manually."
+    fi
+else
+    echo ""
+    echo -e "  ${CYAN}Run 'aibrain setup' to complete installation.${NC}"
+fi
+
+# --------------------------------------------------------------------------- #
+# Done
+# --------------------------------------------------------------------------- #
+
+echo ""
+echo -e "${GREEN}========================================${NC}"
+echo -e "${GREEN}  aibrain installed successfully!${NC}"
+if [ "$VERIFIED" -eq 1 ]; then
+    echo -e "${GREEN}  'aibrain' command is ready in this shell.${NC}"
+else
+    echo -e "${GREEN}  Open a new terminal or run 'source ~/.bashrc' to use 'aibrain'.${NC}"
+fi
+echo -e "${GREEN}========================================${NC}"
+echo ""
