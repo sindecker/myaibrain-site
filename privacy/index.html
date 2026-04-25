@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Privacy Policy — AIBrain</title>
-  <meta name="description" content="AIBrain Privacy Policy. Your data stays on your machine. We do not collect, sell, or share your personal information." />
+  <meta name="description" content="AIBrain Privacy Policy. Your brain data stays on your machine. We do not collect, sell, or share your personal information." />
   <link rel="icon" href="/favicon.ico" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -80,6 +80,36 @@
     .highlight p { margin: 0; color: var(--text); font-size: 1.05rem; }
     a { color: var(--accent-light); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0 1.5rem;
+      font-size: 0.9rem;
+    }
+    th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-weight: 600;
+    }
+    td {
+      padding: 0.6rem 0.75rem;
+      color: var(--dim);
+      border: 1px solid var(--border);
+      vertical-align: top;
+    }
+    td strong { color: var(--text); }
+    code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.15em 0.4em;
+      font-size: 0.875em;
+      color: var(--accent-light);
+      font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    }
     footer {
       border-top: 1px solid var(--border);
       padding: 2rem;
@@ -102,51 +132,89 @@
   <p class="updated">Last updated: April 2026</p>
 
   <div class="highlight">
-    <p><strong>The short version:</strong> AIBrain runs on your machine. Your data — conversations, memory, files — stays on your machine. We do not collect it, store it on our servers, or sell it to anyone.</p>
+    <p><strong>The short version:</strong> AIBrain runs on your machine. Your brain data — conversations, memory, workflow outputs — stays on your machine. We do not collect it, sell it, or share it with third parties. When you activate a paid license, we collect minimal license validation data (described below).</p>
   </div>
 
   <h2>What AIBrain Is</h2>
-  <p>AIBrain is a desktop application and developer tool that runs locally on your computer. It connects to AI providers you configure (such as Anthropic Claude, OpenAI, Google Gemini, or a local Ollama instance) using API keys you supply. All AI conversations are sent directly from your machine to the provider you choose — not through AIBrain servers.</p>
+  <p>AIBrain is a developer tool and agentic cognitive layer that runs locally on your computer. It connects to AI providers you configure (Anthropic Claude, OpenAI, Google Gemini, local Ollama, or others) using API keys you supply. All AI conversations are sent directly from your machine to the provider you choose — not through AIBrain servers.</p>
 
-  <h2>Data We Do Not Collect</h2>
-  <p>We do not collect, transmit, or store:</p>
+  <h2>Data That Stays on Your Machine</h2>
+  <p>All brain data is stored in a local SQLite database (<code>~/projects/aibrain/aibrain.db</code> or the path shown by <code>aibrain status</code>). This includes:</p>
   <ul>
-    <li>Your conversations or chat history</li>
-    <li>Your AI provider API keys</li>
-    <li>Files, documents, or memory you add to AIBrain</li>
-    <li>Your machine's contents, file system, or environment</li>
-    <li>Background telemetry, diagnostics, or analytics — no data is collected passively or without your explicit action</li>
+    <li>Your memories, notes, and stored context</li>
+    <li>Embedding vectors</li>
+    <li>Evolution and quality scores</li>
+    <li>Task execution logs</li>
   </ul>
+  <p>This data never leaves your machine unless you explicitly export it or move the file.</p>
 
-  <h2>What Stays on Your Machine</h2>
-  <p>All AIBrain data is stored in a local SQLite database at <strong>%APPDATA%\aibrain\aibrain.db</strong> (Windows) or <strong>~/.aibrain/aibrain.db</strong> (Mac/Linux). This file never leaves your machine unless you explicitly move or back it up yourself.</p>
-
-  <h2>Network Connections the App Makes</h2>
-  <p>AIBrain makes outbound connections only when you explicitly trigger them:</p>
+  <h2>LLM Provider Calls</h2>
+  <p>When AIBrain processes a task, it routes it to a language model. By default:</p>
   <ul>
-    <li><strong>AI provider APIs</strong> — only when you send a message. Goes to Anthropic, OpenAI, Google, or your configured endpoint. Your API key is used and stays local.</li>
-    <li><strong>Ollama</strong> — connects to localhost only if you configure a local model.</li>
-    <li><strong>Multi-machine sync (optional)</strong> — if you configure a broker for use across multiple machines, connections go only to the broker address you specify.</li>
-    <li><strong>Community registration (optional, setup only)</strong> — if you provide your email during the setup wizard's optional "updates" step, AIBrain sends your email address, platform (e.g. Windows), AIBrain version, and timestamp to myaibrain.org. This step can be skipped by pressing Enter. No data is sent if you skip it.</li>
+    <li><strong>Deterministic tasks:</strong> handled locally with no LLM call</li>
+    <li><strong>Simple tasks:</strong> Ollama (fully local) if installed; otherwise Anthropic Claude Haiku</li>
+    <li><strong>Judgment and complex tasks:</strong> Anthropic Claude Sonnet or Opus by default</li>
   </ul>
-  <p>No other outbound connections are made by the application during normal use.</p>
+  <p>This means that in a default installation, the content of non-trivial tasks is sent to Anthropic (<code>api.anthropic.com</code>). Your Anthropic API key is stored locally and used directly — it is not relayed through AIBrain servers. Anthropic's privacy policy governs their use of this data: <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener">anthropic.com/privacy</a></p>
+  <p>To run fully locally with no external LLM calls, install Ollama and configure AIBrain to use it as the inference backend.</p>
+  <p>If you configure other providers (OpenAI, Gemini, Groq, DeepSeek, Together), their respective privacy policies apply to data sent to those endpoints.</p>
+
+  <h2>License Activation and Heartbeat Telemetry (Pro and Team only)</h2>
+  <p><strong>Free-tier users: no telemetry collected.</strong></p>
+  <p>When you activate a Pro or Team license, AIBrain sends a small validation record to our licensing server (<code>api.myaibrain.org</code>):</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>What it contains</th>
+        <th>Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>key_hash</code></td>
+        <td>SHA-256 of your license key</td>
+        <td>Identify which key activated — raw key never sent</td>
+      </tr>
+      <tr>
+        <td><code>email</code></td>
+        <td>Email address embedded in your license</td>
+        <td>Associate activation with your account</td>
+      </tr>
+      <tr>
+        <td><code>machine_fingerprint_hash</code></td>
+        <td>SHA-256 of (salt + hostname + first MAC address + OS name)</td>
+        <td>Count distinct machines per license — no raw hardware ID stored or transmitted</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Heartbeats (periodic re-validation) occur at most once every 24 hours per machine. If our server is unreachable, the heartbeat is silently skipped and your license continues to work offline.</p>
+  <p><strong>To disable license telemetry:</strong> Set <code>AIBRAIN_LICENSE_API_URL=</code> (empty string) in your environment. Your license will still validate against the locally cached state.</p>
+  <p><strong>Data retention:</strong> Activation records are retained for the duration of your subscription plus 90 days, then deleted. Aggregated counts (number of activations per key) may be retained indefinitely for business metrics.</p>
+
+  <h2>Your Rights</h2>
+  <ul>
+    <li><strong>Export your brain:</strong> Run <code>aibrain brain export</code> to export your full memory database to a portable format.</li>
+    <li><strong>Delete license records:</strong> Email <a href="mailto:hello@myaibrain.org">hello@myaibrain.org</a> to request deletion of your activation records. We will confirm deletion within 30 days.</li>
+    <li><strong>Disable telemetry:</strong> Set <code>AIBRAIN_LICENSE_API_URL=</code> in your environment.</li>
+  </ul>
 
   <h2>myaibrain.org Website</h2>
-  <p>When you visit <strong>myaibrain.org</strong>, standard web server logs may record your IP address and the pages you visit. This is standard infrastructure logging. We do not use third-party tracking pixels, advertising networks, or behavioural analytics on this site.</p>
-  <p>If you create an account on myaibrain.org (for Pro or Team licensing), we store your email address and license information. We do not store payment details — payments are processed by Stripe or Gumroad and governed by their respective privacy policies.</p>
+  <p>When you visit myaibrain.org, standard infrastructure logging records your IP address and the pages you visit. We use Cloudflare as our CDN and DNS provider — Cloudflare may collect anonymised, aggregated page view statistics (no cookies, no fingerprinting, no personal data). See <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's privacy policy</a>.</p>
+  <p>We do not use advertising networks, behavioural tracking pixels, or remarketing systems.</p>
+  <p>If you create an account on myaibrain.org (for Pro or Team licensing), we store your email address and license information. We do not store payment card details — payments are processed by Stripe and Gumroad and governed by their respective privacy policies.</p>
 
-  <h2>Installer Downloads</h2>
-  <p>The AIBrain Windows installer (<strong>AIBrain_x64-setup.exe</strong>) is a standard NSIS installer. It installs the application to your local machine. It does not contain your personal data and does not phone home during installation.</p>
-  <p>Microsoft SmartScreen may warn that the file is from an unknown publisher. This is expected for new software without an extended validation (EV) code signing certificate. You can verify the download came from <strong>myaibrain.org/download/windows</strong>.</p>
+  <h2>Payments</h2>
+  <p>Payments are processed by <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Stripe</a> and <a href="https://gumroad.com/privacy" target="_blank" rel="noopener">Gumroad</a>. We do not store payment card details. We receive your email address from these processors to issue your license key.</p>
 
   <h2>Children</h2>
   <p>AIBrain is not directed at children under 13. We do not knowingly collect information from children.</p>
 
   <h2>Changes to This Policy</h2>
-  <p>If we make material changes to this policy, we will update the date at the top of this page. Continued use of AIBrain after changes constitutes acceptance of the updated policy.</p>
+  <p>If we make material changes to this policy, we will update the date at the top of this page. Continued use of AIBrain constitutes acceptance of the updated policy.</p>
 
   <h2>Contact</h2>
-  <p>Questions about this privacy policy: <a href="mailto:hello@myaibrain.org">hello@myaibrain.org</a></p>
+  <p>Privacy questions: <a href="mailto:hello@myaibrain.org">hello@myaibrain.org</a></p>
 
 </main>
 
