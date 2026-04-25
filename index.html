@@ -604,16 +604,27 @@
     }
     </script>
 
-    <!-- Primary CTA: pip install (native desktop app returning in v3) -->
-    <div style="max-width:560px;margin:0 auto 1rem;text-align:center;">
-        <div style="color:var(--dim);font-size:0.82rem;margin-bottom:0.4rem;">Install from PyPI · click to copy</div>
-        <div class="hero-install" onclick="navigator.clipboard.writeText('pip install aibrain'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='pip install aibrain',1500)" style="font-size:1.15rem;padding:1rem 1.5rem;background:var(--cta);color:#000;border-radius:10px;cursor:pointer;font-weight:700;display:inline-block;min-width:300px;">
-            <span class="cmd">pip install aibrain</span>
+    <!-- Primary CTA: one-command install -->
+    <div style="max-width:560px;margin:0 auto 1.5rem;text-align:left;display:flex;flex-direction:column;gap:0.6rem;">
+        <div>
+            <div style="color:var(--dim);font-size:0.78rem;margin-bottom:0.25rem;">Windows PowerShell · click to copy</div>
+            <div class="hero-install" onclick="navigator.clipboard.writeText('irm https://myaibrain.org/install.ps1 | iex'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='irm https://myaibrain.org/install.ps1 | iex',1500)" style="font-size:1rem;padding:0.85rem 1.2rem;background:var(--cta);color:#000;border-radius:10px;cursor:pointer;font-weight:700;display:block;">
+                <span class="cmd">irm https://myaibrain.org/install.ps1 | iex</span>
+            </div>
         </div>
-        <div style="color:var(--dim);font-size:0.85rem;margin-top:0.6rem;">Then run: <code style="background:rgba(255,255,255,0.06);padding:0.15rem 0.45rem;border-radius:3px;">aibrain setup</code></div>
+        <div>
+            <div style="color:var(--dim);font-size:0.78rem;margin-bottom:0.25rem;">Mac / Linux / WSL · click to copy</div>
+            <div class="hero-install" onclick="navigator.clipboard.writeText('curl -fsSL https://myaibrain.org/install.sh | bash'); this.querySelector('.cmd').textContent='✓ Copied'; setTimeout(()=>this.querySelector('.cmd').textContent='curl -fsSL https://myaibrain.org/install.sh | bash',1500)" style="font-size:1rem;padding:0.85rem 1.2rem;background:var(--cta);color:#000;border-radius:10px;cursor:pointer;font-weight:700;display:block;">
+                <span class="cmd">curl -fsSL https://myaibrain.org/install.sh | bash</span>
+            </div>
+        </div>
+        <div style="text-align:center;color:var(--dim);font-size:0.8rem;margin-top:0.2rem;">
+            or: <span onclick="navigator.clipboard.writeText('pip install aibrain')" style="cursor:pointer;font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:3px;">pip install aibrain</span>
+            &nbsp;→&nbsp;
+            <span style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:3px;">aibrain setup</span>
+        </div>
     </div>
     <div class="hero-sub" style="margin-bottom:1rem;">Free. Python 3.10+ · Windows, macOS, Linux.</div>
-    <div class="hero-sub" style="margin-bottom:1.5rem;font-size:0.85rem;color:var(--dim);max-width:560px;margin-left:auto;margin-right:auto;">Native desktop app returning in v3 — the CLI and API are the stable shipping path today.</div>
     <br>
     <div class="hero-install" style="text-align: left; display: block; max-width: 520px; margin: 0.75rem auto; font-size: 0.88rem; line-height: 1.7;" onclick="navigator.clipboard.writeText('from aibrain import Brain\nbrain = Brain()\nbrain.add(&quot;I love tennis&quot;, user_id=&quot;alice&quot;)\nbrain.search(&quot;hobbies&quot;, user_id=&quot;alice&quot;)')">
         <span style="color: var(--dim);"># Brain API</span><br>
