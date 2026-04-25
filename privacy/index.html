@@ -115,7 +115,7 @@
     <li>Your AI provider API keys</li>
     <li>Files, documents, or memory you add to AIBrain</li>
     <li>Your machine's contents, file system, or environment</li>
-    <li>Usage data, telemetry, or analytics from within the app</li>
+    <li>Background telemetry, diagnostics, or analytics — no data is collected passively or without your explicit action</li>
   </ul>
 
   <h2>What Stays on Your Machine</h2>
@@ -127,6 +127,7 @@
     <li><strong>AI provider APIs</strong> — only when you send a message. Goes to Anthropic, OpenAI, Google, or your configured endpoint. Your API key is used and stays local.</li>
     <li><strong>Ollama</strong> — connects to localhost only if you configure a local model.</li>
     <li><strong>Multi-machine sync (optional)</strong> — if you configure a broker for use across multiple machines, connections go only to the broker address you specify.</li>
+    <li><strong>Community registration (optional, setup only)</strong> — if you provide your email during the setup wizard's optional "updates" step, AIBrain sends your email address, platform (e.g. Windows), AIBrain version, and timestamp to myaibrain.org. This step can be skipped by pressing Enter. No data is sent if you skip it.</li>
   </ul>
   <p>No other outbound connections are made by the application during normal use.</p>
 
