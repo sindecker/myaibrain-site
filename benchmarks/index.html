@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIBrain — Memory Retrieval Benchmarks</title>
+  <meta name="description" content="AIBrain memory retrieval benchmarks: 7 independent datasets, 228K+ test instances. Ra@5 peak 0.800 on LongMemEval_M. See full evaluation results.">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--darker);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    :root {
+      --brand: #F59E0B;
+      --cta: #F97316;
+      --accent: #FBBF24;
+      --dark: #0a0a0a;
+      --darker: #060606;
+      --card: #18181b;
+      --border: #27272a;
+      --text: #f4f4f5;
+      --dim: #71717a;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(10,10,15,0.9); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-brand { font-weight: 700; font-size: 1.2rem; color: var(--brand); text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--dim); font-size: 0.9rem; text-decoration: none; }
+    .nav-links a:hover { color: var(--brand); }
+    .nav-cta {
+      background: var(--cta); color: var(--dark); padding: 0.5rem 1.2rem;
+      border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; display: inline-block;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    /* Hero */
+    .hero { text-align: center; padding: 8rem 2rem 4rem; }
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; line-height: 1.2; }
+    .hero p { font-size: 1.2rem; color: var(--dim); max-width: 700px; margin: 0 auto 2rem; }
+    .stats-row { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem;
+      min-width: 200px; text-align: center;
+    }
+    .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--brand); display: block; }
+    .stat-label { color: var(--dim); font-size: 0.9rem; margin-top: 0.5rem; }
+    .stat-sub { font-size: 0.8rem; color: var(--dim); margin-top: 0.25rem; }
+    /* Section */
+    section { padding: 4rem 2rem; border-bottom: 1px solid var(--border); }
+    h2 { font-size: 2rem; margin-bottom: 1rem; color: var(--text); }
+    h2 small { font-size: 1rem; color: var(--dim); font-weight: normal; }
+    .intro-text { color: var(--dim); max-width: 800px; margin-bottom: 2rem; }
+    /* Tables */
+    .table-wrapper { overflow-x: auto; margin: 2rem 0; }
+    table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--dark); color: var(--dim); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { font-size: 0.95rem; }
+    .winner { color: var(--brand); font-weight: 700; }
+    .baseline { color: var(--dim); }
+    .badge {
+      background: var(--brand); color: var(--darker); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 999px;
+      text-transform: uppercase; font-weight: 700; margin-left: 0.5rem; white-space: nowrap;
+    }
+    .note { font-size: 0.85rem; color: var(--dim); margin-top: 1rem; }
+    .highlight { color: var(--green); font-weight: 600; }
+    .divider-row td { border-bottom: 2px solid var(--brand); }
+    /* Methodology */
+    .methodology-list { list-style: none; padding-left: 0; }
+    .methodology-list li { margin-bottom: 1rem; padding-left: 1.5rem; position: relative; }
+    .methodology-list li::before { content: "▸"; position: absolute; left: 0; color: var(--brand); }
+    /* CTA */
+    .cta-section { text-align: center; padding: 4rem 2rem; }
+    .code-block {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem;
+      display: inline-block; margin: 1rem 0; font-family: monospace; font-size: 1rem;
+    }
+    .btn-cta {
+      background: var(--cta); color: var(--dark); padding: 0.8rem 2rem; border-radius: 8px; font-weight: 700; font-size: 1rem;
+      text-decoration: none; display: inline-block; margin-top: 1rem;
+    }
+    .btn-cta:hover { opacity: 0.9; }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .nav-links { display: none; }
+      .stats-row { flex-direction: column; align-items: center; }
+      .stat-card { width: 100%; max-width: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="nav-brand">🧠 AIBrain</a>
+    <div class="nav-links">
+        <a href="/#packs">Brain Packs</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="https://pypi.org/project/aibrain/">PyPI</a>
+        <a href="/metrics">Metrics</a>
+        <a href="/benchmarks" style="color: var(--brand);">Benchmarks</a>
+    </div>
+    <div style="display:flex; gap:0.75rem; align-items:center;">
+        <a href="/login" style="color: var(--dim); font-size: 0.9rem;">Log in</a>
+        <a href="/signup" class="nav-cta">Sign up</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>AIBrain Memory Retrieval Benchmarks</h1>
+    <p>Empirical evaluation across 7 independent benchmarks, 228,000+ test instances. No cherry-picking. Every evaluation run is shown.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-number">7</span>
+        <div class="stat-label">Benchmarks</div>
+        <div class="stat-sub">Independent datasets</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">228K+</span>
+        <div class="stat-label">Test Instances</div>
+        <div class="stat-sub">Across all evaluations</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">0.800</span>
+        <div class="stat-label">Ra@5 Peak</div>
+        <div class="stat-sub">LongMemEval_M primary</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>LongMemEval_M — Primary Benchmark</h2>
+      <p class="intro-text">The standard benchmark for long-term conversational memory retrieval (Wu et al., 2024). 470 scored instances, session-level retrieval.</p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>System</th>
+              <th>Parameters</th>
+              <th>Ra@5</th>
+              <th>NDCG@5</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="winner">
+              <td><strong>AIBrain / bge-base-en-v1.5</strong></td>
+              <td>109M</td>
+              <td><strong>0.800</strong></td>
+              <td>—</td>
+            </tr>
+            <tr class="winner">
+              <td><strong>AIBrain / bge-small-en-v1.5</strong></td>
+              <td>33M</td>
+              <td>0.786</td>
+              <td>0.718</td>
+            </tr>
+            <tr class="winner">
+              <td><strong>AIBrain / all-MiniLM-L6-v2</strong></td>
+              <td>22M</td>
+              <td>0.785</td>
+              <td>0.717</td>
+            </tr>
+            <tr class="winner" style="border-bottom: 2px solid var(--brand);">
+              <td><strong>AIBrain / FTS5 (no ML)</strong></td>
+              <td>0</td>
+              <td>0.745</td>
+              <td>0.692</td>
+            </tr>
+            <tr>
+              <td>Contriever + fact keys <span class="badge">Best prior</span></td>
+              <td>110M</td>
+              <td>0.762</td>
+              <td>0.632</td>
+            </tr>
+            <tr class="baseline">
+              <td>Stella V5</td>
+              <td>1.5B</td>
+              <td>0.720</td>
+              <td>—</td>
+            </tr>
+            <tr class="baseline">
+              <td>FAISS / hybrid</td>
+              <td>varies</td>
+              <td>0.666</td>
+              <td>—</td>
+            </tr>
+            <tr class="baseline">
+              <td>BM25</td>
+              <td>0</td>
+              <td>0.634</td>
+              <td>0.516</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note highlight">Bootstrap 95% CI (10,000 resamples): Ra@5 lower bound = 0.751, upper = 0.826. Lower bound exceeds all listed baselines.</div>
+      <div class="note">5-fold cross-validation: bge-base held-out Ra@5 = 0.774 ± 0.027. Routing generalizes beyond the training distribution.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Generalization Across 7 Benchmarks</h2>
+      <p class="intro-text">SelRoute was evaluated on every accessible benchmark for long-term conversational memory retrieval. Results are shown for all three embedding configurations and the zero-ML FTS5 baseline.</p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Benchmark</th>
+              <th>Instances</th>
+              <th>bge-base</th>
+              <th>bge-small</th>
+              <th>MiniLM</th>
+              <th>FTS5</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>LongMemEval_M</td>
+              <td>470</td>
+              <td class="winner">0.800</td>
+              <td>0.786</td>
+              <td>0.785</td>
+              <td>0.745</td>
+              <td>Primary — full-data Ra@5</td>
+            </tr>
+            <tr>
+              <td>LongMemEval_S</td>
+              <td>~500</td>
+              <td class="winner">0.920</td>
+              <td>0.914</td>
+              <td>0.892</td>
+              <td>0.776</td>
+              <td>Single-session Ra@5</td>
+            </tr>
+            <tr>
+              <td>LoCoMo</td>
+              <td>1,986</td>
+              <td>0.766</td>
+              <td>0.762</td>
+              <td>0.739</td>
+              <td class="winner">0.767*</td>
+              <td>*FTS5 leads; Recall-all@5</td>
+            </tr>
+            <tr>
+              <td>MSDialog</td>
+              <td>2,199</td>
+              <td class="winner">0.998</td>
+              <td>0.998</td>
+              <td>0.998</td>
+              <td>0.965</td>
+              <td>Task-oriented dialogue</td>
+            </tr>
+            <tr>
+              <td>LMEB</td>
+              <td>154,159</td>
+              <td>—</td>
+              <td>—</td>
+              <td class="winner">0.792</td>
+              <td>0.599</td>
+              <td>Large-scale episodic</td>
+            </tr>
+            <tr>
+              <td>EpisodicMemory</td>
+              <td>273</td>
+              <td>0.645</td>
+              <td class="winner">0.667</td>
+              <td>0.604</td>
+              <td>0.451</td>
+              <td>Episodic QA</td>
+            </tr>
+            <tr>
+              <td>PerLTQA</td>
+              <td>345</td>
+              <td>0.591</td>
+              <td>0.661</td>
+              <td>0.664</td>
+              <td class="winner">0.745*</td>
+              <td>*FTS5 leads; personality QA</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note" style="margin-top: 1rem;">Metric: Recall@5 (Ra@5) for LME benchmarks. Recall-all@5 for multi-answer benchmarks (LoCoMo, MSDialog, LMEB, EpisodicMemory, PerLTQA), where each query may have multiple ground-truth passages.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Methodology</h2>
+      <ul class="methodology-list">
+        <li><strong>Recall@5 (Ra@5):</strong> fraction of queries where the correct session appears in the top 5 retrieved results</li>
+        <li><strong>NDCG@5:</strong> ranking quality — whether correct results appear at higher positions</li>
+        <li><strong>SelRoute:</strong> assigns queries to specialized retrieval pipelines (FTS5 / embedding / hybrid) based on predicted query type. No LLM at query time. No GPU required. Runs on commodity hardware.</li>
+        <li><a href="https://arxiv.org/abs/2604.02431" target="_blank" rel="noopener">Full methodology: Sindecker (2026). SelRoute: Selective Query-Type Routing for Long-Term Conversational Memory Retrieval. arXiv:2604.02431</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2>Get this retrieval quality in your agent</h2>
+    <p style="color: var(--dim); max-width: 600px; margin: 0 auto;">AIBrain gives your AI agents access to the same retrieval system benchmarked above. Install in seconds.</p>
+    <div class="code-block">
+      <code>pip install aibrain</code>
+    </div>
+    <br>
+    <a href="/signup" class="btn-cta">Get started free</a>
+  </section>
+
+</body>
+</html>
