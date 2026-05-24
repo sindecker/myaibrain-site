@@ -39,7 +39,7 @@
       "description": "Persistent memory layer for AI agents. Install a brain and your agent compounds knowledge across every session. Free, open source, works with any LLM.",
       "url": "https://myaibrain.org",
       "downloadUrl": "https://pypi.org/project/aibrain/",
-      "softwareVersion": "1.8.1",
+      "softwareVersion": "1.8.5",
       "author": {"@id": "https://myaibrain.org/#organization"},
       "offers": [
         {"@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free"},
@@ -544,7 +544,7 @@
 
 <!-- Hero -->
 <div class="hero">
-    <div class="hero-badge">v1.8.1 — The Portable Agent Operating System</div>
+    <div class="hero-badge">v1.8.5 — The Portable Agent Operating System</div>
     <div style="text-align: center; margin-bottom: 1.5rem;">
         <span style="font-size: clamp(3rem, 6vw, 4.5rem); margin-right: 0.5rem;">🧠</span>
         <span style="font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; color: var(--brand);">AIBrain</span>
@@ -686,6 +686,40 @@
     </div>
 </div>
 <style>@media(max-width:600px){.quickstart-grid{grid-template-columns:1fr!important;}}</style>
+
+<!-- Meet Lucy — the agent that comes with AIBrain -->
+<section id="lucy" style="padding: 3rem 2rem;">
+    <div class="section-title">
+        <h2>Meet Lucy</h2>
+        <p>The autonomous agent that comes with every <code>pip install aibrain</code>. One install, one CLI, one persistent brain — and an agent that already knows how to use it.</p>
+    </div>
+    <div style="max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+        <div class="price-card" style="text-align:left;">
+            <h3 style="margin-top:0;">Terminal-native chat</h3>
+            <p style="color: var(--dim); font-size: 0.9rem;">Multi-line editing, bracketed paste, arrow-key history, and stream-safe typing — your input buffer never gets clobbered by Lucy's reply mid-stream.</p>
+        </div>
+        <div class="price-card" style="text-align:left;">
+            <h3 style="margin-top:0;">Multi-provider routing</h3>
+            <p style="color: var(--dim); font-size: 0.9rem;">DeepSeek, OpenAI, Anthropic, Ollama — switch providers with <code>/switch openai</code>. Routing works in scripts and autonomous runs, not just interactive sessions.</p>
+        </div>
+        <div class="price-card" style="text-align:left;">
+            <h3 style="margin-top:0;">Browser automation + captcha</h3>
+            <p style="color: var(--dim); font-size: 0.9rem;">Lucy drives a CDP-attached Chrome session for browser work. Stealth-first captcha solver layer (recaptcha v2/v3, Turnstile, hCaptcha) with optional CapSolver REST fallback.</p>
+        </div>
+        <div class="price-card" style="text-align:left;">
+            <h3 style="margin-top:0;">Autonomous fleet comms</h3>
+            <p style="color: var(--dim); font-size: 0.9rem;">FleetBus pub/sub lets Lucy talk to other agents without copy-paste glue. Inter-agent task routing, Liaison-gated work output, real audit trail.</p>
+        </div>
+        <div class="price-card" style="text-align:left;">
+            <h3 style="margin-top:0;">Persistent memory, native</h3>
+            <p style="color: var(--dim); font-size: 0.9rem;">Lucy reads and writes AIBrain's CLS memory directly — every session compounds. <code>/memory_recall</code> and <code>/memory_store</code> are built-in commands.</p>
+        </div>
+        <div class="price-card" style="text-align:left;">
+            <h3 style="margin-top:0;">Try it</h3>
+            <p style="color: var(--dim); font-size: 0.9rem;">Install AIBrain, then run <code>lucy</code> in any terminal. <code>/help</code> lists all 21 wired commands. Bundled with v1.8.5 as the canonical agent surface.</p>
+        </div>
+    </div>
+</section>
 
 <!-- Brain Packs -->
 <section id="packs">
