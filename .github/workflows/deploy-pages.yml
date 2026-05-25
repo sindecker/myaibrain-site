@@ -1,0 +1,38 @@
+name: deploy-pages
+
+# Auto-deploy to Cloudflare Pages project `myaibrain-site` via wrangler
+# Direct Upload on every push to master. Replaces the Cloudflare ↔ GitHub
+# first-party integration that was disconnected (project is a Direct
+# Uploads type — Cloudflare API code 8000069 blocks API-level re-link).
+#
+# Required GitHub repo secrets:
+#   CLOUDFLARE_API_TOKEN   — Pages:Write scope (account-level)
+#   CLOUDFLARE_ACCOUNT_ID  — 9f2416dfe1f0eb6ec3fc9fb99a09f9cd
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: deploy-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=myaibrain-site --branch=master --commit-dirty=true
