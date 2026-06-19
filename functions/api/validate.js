@@ -12,7 +12,7 @@
  *   - HMAC_SIG     = first 16 hex chars of HMAC-SHA256(payload_b64, signing_key)
  *
  * Environment variables (set in CF Pages dashboard):
- *   LICENSE_SIGNING_KEY  — shared secret (default: "aibrain-license-v1")
+ *   LICENSE_SIGNING_KEY  — shared HMAC secret (REQUIRED; set in Cloudflare env; no default, fails closed if unset)
  *
  * Returns:
  *   { valid: bool, tier: "pro"|"team"|null, email: string, reason?: string }
@@ -164,7 +164,16 @@ export async function onRequest(context) {
     );
   }
 
-  const signingKey = env.LICENSE_SIGNING_KEY || "aibrain-license-v1";
+  // Fail closed: NEVER fall back to a public/default signing key. A hardcoded
+  // fallback in this public repo would let anyone forge valid licenses by HMAC'ing
+  // with the known key. If LICENSE_SIGNING_KEY is not configured, reject.
+  const signingKey = env.LICENSE_SIGNING_KEY;
+  if (!signingKey) {
+    return new Response(
+      JSON.stringify({ valid: false, tier: null, email: null, reason: "License validation temporarily unavailable" }),
+      { status: 503, headers: JSON_HEADERS }
+    );
+  }
 
   let key;
   try {

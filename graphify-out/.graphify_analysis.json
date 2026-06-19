@@ -1,0 +1,235 @@
+{
+  "communities": {
+    "0": [
+      "src_index_extractlicensekey",
+      "src_index_fetch",
+      "src_index_formencode",
+      "src_index_handlebillingportal",
+      "src_index_handlebillingstatus",
+      "src_index_handlecreatecheckout",
+      "src_index_handlelicenserefresh",
+      "src_index_handlelogin",
+      "src_index_handlelogout",
+      "src_index_jsonresponse",
+      "src_index_sendkeyemail",
+      "src_index_stripefetch",
+      "src_index_timingsafeequal",
+      "src_index_verifylicensekey",
+      "worker_pro_remaining_js",
+      "workers_stripe_webhook_src_index_js"
+    ],
+    "1": [
+      "myaibrain_site_verify_prod_bold",
+      "myaibrain_site_verify_prod_color",
+      "myaibrain_site_verify_prod_dim",
+      "myaibrain_site_verify_prod_green",
+      "myaibrain_site_verify_prod_is_tty",
+      "myaibrain_site_verify_prod_print_table",
+      "myaibrain_site_verify_prod_rationale_165",
+      "myaibrain_site_verify_prod_yellow",
+      "verify_prod_py"
+    ],
+    "2": [
+      "account_auth_apicall",
+      "account_auth_clearnotice",
+      "account_auth_getqueryparam",
+      "account_auth_js",
+      "account_auth_loadproviders",
+      "account_auth_renderoauthbuttons",
+      "account_auth_shownotice",
+      "account_auth_validateemail",
+      "account_auth_validatepassword"
+    ],
+    "3": [
+      "20260412_pages_function_deletion_stripe_hmacsha256",
+      "20260412_pages_function_deletion_stripe_sendlicenseemail",
+      "20260412_pages_function_deletion_stripe_tohex",
+      "archive_20260412_pages_function_deletion_stripe_js",
+      "community_register_onrequestpost",
+      "src_index_base64urlencode",
+      "src_index_generatelicensekey",
+      "src_index_hexencode",
+      "src_index_verifystripesignature"
+    ],
+    "4": [
+      "install_ps1",
+      "myaibrain_site_install_get_pythonversion",
+      "myaibrain_site_install_test_version310",
+      "myaibrain_site_install_write_fail",
+      "myaibrain_site_install_write_ok",
+      "myaibrain_site_install_write_step",
+      "myaibrain_site_install_write_warn"
+    ],
+    "5": [
+      "myaibrain_site_verify_prod_load_manifest",
+      "myaibrain_site_verify_prod_main",
+      "myaibrain_site_verify_prod_rationale_124",
+      "myaibrain_site_verify_prod_red",
+      "myaibrain_site_verify_prod_verify_all",
+      "verify_public_py"
+    ],
+    "6": [
+      "api_stats_onrequestget",
+      "api_stats_onrequestoptions",
+      "functions_api_community_register_js",
+      "functions_api_pypi_stats_js",
+      "functions_api_stats_js",
+      "functions_api_webhooks_stripe_health_js"
+    ],
+    "7": [
+      "feedback_widget_js",
+      "myaibrain_site_feedback_widget_escapehtml",
+      "myaibrain_site_feedback_widget_inject",
+      "myaibrain_site_feedback_widget_openmodal",
+      "myaibrain_site_feedback_widget_submit"
+    ],
+    "8": [
+      "api_validate_computehmachex",
+      "api_validate_extractkey",
+      "api_validate_onrequest",
+      "api_validate_validatekey",
+      "functions_api_validate_js"
+    ],
+    "9": [
+      "myaibrain_site_verify_public_check_artifact",
+      "myaibrain_site_verify_public_fetch_url",
+      "myaibrain_site_verify_public_rationale_72",
+      "myaibrain_site_verify_public_rationale_90"
+    ],
+    "10": [
+      "countdown_js",
+      "myaibrain_site_countdown_updatecountdown"
+    ],
+    "11": [
+      "myaibrain_site_verify_prod_rationale_69",
+      "myaibrain_site_verify_prod_run_smoke"
+    ]
+  },
+  "cohesion": {
+    "0": 0.36,
+    "1": 0.47,
+    "2": 0.25,
+    "3": 0.47,
+    "4": 0.29,
+    "5": 0.6,
+    "6": 0.4,
+    "7": 0.6,
+    "8": 0.7,
+    "9": 0.5,
+    "10": 1.0,
+    "11": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_index_fetch",
+      "label": "fetch()",
+      "degree": 13
+    },
+    {
+      "id": "myaibrain_site_verify_prod_print_table",
+      "label": "print_table()",
+      "degree": 9
+    },
+    {
+      "id": "src_index_generatelicensekey",
+      "label": "generateLicenseKey()",
+      "degree": 9
+    },
+    {
+      "id": "myaibrain_site_verify_prod_color",
+      "label": "_color()",
+      "degree": 8
+    },
+    {
+      "id": "myaibrain_site_verify_prod_verify_all",
+      "label": "verify_all()",
+      "degree": 7
+    },
+    {
+      "id": "src_index_verifystripesignature",
+      "label": "verifyStripeSignature()",
+      "degree": 7
+    },
+    {
+      "id": "src_index_jsonresponse",
+      "label": "jsonResponse()",
+      "degree": 7
+    },
+    {
+      "id": "src_index_verifylicensekey",
+      "label": "verifyLicenseKey()",
+      "degree": 7
+    },
+    {
+      "id": "src_index_handlebillingportal",
+      "label": "handleBillingPortal()",
+      "degree": 7
+    },
+    {
+      "id": "src_index_handlelicenserefresh",
+      "label": "handleLicenseRefresh()",
+      "degree": 7
+    }
+  ],
+  "surprises": [
+    {
+      "source": "verify_all()",
+      "target": "check_artifact()",
+      "source_files": [
+        "verify-prod.py",
+        "verify-public.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "onRequestPost()",
+      "target": "sendLicenseEmail()",
+      "source_files": [
+        "functions/api/community/register.js",
+        "archive/20260412_pages_function_deletion/stripe.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `sendLicenseEmail()` unexpectedly reaches hub `onRequestPost()`"
+    },
+    {
+      "source": "verifyStripeSignature()",
+      "target": "hmacSHA256()",
+      "source_files": [
+        "workers/stripe-webhook/src/index.js",
+        "archive/20260412_pages_function_deletion/stripe.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories"
+    },
+    {
+      "source": "generateLicenseKey()",
+      "target": "hmacSHA256()",
+      "source_files": [
+        "workers/stripe-webhook/src/index.js",
+        "archive/20260412_pages_function_deletion/stripe.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories"
+    },
+    {
+      "source": "verifyStripeSignature()",
+      "target": "toHex()",
+      "source_files": [
+        "workers/stripe-webhook/src/index.js",
+        "archive/20260412_pages_function_deletion/stripe.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}
