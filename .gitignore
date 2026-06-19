@@ -4,3 +4,6 @@ docs/faceless-ai-influencer-playbook.md
 workers/*/.wrangler/
 .wrangler/
 
+
+graphify-out/
+archive/
